@@ -1,0 +1,1626 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Install MLRun on AWS</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="/_/static/css/badge_only.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="/_/static/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="canonical" href="https://docs.mlrun.org/en/stable/install/aws-install.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Set up your client environment" href="remote.html" />
+    <link rel="prev" title="Install MLRun on Kubernetes" href="kubernetes.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MV26G85');</script>
+<!-- End Google Tag Manager -->
+
+
+  
+<!-- RTD Extra Head -->
+
+<link rel="stylesheet" href="/_/static/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2022-12-01T09:20:36Z", "builder": "sphinx", "canonical_url": null, "commit": "9933138d", "docroot": "/docs/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "install/aws-install", "programming_language": "py", "project": "mlrun", "proxied_api_host": "/_", "source_suffix": ".md", "subprojects": {}, "theme": "sphinx_book_theme", "user_analytics_code": "UA-101852366-5", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="/_/static/javascript/readthedocs-analytics.js" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+</head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/MLRun_Character.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLRun basics
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Using MLRun
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     MLRun architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mlops-dev-flow.html">
+   MLOps development workflow
+   <!-- omit in toc -->
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../tutorial/index.html">
+   Tutorials and Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/01-mlrun-basics.html">
+     Quick start tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/02-model-training.html">
+     Train, compare, and register models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/03-model-serving.html">
+     Serving pre-trained ML/DL models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/04-pipeline.html">
+     Projects and automated ML pipeline
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/05-model-monitoring.html">
+     Model monitoring and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/06-add-mlops-to-code.html">
+     Add MLOps to existing code
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/07-batch-infer.html">
+     Batch inference and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/basic-demo.html">
+     Feature store example (stocks)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference external" href="https://github.com/mlrun/demos">
+     MLRun demos repository
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../install.html">
+   Installation and setup guide
+   <!-- omit in toc -->
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="local-docker.html">
+     Install MLRun locally using Docker
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="kubernetes.html">
+     Install MLRun on Kubernetes
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Install MLRun on AWS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="remote.html">
+     Set up your client environment
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core components
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../projects/project.html">
+   Projects and automation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/create-project.html">
+     Create, save, and use projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/load-project.html">
+     Load and run projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/run-build-deploy.html">
+     Run, build, and deploy functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/build-run-workflows-pipelines.html">
+     Build and run workflows/pipelines
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/ci-integration.html">
+     CI/CD integration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../secrets.html">
+     Working with secrets
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../runtimes/functions.html">
+   Serverless functions
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/functions-architecture.html">
+     Functions architecture
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../concepts/functions-overview.html">
+     Kinds of functions (runtimes)
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../runtimes/dask-overview.html">
+       Dask distributed runtime
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-mlrun.html">
+         Running Dask on the cluster with mlrun
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-pipeline.html">
+         Pipelines using Dask, Kubeflow and MLRun
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/horovod.html">
+       MPIJob and Horovod runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/spark-operator.html">
+       Spark Operator runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/nuclio-real-time-functions.html">
+       Nuclio real-time functions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/create-and-use-functions.html">
+     Create and use functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/mlrun_code_annotations.html">
+     Converting notebooks to function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/function-storage.html">
+     Attach storage to functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/images.html">
+     Images and their usage in MLRun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/image-build.html">
+     Build function image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/node-affinity.html">
+     Node affinity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/configuring-job-resources.html">
+     Managing job resources
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/load-from-hub.html">
+     Function Hub
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/data.html">
+   Data and artifacts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/datastore.html">
+     Data stores
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/data-items.html">
+     Data items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/artifacts.html">
+     Artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/models.html">
+     Model Artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../feature-store/feature-store.html">
+   Feature store
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-store-overview.html">
+     Feature store overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-sets.html">
+     Feature sets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/transformations.html">
+     Feature set transformations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-vectors.html">
+     Creating and using feature vectors
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../feature-store/end-to-end-demo/index.html">
+     Feature store end-to-end demo
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/01-ingest-datasources.html">
+       Part 1: Data Ingestion
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/02-create-training-model.html">
+       Part 2: Training
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/03-deploy-serving-model.html">
+       Part 3: Serving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/04-pipeline.html">
+       Part 4: Automated ML pipeline
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/runs-workflows.html">
+   Batch runs and workflows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/mlrun-execution-context.html">
+     MLRun execution context
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/decorators-and-auto-logging.html">
+     Decorators and auto-logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/submitting-tasks-jobs-to-functions.html">
+     Running a task (job)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/workflow-overview.html">
+     Running a multi-stage workflow
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/scheduled-jobs.html">
+     Scheduled jobs and workflows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../serving/serving-graph.html">
+   Real-time serving pipelines (graphs)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/getting-started.html">
+     Getting started
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/use-cases.html">
+     Use cases
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/realtime-pipelines.html">
+     Graph concepts and state machine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/model-serving-get-started.html">
+     Model serving graph
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/writing-custom-steps.html">
+     Writing custom steps
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/available-steps.html">
+     Built-in steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/demos.html">
+     Demos and tutorials
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/distributed-graph.html">
+       Distributed (multi-function) pipeline example
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/graph-example.html">
+       Advanced model serving graph - notebook example
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/graph-ha-cfg.html">
+     Serving graph high availability configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/pipelines-error-handling.html">
+     Error handling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/monitoring.html">
+   Model monitoring
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLOps tasks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data-prep/index.html">
+   Ingest and process data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingesting_data.html">
+     Using data sources and items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/logging_datasets.html">
+     Logging datasets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/spark-operator.html">
+     Spark Operator runtime
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingest-data-fs.html">
+     Ingest data using the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/using-spark-engine.html">
+     Ingest features with Spark
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../development/index.html">
+   Develop and train models
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../development/model-training-tracking.html">
+     Model training and tracking
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/create-a-basic-training-job.html">
+       Create a basic training job
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/working-with-data-and-model-artifacts.html">
+       Working with data and model artifacts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/auto-logging-mlops.html">
+       Automated experiment tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/built-in-training-function.html">
+       Using the built-in training function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../hyper-params.html">
+       Hyperparameter tuning optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/retrieve-offline-data.html">
+     Training with the feature store
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../deployment/index.html">
+   Deploy models and applications
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/serving-overview.html">
+     Real-time deployment
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/built-in-model-serving.html">
+       Using built-in model serving classes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/custom-model-serving-class.html">
+       Build your own model serving class
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/test-deploy-model-server.html">
+       Test and deploy a model server
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/model-api.html">
+       Model serving API
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/training-serving.html">
+     Serving with the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../deployment/batch_inference.html">
+     Batch inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/canary.html">
+     Canary and rolling upgrades
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../monitoring/index.html">
+   Monitor and alert
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/model-monitoring-deployment.html">
+     Model monitoring overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/initial-setup-configuration.html">
+     Enable model monitoring
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../genindex.html">
+   API index
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../api/index.html">
+   API by module
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+  <label for="toctree-checkbox-20">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/mlrun.frameworks/index.html">
+     mlrun.frameworks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.auto_mlrun.html">
+       AutoMLRun
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.tf_keras.html">
+       TensorFlow.Keras
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.pytorch.html">
+       PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.sklearn.html">
+       SciKit-Learn
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.xgboost.html">
+       XGBoost
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.lgbm.html">
+       LightGBM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.html">
+     mlrun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.artifacts.html">
+     mlrun.artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.config.html">
+     mlrun.config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.datastore.html">
+     mlrun.datastore
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.db.html">
+     mlrun.db
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.execution.html">
+     mlrun.execution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.feature_store.html">
+     mlrun.feature_store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.model.html">
+     mlrun.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.platforms.html">
+     mlrun.platforms
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.projects.html">
+     mlrun.projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.run.html">
+     mlrun.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.runtimes.html">
+     mlrun.runtimes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.serving.html">
+     mlrun.serving
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/storey.transformations.html">
+     storey.transformations - Graph transformations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli.html">
+   Command-Line Interface
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            By <a href="https://www.iguazio.com/">Iguazio</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/mlrun/mlrun"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/issues/new?title=Issue%20on%20page%20%2Finstall/aws-install.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/edit/development/docs/install/aws-install.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/install/aws-install.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prerequisites">
+   Prerequisites
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#post-deployment-expectations">
+   Post deployment expectations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configuration-settings">
+   Configuration settings
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started">
+   Getting started
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#storage-resources">
+   Storage resources
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-configure-the-online-feature-store">
+   How to configure the online feature store
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#streaming-support">
+   Streaming support
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cleanup">
+   Cleanup
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Install MLRun on AWS</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prerequisites">
+   Prerequisites
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#post-deployment-expectations">
+   Post deployment expectations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configuration-settings">
+   Configuration settings
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started">
+   Getting started
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#storage-resources">
+   Storage resources
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-configure-the-online-feature-store">
+   How to configure the online feature store
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#streaming-support">
+   Streaming support
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cleanup">
+   Cleanup
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="install-mlrun-on-aws">
+<span id="install-on-aws"></span><h1>Install MLRun on AWS<a class="headerlink" href="#install-mlrun-on-aws" title="Permalink to this headline">#</a></h1>
+<p>For AWS users, the easiest way to install MLRun is to use a native AWS deployment. This option deploys MLRun on an AWS EKS service using a CloudFormation stack.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">#</a></h2>
+<p>AWS account with permissions that include the ability to:</p>
+<ul class="simple">
+<li><p>Run a CloudFormation stack</p></li>
+<li><p>Create an EKS cluster</p></li>
+<li><p>Create EC2 instances</p></li>
+<li><p>Create VPC</p></li>
+<li><p>Create S3 buckets</p></li>
+<li><p>Deploy and pull images from ECR.</p></li>
+</ul>
+<p>For the full set of required permissions, <strong><a class="reference download internal" download="" href="../_downloads/3d901e433b38447c821e062e975c0cac/aws_policy.json"><code class="xref download docutils literal notranslate"><span class="pre">download</span> <span class="pre">the</span> <span class="pre">IAM</span> <span class="pre">policy</span></code></a></strong> or expand &amp; copy the IAM policy below:</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+show the IAM policy<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BasicServices&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;autoscaling:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;cloudwatch:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;elasticloadbalancing:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;sns:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;ec2:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;s3:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;s3-object-lambda:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;eks:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;elasticfilesystem:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;cloudformation:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;acm:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;route53:*&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="p">],</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ServiceLinkedRoles&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;iam:AWSServiceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                        </span><span class="s2">&quot;autoscaling.amazonaws.com&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="s2">&quot;ec2scheduled.amazonaws.com&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="s2">&quot;elasticloadbalancing.amazonaws.com&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="s2">&quot;spot.amazonaws.com&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="s2">&quot;spotfleet.amazonaws.com&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                        </span><span class="s2">&quot;transitgateway.amazonaws.com&quot;</span><span class="w"></span>
+<span class="w">                    </span><span class="p">]</span><span class="w"></span>
+<span class="w">                </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IAMPermissions&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:AddRoleToInstanceProfile&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:AttachRolePolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:TagOpenIDConnectProvider&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:CreateInstanceProfile&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:CreateOpenIDConnectProvider&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:CreateRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:DeleteInstanceProfile&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:DeleteOpenIDConnectProvider&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:DeleteRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:DeleteRolePolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:DetachRolePolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GenerateServiceLastAccessedDetails&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetAccessKeyLastUsed&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetAccountPasswordPolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetAccountSummary&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetGroup&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetInstanceProfile&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetLoginProfile&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetOpenIDConnectProvider&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetPolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetPolicyVersion&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetRolePolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetServiceLastAccessedDetails&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetUser&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListAccessKeys&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListAccountAliases&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListAttachedGroupPolicies&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListAttachedRolePolicies&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListAttachedUserPolicies&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListGroupPolicies&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListGroups&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListGroupsForUser&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListInstanceProfilesForRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListMFADevices&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListOpenIDConnectProviders&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListPolicies&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListPoliciesGrantingServiceAccess&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListRolePolicies&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListRoles&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListRoleTags&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListSAMLProviders&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListSigningCertificates&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListUserPolicies&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListUsers&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:ListUserTags&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:PassRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:PutRolePolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:RemoveRoleFromInstanceProfile&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:CreateGrant&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:CreateKey&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:DescribeKey&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:Encrypt&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:GenerateDataKeyWithoutPlaintext&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:GetKeyPolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:GetKeyRotationStatus&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:ListResourceTags&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:PutKeyPolicy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:ScheduleKeyDeletion&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;kms:TagResource&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="p">],</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AllowLanbda&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:CreateAlias&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:CreateCodeSigningConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:CreateEventSourceMapping&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:CreateFunction&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:CreateFunctionUrlConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:Delete*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:Get*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:InvokeAsync&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:InvokeFunction&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:InvokeFunctionUrl&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:List*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:PublishLayerVersion&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:PublishVersion&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:PutFunctionCodeSigningConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:PutFunctionConcurrency&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:PutFunctionEventInvokeConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:PutProvisionedConcurrencyConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:TagResource&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UntagResource&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateAlias&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateCodeSigningConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateEventSourceMapping&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateFunctionCode&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateFunctionCodeSigningConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateFunctionConfiguration&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateFunctionEventInvokeConfig&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;lambda:UpdateFunctionUrlConfig&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="p">],</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CertificateService&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;iam:CreateServiceLinkedRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::*:role/aws-service-role/acm.amazonaws.com/AWSServiceRoleForCertificateManager*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;iam:AWSServiceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;acm.amazonaws.com&quot;</span><span class="w"></span>
+<span class="w">                </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeleteRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:DeleteServiceLinkedRole&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetServiceLinkedRoleDeletionStatus&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;iam:GetRole&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="p">],</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::*:role/aws-service-role/acm.amazonaws.com/AWSServiceRoleForCertificateManager*&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SSM&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;logs:*&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;ssm:AddTagsToResource&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;ssm:GetParameter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;ssm:DeleteParameter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;ssm:PutParameter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;cloudtrail:GetTrail&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="s2">&quot;cloudtrail:ListTrails&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="p">],</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+</details><p>For more information, see <a class="reference external" href="https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/">how to create a new AWS account</a> and <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html">policies and permissions in IAM</a>.</p>
+<blockquote>
+<div><p><strong>Notes</strong>:</p>
+<ul class="simple">
+<li><p>To access the instances, you will need to have at least one key pair for SSH keys. For more information see <a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">Amazon EC2 key pairs and Linux instances</a>.</p></li>
+<li><p>You need to have a Route53 domain configured. External domain registration is currently not supported. For more information see <a class="reference external" href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html">What is Amazon Route 53</a>.</p></li>
+<li><p>The MLRun software is free of charge, however, there is a cost for the AWS infrastructure services such as EKS, EC2, S3 and ECR. The actual pricing depends on a large set of factors including, for example, the region, the number of EC2 instances, the amount of storage consumed, and the data transfer costs. Other factors include, for example, reserved instance configuration, saving plan, and AWS credits you have associated with your account. It is recommended to use the <a class="reference external" href="https://calculator.aws">AWS pricing calculator</a> to calculate the expected cost, as well as the <a class="reference external" href="https://aws.amazon.com/aws-cost-management/aws-cost-explorer/">AWS Cost Explorer</a> to manage the cost, monitor and set-up alerts.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="post-deployment-expectations">
+<h2>Post deployment expectations<a class="headerlink" href="#post-deployment-expectations" title="Permalink to this headline">#</a></h2>
+<p>The key components deployed on your EKS cluster are:</p>
+<ul class="simple">
+<li><p>MLRun server (including the feature store and the MLRun graph)</p></li>
+<li><p>MLRun UI</p></li>
+<li><p>Kubeflow pipeline</p></li>
+<li><p>Real time serverless framework (Nuclio)</p></li>
+<li><p>Spark operator</p></li>
+<li><p>Jupyter lab</p></li>
+<li><p>Grafana</p></li>
+</ul>
+</section>
+<section id="configuration-settings">
+<h2>Configuration settings<a class="headerlink" href="#configuration-settings" title="Permalink to this headline">#</a></h2>
+<p>Make sure you are logged in to the correct AWS account.</p>
+<p><strong>Click the AWS icon to deploy MLRun.</strong></p>
+<p><a href="https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateUrl=https%3A%2F%2Fmlrun-ce-cfn.s3.us-east-2.amazonaws.com%2Fquickstart-amazon-eks%2Ftemplates%2Figuazio-mlrun-kit-entrypoint-new-vpc.template.yaml&stackName=MLrun-community&param_AdditionalEKSAdminUserArn=&param_AvailabilityZones%5B%5D=&param_ClusterDomain=&param_DeployMLRunKit=true&param_EKSClusterName=&param_KeyPairName=&param_MLrunKitVersion=&param_NodeInstanceFamily=Standard&param_NodeInstanceType=m5.2xlarge&param_NumberOfAZs=3&param_NumberOfNodes=3&param_ProvisionBastionHost=Disabled&param_RegistryDomainName=index.docker.io&param_RegistryEmail=&param_RegistrySuffix=%2Fv1%2F&param_RegistryUsername=&param_RemoteAccessCIDR="><img alt="../_images/aws_launch_stack.png" src="../_images/aws_launch_stack.png" /></img></a></p>
+<p>After clicking the icon, the browser directs you to the CloudFormation stack page in your AWS account, or redirects you to the AWS login page if you are not currently logged in.</p>
+<blockquote>
+<div><p><strong>Note</strong>: You must fill in fields marked as mandatory (m) for the configuration to complete. Fields marked as optional (o) can be left blank.</p>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p><strong>Stack name</strong> (m)—the name of the stack. You cannot continue if left blank. This field becomes the logical id of the stack. Stack name can include letters (A-Z and a-z), numbers (0-9), and dashes (-).</p></li>
+</ol>
+<p><strong>Parameters</strong></p>
+<ol class="arabic simple" start="2">
+<li><p><strong>EKS cluster name</strong> (m)—the name of EKS cluster created. The EKS cluster is used to run the MLRun services. For example, <code class="docutils literal notranslate"><span class="pre">https://jupyter.&lt;eks_cluster_name&gt;.&lt;route53_domain_name&gt;</span></code></p></li>
+</ol>
+<p><strong>VPC network Configuration</strong></p>
+<ol class="arabic simple" start="3">
+<li><p><strong>Number of Availability Zones</strong> (m)—number of availability zones. The default is set to 3. Choose from the dropdown to change the number. The minimum is 2.</p></li>
+<li><p><strong>Availability zones</strong> (m)—select a zone from the dropdown. The list is based on the region of the instance. The number of zones must match the number of zones Number of Availability Zones.</p></li>
+<li><p><strong>Allowed external access CIDR</strong> (m)—range of IP address allowed to access the cluster. Addresses that are not in this range are will not be able to access the cluster.</p></li>
+</ol>
+<p><strong>Amazon EKS configuration</strong></p>
+<ol class="arabic simple" start="6">
+<li><p><strong>Additional EKS admin ARN (IAM user)</strong> (o)—add an additional admin user to the instance. Users can be added after the stack has been created. For more information see <a class="reference external" href="https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html">Create a kubeconfig for Amazon EKS</a>.</p></li>
+<li><p><strong>Instance type</strong> (m)—select from the dropdown list. The default is m5.2xlarge. For size considerations see <a class="reference external" href="https://aws.amazon.com/ec2/instance-types/">Amazon EC2 Instance Types</a>.</p></li>
+<li><p><strong>Number of Nodes</strong> (m)—number of nodes in the cluster. The minimum must match the number of <strong>Availability Zones</strong>. The number of nodes combined with the <strong>Instance type</strong> determines the AWS infrastructure cost.</p></li>
+</ol>
+<p><strong>Amazon EC2 configuration</strong></p>
+<ol class="arabic simple" start="9">
+<li><p><strong>SSH key name</strong> (m)—select from the stored keys in the dropdown. The list is based on the SSH keys that are in your account. For more information about SSH Keys see <a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">Amazon EC2 key pairs and Linux instances</a>.</p></li>
+<li><p><strong>Provision bastion host</strong> (m)—create a bastion host for SSH access to the Kubernetes nodes. The default is enabled.</p></li>
+</ol>
+<p><strong>Iguazio MLRun configuration</strong></p>
+<ol class="arabic simple" start="11">
+<li><p><strong>Route 53 hosted DNS domain</strong> (m)—enter the name of your registered Route53 domain. <strong>Note:</strong> Only route53 domains are acceptable.</p></li>
+<li><p><strong>The URL of your REDIS database</strong> (o)—the URL of your Redis database. This is only required if you’re using Redis with the online feature store. See <a class="reference external" href="#configure-online-feature-store">how to configure the online feature store</a> for more details.</p></li>
+</ol>
+<p><strong>Other parameters</strong></p>
+<ol class="arabic simple" start="13">
+<li><p><strong>MLrunCeVersion</strong> (m)—the MLRun Community Edition version to install. Leave the default value for the latest CE release.</p></li>
+</ol>
+<p><strong>Capabilities</strong></p>
+<ol class="arabic simple" start="14">
+<li><p>Check all the capabilities boxes (m).</p></li>
+</ol>
+<p>Press <strong>Create Stack</strong> to continue the deployment.
+The stack creates a VPC with an EKS cluster and deploys all the services on top of it.</p>
+<blockquote>
+<div><p><strong>Note</strong>: It could take up to 2 hours for your stack to be created.</p>
+</div></blockquote>
+</section>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">#</a></h2>
+<p>When the stack is complete, go to the <strong>output</strong> tab for the stack you created. There are links for the MLRun UI, Jupyter and the Kubeconfig command.</p>
+<p>It’s recommended to go through the quick-start and the other tutorials as shown in the documentation. These tutorials and demos come built-in with Jupyter under the root folder of Jupyter.</p>
+</section>
+<section id="storage-resources">
+<h2>Storage resources<a class="headerlink" href="#storage-resources" title="Permalink to this headline">#</a></h2>
+<p>When installing the MLRun Community Edition via Cloud Formation, several storage resources are created:</p>
+<ul class="simple">
+<li><p><strong>PVs via AWS storage provider</strong>: Used to hold the file system of the stacks pods, including the MySQL database of MLRun. These are deleted when the stack is uninstalled.</p></li>
+<li><p><strong>S3 Bucket</strong>: A bucket named <code class="docutils literal notranslate"><span class="pre">&lt;EKS</span> <span class="pre">cluster</span> <span class="pre">name&gt;-&lt;Random</span> <span class="pre">string&gt;</span></code> is created in the AWS account that installs the stack (where <code class="docutils literal notranslate"><span class="pre">&lt;EKS</span> <span class="pre">cluster</span> <span class="pre">name&gt;</span></code> is the name of the EKS cluster you chose and <code class="docutils literal notranslate"><span class="pre">&lt;Random</span> <span class="pre">string&gt;</span></code> is part of the CloudFormation stack ID). You can see the bucket name in the output tab of the stack. The bucket is used for MLRun’s artifact storage, and is not deleted when uninstalling the stack. The user must empty the bucket and delete it.</p></li>
+<li><p><strong>Container Images in ECR</strong>: When building and deploying MLRun and Nuclio functions via the MLRun Community Edition, the function images are stored in an ECR belonging to the AWS account that installs the stack. These images persist in the account’s ECR and are not deleted either.</p></li>
+</ul>
+<a id="configure-online-feature-store"/>
+</section>
+<section id="how-to-configure-the-online-feature-store">
+<h2>How to configure the online feature store<a class="headerlink" href="#how-to-configure-the-online-feature-store" title="Permalink to this headline">#</a></h2>
+<p>The feature store can store data on a fast key value database table for quick serving. This online feature store capability requires an external key value database.</p>
+<p>Currently the MLRun feature store supports the following options:</p>
+<ul class="simple">
+<li><p>Redis</p></li>
+<li><p>Iguazio key value database</p></li>
+</ul>
+<p>To use Redis, you must install Redis separately and provide the Redis URL when configuring the AWS CloudFormation stack. Refer to the <a class="reference external" href="https://redis.io/docs/getting-started/">Redis getting-started page</a> for information about Redis installation.</p>
+</section>
+<section id="streaming-support">
+<h2>Streaming support<a class="headerlink" href="#streaming-support" title="Permalink to this headline">#</a></h2>
+<p>For online serving, it is often convenient to use MLRun graph with a streaming engine. This allows managing queues between steps and functions.
+MLRun supports Kafka streams as well as Iguazio V3IO streams.
+See the examples on how to configure the MLRun serving graph with <a class="reference internal" href="../serving/model-serving-get-started.html#serving-kafka-stream-example"><span class="std std-ref">kafka</span></a> and <a class="reference internal" href="../serving/model-serving-get-started.html#serving-v3io-stream-example"><span class="std std-ref">V3IO</span></a>.</p>
+</section>
+<section id="cleanup">
+<h2>Cleanup<a class="headerlink" href="#cleanup" title="Permalink to this headline">#</a></h2>
+<p>To free up the resources used by MLRun:</p>
+<ul class="simple">
+<li><p>Delete the stack. See <a class="reference external" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-delete-stack.html">instructions for deleting a stack on the AWS CloudFormation console</a> for more details.</p></li>
+<li><p>Delete the S3 bucket that begins with the same name as your EKS cluster. The S3 bucket name is available in the CloudFormation stack output tab.</p></li>
+<li><p>Delete any remaining images in ECR.</p></li>
+</ul>
+<p>You may also need to check any external storage that you used.</p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="kubernetes.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Install MLRun on Kubernetes</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="remote.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Set up your client environment <!-- omit in toc --></p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Iguazio<br/>
+  
+      &copy; Copyright 2022, Iguazio.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+
+<div class="footer"><!-- This page uses <a href="https://analytics.google.com/">
+Google Analytics</a> to collect statistics. You can disable it by blocking
+the JavaScript coming from www.google-analytics.com. -->
+
+</div>
+
+  </body>
+</html>

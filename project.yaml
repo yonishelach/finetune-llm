@@ -1,0 +1,11 @@
+kind: project
+metadata:
+  name: learn-docs-dev-admin
+spec:
+  functions: []
+  workflows: []
+  artifacts: []
+  conda: ''
+  source: git://github.com/yonishelach/learn-docs.git#refs/heads/main
+  origin_url: git://github.com/yonishelach/learn-docs.git#refs/heads/main
+  desired_state: online

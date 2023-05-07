@@ -1,0 +1,2008 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>mlrun.serving</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="/_/static/css/badge_only.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="/_/static/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="canonical" href="https://docs.mlrun.org/en/stable/api/mlrun.serving.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="storey.transformations - Graph transformations" href="storey.transformations.html" />
+    <link rel="prev" title="mlrun.runtimes" href="mlrun.runtimes.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MV26G85');</script>
+<!-- End Google Tag Manager -->
+
+
+  
+<!-- RTD Extra Head -->
+
+<link rel="stylesheet" href="/_/static/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2022-12-01T09:20:10Z", "builder": "sphinx", "canonical_url": null, "commit": "9933138d", "docroot": "/docs/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "api/mlrun.serving", "programming_language": "py", "project": "mlrun", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {}, "theme": "sphinx_book_theme", "user_analytics_code": "UA-101852366-5", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="/_/static/javascript/readthedocs-analytics.js" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+</head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/MLRun_Character.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLRun basics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Using MLRun
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     MLRun architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mlops-dev-flow.html">
+   MLOps development workflow
+   <!-- omit in toc -->
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../tutorial/index.html">
+   Tutorials and Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/01-mlrun-basics.html">
+     Quick start tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/02-model-training.html">
+     Train, compare, and register models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/03-model-serving.html">
+     Serving pre-trained ML/DL models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/04-pipeline.html">
+     Projects and automated ML pipeline
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/05-model-monitoring.html">
+     Model monitoring and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/06-add-mlops-to-code.html">
+     Add MLOps to existing code
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/07-batch-infer.html">
+     Batch inference and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/basic-demo.html">
+     Feature store example (stocks)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference external" href="https://github.com/mlrun/demos">
+     MLRun demos repository
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../install.html">
+   Installation and setup guide
+   <!-- omit in toc -->
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/local-docker.html">
+     Install MLRun locally using Docker
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/kubernetes.html">
+     Install MLRun on Kubernetes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/aws-install.html">
+     Install MLRun on AWS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/remote.html">
+     Set up your client environment
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core components
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../projects/project.html">
+   Projects and automation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/create-project.html">
+     Create, save, and use projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/load-project.html">
+     Load and run projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/run-build-deploy.html">
+     Run, build, and deploy functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/build-run-workflows-pipelines.html">
+     Build and run workflows/pipelines
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/ci-integration.html">
+     CI/CD integration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../secrets.html">
+     Working with secrets
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../runtimes/functions.html">
+   Serverless functions
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/functions-architecture.html">
+     Functions architecture
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../concepts/functions-overview.html">
+     Kinds of functions (runtimes)
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../runtimes/dask-overview.html">
+       Dask distributed runtime
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-mlrun.html">
+         Running Dask on the cluster with mlrun
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-pipeline.html">
+         Pipelines using Dask, Kubeflow and MLRun
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/horovod.html">
+       MPIJob and Horovod runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/spark-operator.html">
+       Spark Operator runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/nuclio-real-time-functions.html">
+       Nuclio real-time functions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/create-and-use-functions.html">
+     Create and use functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/mlrun_code_annotations.html">
+     Converting notebooks to function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/function-storage.html">
+     Attach storage to functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/images.html">
+     Images and their usage in MLRun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/image-build.html">
+     Build function image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/node-affinity.html">
+     Node affinity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/configuring-job-resources.html">
+     Managing job resources
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/load-from-hub.html">
+     Function Hub
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/data.html">
+   Data and artifacts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/datastore.html">
+     Data stores
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/data-items.html">
+     Data items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/artifacts.html">
+     Artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/models.html">
+     Model Artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../feature-store/feature-store.html">
+   Feature store
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-store-overview.html">
+     Feature store overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-sets.html">
+     Feature sets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/transformations.html">
+     Feature set transformations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-vectors.html">
+     Creating and using feature vectors
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../feature-store/end-to-end-demo/index.html">
+     Feature store end-to-end demo
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/01-ingest-datasources.html">
+       Part 1: Data Ingestion
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/02-create-training-model.html">
+       Part 2: Training
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/03-deploy-serving-model.html">
+       Part 3: Serving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/04-pipeline.html">
+       Part 4: Automated ML pipeline
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/runs-workflows.html">
+   Batch runs and workflows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/mlrun-execution-context.html">
+     MLRun execution context
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/decorators-and-auto-logging.html">
+     Decorators and auto-logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/submitting-tasks-jobs-to-functions.html">
+     Running a task (job)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/workflow-overview.html">
+     Running a multi-stage workflow
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/scheduled-jobs.html">
+     Scheduled jobs and workflows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../serving/serving-graph.html">
+   Real-time serving pipelines (graphs)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/getting-started.html">
+     Getting started
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/use-cases.html">
+     Use cases
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/realtime-pipelines.html">
+     Graph concepts and state machine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/model-serving-get-started.html">
+     Model serving graph
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/writing-custom-steps.html">
+     Writing custom steps
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/available-steps.html">
+     Built-in steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/demos.html">
+     Demos and tutorials
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/distributed-graph.html">
+       Distributed (multi-function) pipeline example
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/graph-example.html">
+       Advanced model serving graph - notebook example
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/graph-ha-cfg.html">
+     Serving graph high availability configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/pipelines-error-handling.html">
+     Error handling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/monitoring.html">
+   Model monitoring
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLOps tasks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data-prep/index.html">
+   Ingest and process data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingesting_data.html">
+     Using data sources and items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/logging_datasets.html">
+     Logging datasets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/spark-operator.html">
+     Spark Operator runtime
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingest-data-fs.html">
+     Ingest data using the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/using-spark-engine.html">
+     Ingest features with Spark
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../development/index.html">
+   Develop and train models
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../development/model-training-tracking.html">
+     Model training and tracking
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/create-a-basic-training-job.html">
+       Create a basic training job
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/working-with-data-and-model-artifacts.html">
+       Working with data and model artifacts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/auto-logging-mlops.html">
+       Automated experiment tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/built-in-training-function.html">
+       Using the built-in training function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../hyper-params.html">
+       Hyperparameter tuning optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/retrieve-offline-data.html">
+     Training with the feature store
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../deployment/index.html">
+   Deploy models and applications
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/serving-overview.html">
+     Real-time deployment
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/built-in-model-serving.html">
+       Using built-in model serving classes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/custom-model-serving-class.html">
+       Build your own model serving class
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/test-deploy-model-server.html">
+       Test and deploy a model server
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/model-api.html">
+       Model serving API
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/training-serving.html">
+     Serving with the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../deployment/batch_inference.html">
+     Batch inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/canary.html">
+     Canary and rolling upgrades
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../monitoring/index.html">
+   Monitor and alert
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/model-monitoring-deployment.html">
+     Model monitoring overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/initial-setup-configuration.html">
+     Enable model monitoring
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../genindex.html">
+   API index
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   API by module
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+  <label for="toctree-checkbox-20">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="mlrun.frameworks/index.html">
+     mlrun.frameworks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="mlrun.frameworks/mlrun.frameworks.auto_mlrun.html">
+       AutoMLRun
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="mlrun.frameworks/mlrun.frameworks.tf_keras.html">
+       TensorFlow.Keras
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="mlrun.frameworks/mlrun.frameworks.pytorch.html">
+       PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="mlrun.frameworks/mlrun.frameworks.sklearn.html">
+       SciKit-Learn
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="mlrun.frameworks/mlrun.frameworks.xgboost.html">
+       XGBoost
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="mlrun.frameworks/mlrun.frameworks.lgbm.html">
+       LightGBM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.html">
+     mlrun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.artifacts.html">
+     mlrun.artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.config.html">
+     mlrun.config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.datastore.html">
+     mlrun.datastore
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.db.html">
+     mlrun.db
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.execution.html">
+     mlrun.execution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.feature_store.html">
+     mlrun.feature_store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.model.html">
+     mlrun.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.platforms.html">
+     mlrun.platforms
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.projects.html">
+     mlrun.projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.run.html">
+     mlrun.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun.runtimes.html">
+     mlrun.runtimes
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     mlrun.serving
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="storey.transformations.html">
+     storey.transformations - Graph transformations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli.html">
+   Command-Line Interface
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            By <a href="https://www.iguazio.com/">Iguazio</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/mlrun/mlrun"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/issues/new?title=Issue%20on%20page%20%2Fapi/mlrun.serving.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/edit/development/docs/api/mlrun.serving.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/api/mlrun.serving.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>mlrun.serving</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="module-mlrun.serving">
+<span id="mlrun-serving"></span><h1>mlrun.serving<a class="headerlink" href="#module-mlrun.serving" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.GraphContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">GraphContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nuclio_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphContext" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Graph context object</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphContext.get_param">
+<span class="sig-name descname"><span class="pre">get_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphContext.get_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphContext.get_param" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphContext.get_remote_endpoint">
+<span class="sig-name descname"><span class="pre">get_remote_endpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">external</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphContext.get_remote_endpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphContext.get_remote_endpoint" title="Permalink to this definition">#</a></dt>
+<dd><p>return the remote nuclio/serving function http(s) endpoint given its name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the function name/uri in the form [project/]function-name[:tag]</p></li>
+<li><p><strong>external</strong> – return the external url (returns the external url by default)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphContext.get_secret">
+<span class="sig-name descname"><span class="pre">get_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphContext.get_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphContext.get_secret" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mlrun.serving.GraphContext.project">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">project</span></span><a class="headerlink" href="#mlrun.serving.GraphContext.project" title="Permalink to this definition">#</a></dt>
+<dd><p>current project name (for the current function)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphContext.push_error">
+<span class="sig-name descname"><span class="pre">push_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphContext.push_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphContext.push_error" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mlrun.serving.GraphContext.server">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">server</span></span><a class="headerlink" href="#mlrun.serving.GraphContext.server" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">GraphServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">functions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_stream</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_models</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracking_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_sources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_content_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mlrun.model.ModelObj</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.graph">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">graph</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">mlrun.serving.states.RootFlowStep</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#mlrun.serving.RouterStep" title="mlrun.serving.states.RouterStep"><span class="pre">mlrun.serving.states.RouterStep</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#mlrun.serving.GraphServer.graph" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.init_object">
+<span class="sig-name descname"><span class="pre">init_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer.init_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer.init_object" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.init_states">
+<span class="sig-name descname"><span class="pre">init_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">mlrun.datastore.store_resources.ResourceCache</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_mock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer.init_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer.init_states" title="Permalink to this definition">#</a></dt>
+<dd><p>for internal use, initialize all steps (recursively)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'server'</span></em><a class="headerlink" href="#mlrun.serving.GraphServer.kind" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer.run" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.set_current_function">
+<span class="sig-name descname"><span class="pre">set_current_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer.set_current_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer.set_current_function" title="Permalink to this definition">#</a></dt>
+<dd><p>set which child function this server is currently running on</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.set_error_stream">
+<span class="sig-name descname"><span class="pre">set_error_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_stream</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer.set_error_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer.set_error_stream" title="Permalink to this definition">#</a></dt>
+<dd><p>set/initialize the error notification stream</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.test">
+<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">mlrun.serving.server.MockTrigger</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer.test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer.test" title="Permalink to this definition">#</a></dt>
+<dd><p>invoke a test event into the server to simulate/test server behavior</p>
+<p>example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="o">=</span> <span class="n">create_graph_server</span><span class="p">()</span>
+<span class="n">server</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="s2">&quot;my&quot;</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="n">MyModelClass</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{path}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">server</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="s2">&quot;my/infer&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – api path, e.g. (/{router.url_prefix}/{model-name}/..) path</p></li>
+<li><p><strong>body</strong> – message body (dict or json str/bytes)</p></li>
+<li><p><strong>method</strong> – optional, GET, POST, ..</p></li>
+<li><p><strong>headers</strong> – optional, request headers, ..</p></li>
+<li><p><strong>content_type</strong> – optional, http mime type</p></li>
+<li><p><strong>silent</strong> – don’t raise on error responses (when not 20X)</p></li>
+<li><p><strong>get_body</strong> – return the body as py object (vs serialize response into json)</p></li>
+<li><p><strong>event_id</strong> – specify the unique event ID (by default a random value will be generated)</p></li>
+<li><p><strong>trigger</strong> – nuclio trigger info or mlrun.serving.server.MockTrigger class (holds kind and name)</p></li>
+<li><p><strong>offset</strong> – trigger offset (for streams)</p></li>
+<li><p><strong>time</strong> – event time Datetime or str, default to now()</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.GraphServer.wait_for_completion">
+<span class="sig-name descname"><span class="pre">wait_for_completion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/server.html#GraphServer.wait_for_completion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.GraphServer.wait_for_completion" title="Permalink to this definition">#</a></dt>
+<dd><p>wait for async operation to complete</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.QueueStep">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">QueueStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shards</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retention_in_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#QueueStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.QueueStep" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mlrun.serving.states.BaseStep</span></code></p>
+<p>queue step, implement an async queue or represent a stream</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="mlrun.serving.QueueStep.async_object">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">async_object</span></span><a class="headerlink" href="#mlrun.serving.QueueStep.async_object" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mlrun.serving.QueueStep.default_shape">
+<span class="sig-name descname"><span class="pre">default_shape</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cds'</span></em><a class="headerlink" href="#mlrun.serving.QueueStep.default_shape" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.QueueStep.init_object">
+<span class="sig-name descname"><span class="pre">init_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#QueueStep.init_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.QueueStep.init_object" title="Permalink to this definition">#</a></dt>
+<dd><p>init the step class</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mlrun.serving.QueueStep.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'queue'</span></em><a class="headerlink" href="#mlrun.serving.QueueStep.kind" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.QueueStep.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#QueueStep.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.QueueStep.run" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">RouterStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">routes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#RouterStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.RouterStep" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mlrun.serving.TaskStep" title="mlrun.serving.states.TaskStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">mlrun.serving.states.TaskStep</span></code></a></p>
+<p>router step, implement routing logic for running child routes</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.add_route">
+<span class="sig-name descname"><span class="pre">add_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">class_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#RouterStep.add_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.RouterStep.add_route" title="Permalink to this definition">#</a></dt>
+<dd><p>add child route step or class to the router</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – unique name (and route path) for the child step</p></li>
+<li><p><strong>route</strong> – child step object (Task, ..)</p></li>
+<li><p><strong>class_name</strong> – class name to build the route step from (when route is not provided)</p></li>
+<li><p><strong>class_args</strong> – class init arguments</p></li>
+<li><p><strong>handler</strong> – class handler to invoke on run/event</p></li>
+<li><p><strong>function</strong> – function this step should run in</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.clear_children">
+<span class="sig-name descname"><span class="pre">clear_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">routes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#RouterStep.clear_children"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.RouterStep.clear_children" title="Permalink to this definition">#</a></dt>
+<dd><p>clear child steps (routes)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.default_shape">
+<span class="sig-name descname"><span class="pre">default_shape</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'doubleoctagon'</span></em><a class="headerlink" href="#mlrun.serving.RouterStep.default_shape" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.get_children">
+<span class="sig-name descname"><span class="pre">get_children</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#RouterStep.get_children"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.RouterStep.get_children" title="Permalink to this definition">#</a></dt>
+<dd><p>get child steps (routes)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.init_object">
+<span class="sig-name descname"><span class="pre">init_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#RouterStep.init_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.RouterStep.init_object" title="Permalink to this definition">#</a></dt>
+<dd><p>init the step class</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'router'</span></em><a class="headerlink" href="#mlrun.serving.RouterStep.kind" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#RouterStep.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.RouterStep.plot" title="Permalink to this definition">#</a></dt>
+<dd><p>plot/save graph using graphviz</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – target filepath for the image (None for the notebook)</p></li>
+<li><p><strong>format</strong> – The output format used for rendering (<code class="docutils literal notranslate"><span class="pre">'pdf'</span></code>, <code class="docutils literal notranslate"><span class="pre">'png'</span></code>, etc.)</p></li>
+<li><p><strong>source</strong> – source step to add to the graph</p></li>
+<li><p><strong>kw</strong> – kwargs passed to graphviz, e.g. rankdir=”LR” (see: <a class="reference external" href="https://graphviz.org/doc/info/attrs.html">https://graphviz.org/doc/info/attrs.html</a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>graphviz graph object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mlrun.serving.RouterStep.routes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">routes</span></span><a class="headerlink" href="#mlrun.serving.RouterStep.routes" title="Permalink to this definition">#</a></dt>
+<dd><p>child routes/steps, traffic is routed to routes based on router logic</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.TaskStep">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">TaskStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">responder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#TaskStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.TaskStep" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mlrun.serving.states.BaseStep</span></code></p>
+<p>task execution step, runs a class or handler</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="mlrun.serving.TaskStep.async_object">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">async_object</span></span><a class="headerlink" href="#mlrun.serving.TaskStep.async_object" title="Permalink to this definition">#</a></dt>
+<dd><p>return the sync or async (storey) class instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.TaskStep.clear_object">
+<span class="sig-name descname"><span class="pre">clear_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#TaskStep.clear_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.TaskStep.clear_object" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.TaskStep.init_object">
+<span class="sig-name descname"><span class="pre">init_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#TaskStep.init_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.TaskStep.init_object" title="Permalink to this definition">#</a></dt>
+<dd><p>init the step class</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mlrun.serving.TaskStep.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'task'</span></em><a class="headerlink" href="#mlrun.serving.TaskStep.kind" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.TaskStep.respond">
+<span class="sig-name descname"><span class="pre">respond</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#TaskStep.respond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.TaskStep.respond" title="Permalink to this definition">#</a></dt>
+<dd><p>mark this step as the responder.</p>
+<p>step output will be returned as the flow result, no other step can follow</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.TaskStep.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/states.html#TaskStep.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.TaskStep.run" title="Permalink to this definition">#</a></dt>
+<dd><p>run this step, in async flows the run is done through storey</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">V2ModelServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mlrun.serving.utils.StepToDict</span></code></p>
+<p>base model serving class (v2), using similar API to KFServing v2 and Triton</p>
+<p>base model serving class (v2), using similar API to KFServing v2 and Triton</p>
+<p>The class is initialized automatically by the model server and can run locally
+as part of a nuclio serverless function, or as part of a real-time pipeline
+default model url is: /v2/models/&lt;model&gt;[/versions/&lt;ver&gt;]/operation</p>
+<dl class="simple">
+<dt>You need to implement two mandatory methods:</dt><dd><p>load()     - download the model file(s) and load the model into memory
+predict()  - accept request payload and return prediction/inference results</p>
+</dd>
+</dl>
+<p>you can override additional methods : preprocess, validate, postprocess, explain
+you can add custom api endpoint by adding method op_xx(event), will be invoked by
+calling the &lt;model-url&gt;/xx (operation = xx)</p>
+<p>model server classes are subclassed (subclass implements the <cite>load()</cite> and <cite>predict()</cite> methods)
+the subclass can be added to a serving graph or to a model router</p>
+<p>defining a sub class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">V2ModelServer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># load and initialize the model and/or other elements</span>
+        <span class="n">model_file</span><span class="p">,</span> <span class="n">extra_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">model_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">])</span>
+        <span class="n">dmatrix</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dmatrix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">tolist</span><span class="p">()}</span>
+</pre></div>
+</div>
+<p>usage example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># adding a model to a serving graph using the subclass MyClass</span>
+<span class="c1"># MyClass will be initialized with the name &quot;my&quot;, the model_path, and an arg called my_param</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">set_topology</span><span class="p">(</span><span class="s2">&quot;router&quot;</span><span class="p">)</span>
+<span class="n">fn</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="s2">&quot;my&quot;</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;MyClass&quot;</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;&lt;model-uri&gt;&gt;&quot;</span><span class="p">,</span> <span class="n">my_param</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – for internal use (passed in init)</p></li>
+<li><p><strong>name</strong> – step name</p></li>
+<li><p><strong>model_path</strong> – model file/dir or artifact path</p></li>
+<li><p><strong>model</strong> – model object (for local testing)</p></li>
+<li><p><strong>protocol</strong> – serving API protocol (default “v2”)</p></li>
+<li><p><strong>input_path</strong> – when specified selects the key/path in the event to use as body
+this require that the event body will behave like a dict, example:
+event: {“data”: {“a”: 5, “b”: 7}}, input_path=”data.b” means request body will be 7</p></li>
+<li><p><strong>result_path</strong> – selects the key/path in the event to write the results to
+this require that the event body will behave like a dict, example:
+event: {“x”: 5} , result_path=”resp” means the returned response will be written
+to event[“y”] resulting in {“x”: 5, “resp”: &lt;result&gt;}</p></li>
+<li><p><strong>kwargs</strong> – extra arguments (can be accessed using self.get_param(key))</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.do_event">
+<span class="sig-name descname"><span class="pre">do_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.do_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.do_event" title="Permalink to this definition">#</a></dt>
+<dd><p>main model event handler method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.explain">
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.explain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.explain" title="Permalink to this definition">#</a></dt>
+<dd><p>model explain operation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.get_model">
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.get_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.get_model" title="Permalink to this definition">#</a></dt>
+<dd><p>get the model file(s) and metadata from model store</p>
+<p>the method returns a path to the model file and the extra data (dict of dataitem objects)
+it also loads the model metadata into the self.model_spec attribute, allowing direct access
+to all the model metadata attributes.</p>
+<p>get_model is usually used in the model .load() method to init the model
+.. rubric:: Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">model_file</span><span class="p">,</span> <span class="n">extra_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">model_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">extra_data</span><span class="p">[</span><span class="s1">&#39;categories&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>suffix</strong> (<em>str</em>) – optional, model file suffix (when the model_path is a directory)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – (local) model file</p></li>
+<li><p><em>dict</em> – extra dataitems dictionary</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.get_param">
+<span class="sig-name descname"><span class="pre">get_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.get_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.get_param" title="Permalink to this definition">#</a></dt>
+<dd><p>get param by key (specified in the model or the function)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.load" title="Permalink to this definition">#</a></dt>
+<dd><p>model loading function, see also .get_model() method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.logged_results">
+<span class="sig-name descname"><span class="pre">logged_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.logged_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.logged_results" title="Permalink to this definition">#</a></dt>
+<dd><p>hook for controlling which results are tracked by the model monitoring</p>
+<p>this hook allows controlling which input/output data is logged by the model monitoring
+allow filtering out columns or adding custom values, can also be used to monitor derived metrics
+for example in image classification calculate and track the RGB values vs the image bitmap</p>
+<p>the request[“inputs”] holds a list of input values/arrays, the response[“outputs”] holds a list of
+corresponding output values/arrays (the schema of the input/output fields is stored in the model object),
+this method should return lists of alternative inputs and outputs which will be monitored</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – predict/explain request, see model serving docs for details</p></li>
+<li><p><strong>response</strong> – result from the model predict/explain (after postprocess())</p></li>
+<li><p><strong>op</strong> – operation (predict/infer or explain)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the input and output lists to track</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.post_init">
+<span class="sig-name descname"><span class="pre">post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.post_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.post_init" title="Permalink to this definition">#</a></dt>
+<dd><p>sync/async model loading, for internal use</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.postprocess">
+<span class="sig-name descname"><span class="pre">postprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.postprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.postprocess" title="Permalink to this definition">#</a></dt>
+<dd><p>postprocess, before returning response</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.predict" title="Permalink to this definition">#</a></dt>
+<dd><p>model prediction operation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.preprocess" title="Permalink to this definition">#</a></dt>
+<dd><p>preprocess the event body before validate and action</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.set_metric">
+<span class="sig-name descname"><span class="pre">set_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.set_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.set_metric" title="Permalink to this definition">#</a></dt>
+<dd><p>set real time metric (for model monitoring)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.V2ModelServer.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/v2_serving.html#V2ModelServer.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.V2ModelServer.validate" title="Permalink to this definition">#</a></dt>
+<dd><p>validate the event body (after preprocess)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.VotingEnsemble">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">VotingEnsemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">routes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">health_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vote_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_col_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/routers.html#VotingEnsemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.VotingEnsemble" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mlrun.serving.routers.BaseModelRouter</span></code></p>
+<p>Voting Ensemble</p>
+<p>The <cite>VotingEnsemble</cite> class enables you to apply prediction logic on top of
+the different added models.</p>
+<p>You can use it by calling:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>&lt;prefix&gt;/&lt;model&gt;[/versions/&lt;ver&gt;]/operation</cite></dt><dd><p>Sends the event to the specific &lt;model&gt;[/versions/&lt;ver&gt;]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>&lt;prefix&gt;/operation</cite></dt><dd><p>Sends the event to all models and applies <cite>vote(self, event)</cite></p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The <cite>VotingEnsemble</cite> applies the following logic:
+Incoming Event -&gt; Router Preprocessing -&gt; Send to model/s -&gt;
+Apply all model/s logic (Preprocessing -&gt; Prediction -&gt; Postprocessing) -&gt;
+Router Voting logic -&gt; Router Postprocessing -&gt; Response</p>
+<p>This enables you to do the general preprocessing and postprocessing steps
+once on the router level, with only model-specific adjustments at the
+model level.</p>
+<blockquote>
+<div><p>When enabling model tracking via <cite>set_tracking()</cite> the ensemble logic
+predictions will appear with model name as the given VotingEnsemble name
+or “VotingEnsemble” by default.</p>
+</div></blockquote>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a serving function</span>
+<span class="c1"># Note: You can point the function to a file containing you own Router or Classifier Model class</span>
+<span class="c1">#       this basic class supports sklearn based models (with `&lt;model&gt;.predict()` api)</span>
+<span class="n">fn</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">code_to_function</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ensemble&#39;</span><span class="p">,</span>
+                            <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span>
+                            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;model-server.py&#39;</span>
+                            <span class="n">image</span><span class="o">=</span><span class="s1">&#39;mlrun/ml-models&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set the router class</span>
+<span class="c1"># You can set your own classes by simply changing the `class_name`</span>
+<span class="n">fn</span><span class="o">.</span><span class="n">set_topology</span><span class="p">(</span><span class="n">class_name</span><span class="o">=</span><span class="s1">&#39;mlrun.serving.routers.VotingEnsemble&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add models</span>
+<span class="n">fn</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="o">&lt;</span><span class="n">model_name</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">model_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">model_class_name</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="n">fn</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="o">&lt;</span><span class="n">model_name</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">model_path</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">model_class_name</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>How to extend the VotingEnsemble:</p>
+<p>The VotingEnsemble applies its logic using the <cite>logic(predictions)</cite> function.
+The <cite>logic()</cite> function receives an array of (# samples, # predictors) which you
+can then use to apply whatever logic you may need.</p>
+<p>If we use this <cite>VotingEnsemble</cite> as an example, the <cite>logic()</cite> function tries to figure
+out whether you are trying to do a <strong>classification</strong> or a <strong>regression</strong> prediction by
+the prediction type or by the given <cite>vote_type</cite> parameter.  Then we apply the appropriate
+<cite>max_vote()</cite> or <cite>mean_vote()</cite> which calculates the actual prediction result and returns it
+as the VotingEnsemble’s prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> – for internal use (passed in init)</p></li>
+<li><p><strong>name</strong> – step name</p></li>
+<li><p><strong>routes</strong> – for internal use (routes passed in init)</p></li>
+<li><p><strong>protocol</strong> – serving API protocol (default “v2”)</p></li>
+<li><p><strong>url_prefix</strong> – url prefix for the router (default /v2/models)</p></li>
+<li><p><strong>health_prefix</strong> – health api url prefix (default /v2/health)</p></li>
+<li><p><strong>input_path</strong> – when specified selects the key/path in the event to use as body
+this require that the event body will behave like a dict, example:
+event: {“data”: {“a”: 5, “b”: 7}}, input_path=”data.b” means request body will be 7</p></li>
+<li><p><strong>result_path</strong> – selects the key/path in the event to write the results to
+this require that the event body will behave like a dict, example:
+event: {“x”: 5} , result_path=”resp” means the returned response will be written
+to event[“y”] resulting in {“x”: 5, “resp”: &lt;result&gt;}</p></li>
+<li><p><strong>vote_type</strong> – Voting type to be used (from <cite>VotingTypes</cite>).
+by default will try to self-deduct upon the first event:
+- float prediction type: regression
+- int prediction type: classification</p></li>
+<li><p><strong>executor_type</strong> – Parallelism mechanism, out of <cite>ParallelRunnerModes</cite>, by default <cite>threads</cite></p></li>
+<li><p><strong>prediction_col_name</strong> – The dict key for the predictions column in the model’s responses output.
+Example: If the model returns
+<cite>{id: &lt;id&gt;, model_name: &lt;name&gt;, outputs: {…, prediction: [&lt;predictions&gt;], …}}</cite>
+the prediction_col_name should be <cite>prediction</cite>.
+by default, <cite>prediction</cite></p></li>
+<li><p><strong>kwargs</strong> – extra arguments</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.VotingEnsemble.do_event">
+<span class="sig-name descname"><span class="pre">do_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/routers.html#VotingEnsemble.do_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.VotingEnsemble.do_event" title="Permalink to this definition">#</a></dt>
+<dd><p>Handles incoming requests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>nuclio.Event</em>) – Incoming request as a nuclio.Event.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Event response after running the requested logic</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.VotingEnsemble.extract_results_from_response">
+<span class="sig-name descname"><span class="pre">extract_results_from_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/routers.html#VotingEnsemble.extract_results_from_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.VotingEnsemble.extract_results_from_response" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts the prediction from the model response.
+This function is used to allow multiple model return types. and allow for easy
+extension to the user’s ensemble and models best practices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>response</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><em>Dict</em><em>]</em>) – The model response’s <cite>output</cite> field.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The model’s predictions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.VotingEnsemble.logic">
+<span class="sig-name descname"><span class="pre">logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/routers.html#VotingEnsemble.logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.VotingEnsemble.logic" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.VotingEnsemble.post_init">
+<span class="sig-name descname"><span class="pre">post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sync'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/routers.html#VotingEnsemble.post_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.VotingEnsemble.post_init" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.VotingEnsemble.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/routers.html#VotingEnsemble.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.VotingEnsemble.validate" title="Permalink to this definition">#</a></dt>
+<dd><p>Validate the event body (after preprocessing)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>dict</em>) – Event body.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Event body after validation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Exception</strong> – <cite>inputs</cite> key not found in <cite>request</cite></p></li>
+<li><p><strong>Exception</strong> – <cite>inputs</cite> should be of type List</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlrun.serving.create_graph_server">
+<span class="sig-prename descclassname"><span class="pre">mlrun.serving.</span></span><span class="sig-name descname"><span class="pre">create_graph_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#mlrun.serving.GraphServer" title="mlrun.serving.server.GraphServer"><span class="pre">mlrun.serving.server.GraphServer</span></a></span></span><a class="reference internal" href="../_modules/mlrun/serving/server.html#create_graph_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.create_graph_server" title="Permalink to this definition">#</a></dt>
+<dd><p>create graph server host/emulator for local or test runs</p>
+<p>Usage example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="o">=</span> <span class="n">create_graph_server</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">RouterStep</span><span class="p">(),</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{})</span>
+<span class="n">server</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span>
+<span class="n">server</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">add_route</span><span class="p">(</span><span class="s2">&quot;my&quot;</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="n">MyModelClass</span><span class="p">,</span> <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{path}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">server</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="s2">&quot;/v2/models/my/infer&quot;</span><span class="p">,</span> <span class="n">testdata</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="module-mlrun.serving.remote"></span><dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.remote.BatchHttpRequests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.remote.</span></span><span class="sig-name descname"><span class="pre">BatchHttpRequests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backoff_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/remote.html#BatchHttpRequests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.remote.BatchHttpRequests" title="Permalink to this definition">#</a></dt>
+<dd><p>class for calling remote endpoints in parallel</p>
+<p>class for calling remote endpoints in parallel</p>
+<p>sync and async graph step implementation for request/resp to remote service (class shortcut = “$remote”)
+url can be an http(s) url (e.g. “<a class="reference external" href="https://myservice/path">https://myservice/path</a>”) or an mlrun function uri ([project/]name).
+alternatively the url_expression can be specified to build the url from the event (e.g. “event[‘url’]”).</p>
+<p>example pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">new_function</span><span class="p">(</span><span class="s2">&quot;myfunc&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;serving&quot;</span><span class="p">)</span>
+<span class="n">flow</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">set_topology</span><span class="p">(</span><span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;async&quot;</span><span class="p">)</span>
+<span class="n">flow</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+    <span class="n">BatchHttpRequests</span><span class="p">(</span>
+        <span class="n">url_expression</span><span class="o">=</span><span class="s2">&quot;event[&#39;url&#39;]&quot;</span><span class="p">,</span>
+        <span class="n">body_expression</span><span class="o">=</span><span class="s2">&quot;event[&#39;data&#39;]&quot;</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+        <span class="n">input_path</span><span class="o">=</span><span class="s2">&quot;req&quot;</span><span class="p">,</span>
+        <span class="n">result_path</span><span class="o">=</span><span class="s2">&quot;resp&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">()</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">to_mock_server</span><span class="p">()</span>
+<span class="c1"># request contains a list of elements, each with url and data</span>
+<span class="n">request</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – http(s) url or function [project/]name to call</p></li>
+<li><p><strong>subpath</strong> – path (which follows the url)</p></li>
+<li><p><strong>method</strong> – HTTP method (GET, POST, ..), default to POST</p></li>
+<li><p><strong>headers</strong> – dictionary with http header values</p></li>
+<li><p><strong>url_expression</strong> – an expression for getting the url from the event, e.g. “event[‘url’]”</p></li>
+<li><p><strong>body_expression</strong> – an expression for getting the request body from the event, e.g. “event[‘data’]”</p></li>
+<li><p><strong>return_json</strong> – indicate the returned value is json, and convert it to a py object</p></li>
+<li><p><strong>input_path</strong> – when specified selects the key/path in the event to use as body
+this require that the event body will behave like a dict, example:
+event: {“data”: {“a”: 5, “b”: 7}}, input_path=”data.b” means request body will be 7</p></li>
+<li><p><strong>result_path</strong> – selects the key/path in the event to write the results to
+this require that the event body will behave like a dict, example:
+event: {“x”: 5} , result_path=”resp” means the returned response will be written
+to event[“y”] resulting in {“x”: 5, “resp”: &lt;result&gt;}</p></li>
+<li><p><strong>retries</strong> – number of retries (in exponential backoff)</p></li>
+<li><p><strong>backoff_factor</strong> – A backoff factor in seconds to apply between attempts after the second try</p></li>
+<li><p><strong>timeout</strong> – How long to wait for the server to send data before giving up, float in seconds</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.remote.BatchHttpRequests.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backoff_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/remote.html#BatchHttpRequests.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.remote.BatchHttpRequests.__init__" title="Permalink to this definition">#</a></dt>
+<dd><p>class for calling remote endpoints in parallel</p>
+<p>sync and async graph step implementation for request/resp to remote service (class shortcut = “$remote”)
+url can be an http(s) url (e.g. “<a class="reference external" href="https://myservice/path">https://myservice/path</a>”) or an mlrun function uri ([project/]name).
+alternatively the url_expression can be specified to build the url from the event (e.g. “event[‘url’]”).</p>
+<p>example pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">new_function</span><span class="p">(</span><span class="s2">&quot;myfunc&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;serving&quot;</span><span class="p">)</span>
+<span class="n">flow</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">set_topology</span><span class="p">(</span><span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;async&quot;</span><span class="p">)</span>
+<span class="n">flow</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+    <span class="n">BatchHttpRequests</span><span class="p">(</span>
+        <span class="n">url_expression</span><span class="o">=</span><span class="s2">&quot;event[&#39;url&#39;]&quot;</span><span class="p">,</span>
+        <span class="n">body_expression</span><span class="o">=</span><span class="s2">&quot;event[&#39;data&#39;]&quot;</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+        <span class="n">input_path</span><span class="o">=</span><span class="s2">&quot;req&quot;</span><span class="p">,</span>
+        <span class="n">result_path</span><span class="o">=</span><span class="s2">&quot;resp&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">()</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">to_mock_server</span><span class="p">()</span>
+<span class="c1"># request contains a list of elements, each with url and data</span>
+<span class="n">request</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – http(s) url or function [project/]name to call</p></li>
+<li><p><strong>subpath</strong> – path (which follows the url)</p></li>
+<li><p><strong>method</strong> – HTTP method (GET, POST, ..), default to POST</p></li>
+<li><p><strong>headers</strong> – dictionary with http header values</p></li>
+<li><p><strong>url_expression</strong> – an expression for getting the url from the event, e.g. “event[‘url’]”</p></li>
+<li><p><strong>body_expression</strong> – an expression for getting the request body from the event, e.g. “event[‘data’]”</p></li>
+<li><p><strong>return_json</strong> – indicate the returned value is json, and convert it to a py object</p></li>
+<li><p><strong>input_path</strong> – when specified selects the key/path in the event to use as body
+this require that the event body will behave like a dict, example:
+event: {“data”: {“a”: 5, “b”: 7}}, input_path=”data.b” means request body will be 7</p></li>
+<li><p><strong>result_path</strong> – selects the key/path in the event to write the results to
+this require that the event body will behave like a dict, example:
+event: {“x”: 5} , result_path=”resp” means the returned response will be written
+to event[“y”] resulting in {“x”: 5, “resp”: &lt;result&gt;}</p></li>
+<li><p><strong>retries</strong> – number of retries (in exponential backoff)</p></li>
+<li><p><strong>backoff_factor</strong> – A backoff factor in seconds to apply between attempts after the second try</p></li>
+<li><p><strong>timeout</strong> – How long to wait for the server to send data before giving up, float in seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mlrun.serving.remote.RemoteStep">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mlrun.serving.remote.</span></span><span class="sig-name descname"><span class="pre">RemoteStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_in_flight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backoff_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/remote.html#RemoteStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.remote.RemoteStep" title="Permalink to this definition">#</a></dt>
+<dd><p>class for calling remote endpoints</p>
+<p>class for calling remote endpoints</p>
+<p>sync and async graph step implementation for request/resp to remote service (class shortcut = “$remote”)
+url can be an http(s) url (e.g. “<a class="reference external" href="https://myservice/path">https://myservice/path</a>”) or an mlrun function uri ([project/]name).
+alternatively the url_expression can be specified to build the url from the event (e.g. “event[‘url’]”).</p>
+<p>example pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flow</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">set_topology</span><span class="p">(</span><span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;async&quot;</span><span class="p">)</span>
+<span class="n">flow</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;step1&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s2">&quot;func1&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">RemoteStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;remote_echo&quot;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://myservice/path&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;laststep&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s2">&quot;func2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – http(s) url or function [project/]name to call</p></li>
+<li><p><strong>subpath</strong> – path (which follows the url), use <cite>$path</cite> to use the event.path</p></li>
+<li><p><strong>method</strong> – HTTP method (GET, POST, ..), default to POST</p></li>
+<li><p><strong>headers</strong> – dictionary with http header values</p></li>
+<li><p><strong>url_expression</strong> – an expression for getting the url from the event, e.g. “event[‘url’]”</p></li>
+<li><p><strong>body_expression</strong> – an expression for getting the request body from the event, e.g. “event[‘data’]”</p></li>
+<li><p><strong>return_json</strong> – indicate the returned value is json, and convert it to a py object</p></li>
+<li><p><strong>input_path</strong> – when specified selects the key/path in the event to use as body
+this require that the event body will behave like a dict, example:
+event: {“data”: {“a”: 5, “b”: 7}}, input_path=”data.b” means request body will be 7</p></li>
+<li><p><strong>result_path</strong> – selects the key/path in the event to write the results to
+this require that the event body will behave like a dict, example:
+event: {“x”: 5} , result_path=”resp” means the returned response will be written
+to event[“y”] resulting in {“x”: 5, “resp”: &lt;result&gt;}</p></li>
+<li><p><strong>retries</strong> – number of retries (in exponential backoff)</p></li>
+<li><p><strong>backoff_factor</strong> – A backoff factor in seconds to apply between attempts after the second try</p></li>
+<li><p><strong>timeout</strong> – How long to wait for the server to send data before giving up, float in seconds</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mlrun.serving.remote.RemoteStep.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_in_flight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backoff_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlrun/serving/remote.html#RemoteStep.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mlrun.serving.remote.RemoteStep.__init__" title="Permalink to this definition">#</a></dt>
+<dd><p>class for calling remote endpoints</p>
+<p>sync and async graph step implementation for request/resp to remote service (class shortcut = “$remote”)
+url can be an http(s) url (e.g. “<a class="reference external" href="https://myservice/path">https://myservice/path</a>”) or an mlrun function uri ([project/]name).
+alternatively the url_expression can be specified to build the url from the event (e.g. “event[‘url’]”).</p>
+<p>example pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flow</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">set_topology</span><span class="p">(</span><span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;async&quot;</span><span class="p">)</span>
+<span class="n">flow</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;step1&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s2">&quot;func1&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">RemoteStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;remote_echo&quot;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://myservice/path&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;laststep&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s2">&quot;func2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – http(s) url or function [project/]name to call</p></li>
+<li><p><strong>subpath</strong> – path (which follows the url), use <cite>$path</cite> to use the event.path</p></li>
+<li><p><strong>method</strong> – HTTP method (GET, POST, ..), default to POST</p></li>
+<li><p><strong>headers</strong> – dictionary with http header values</p></li>
+<li><p><strong>url_expression</strong> – an expression for getting the url from the event, e.g. “event[‘url’]”</p></li>
+<li><p><strong>body_expression</strong> – an expression for getting the request body from the event, e.g. “event[‘data’]”</p></li>
+<li><p><strong>return_json</strong> – indicate the returned value is json, and convert it to a py object</p></li>
+<li><p><strong>input_path</strong> – when specified selects the key/path in the event to use as body
+this require that the event body will behave like a dict, example:
+event: {“data”: {“a”: 5, “b”: 7}}, input_path=”data.b” means request body will be 7</p></li>
+<li><p><strong>result_path</strong> – selects the key/path in the event to write the results to
+this require that the event body will behave like a dict, example:
+event: {“x”: 5} , result_path=”resp” means the returned response will be written
+to event[“y”] resulting in {“x”: 5, “resp”: &lt;result&gt;}</p></li>
+<li><p><strong>retries</strong> – number of retries (in exponential backoff)</p></li>
+<li><p><strong>backoff_factor</strong> – A backoff factor in seconds to apply between attempts after the second try</p></li>
+<li><p><strong>timeout</strong> – How long to wait for the server to send data before giving up, float in seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="mlrun.runtimes.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">mlrun.runtimes</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="storey.transformations.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">storey.transformations - Graph transformations</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Iguazio<br/>
+  
+      &copy; Copyright 2022, Iguazio.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+
+<div class="footer"><!-- This page uses <a href="https://analytics.google.com/">
+Google Analytics</a> to collect statistics. You can disable it by blocking
+the JavaScript coming from www.google-analytics.com. -->
+
+</div>
+
+  </body>
+</html>

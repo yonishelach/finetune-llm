@@ -1,0 +1,2268 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Converting notebooks to function</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="/_/static/css/badge_only.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="/_/static/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="canonical" href="https://docs.mlrun.org/en/stable/runtimes/mlrun_code_annotations.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Attach storage to functions" href="function-storage.html" />
+    <link rel="prev" title="Create and use functions" href="create-and-use-functions.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MV26G85');</script>
+<!-- End Google Tag Manager -->
+
+
+  
+<!-- RTD Extra Head -->
+
+<link rel="stylesheet" href="/_/static/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2022-12-01T09:20:51Z", "builder": "sphinx", "canonical_url": null, "commit": "9933138d", "docroot": "/docs/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "runtimes/mlrun_code_annotations", "programming_language": "py", "project": "mlrun", "proxied_api_host": "/_", "source_suffix": ".ipynb", "subprojects": {}, "theme": "sphinx_book_theme", "user_analytics_code": "UA-101852366-5", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="/_/static/javascript/readthedocs-analytics.js" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+</head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/MLRun_Character.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLRun basics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Using MLRun
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     MLRun architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mlops-dev-flow.html">
+   MLOps development workflow
+   <!-- omit in toc -->
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../tutorial/index.html">
+   Tutorials and Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/01-mlrun-basics.html">
+     Quick start tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/02-model-training.html">
+     Train, compare, and register models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/03-model-serving.html">
+     Serving pre-trained ML/DL models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/04-pipeline.html">
+     Projects and automated ML pipeline
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/05-model-monitoring.html">
+     Model monitoring and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/06-add-mlops-to-code.html">
+     Add MLOps to existing code
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/07-batch-infer.html">
+     Batch inference and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/basic-demo.html">
+     Feature store example (stocks)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference external" href="https://github.com/mlrun/demos">
+     MLRun demos repository
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../install.html">
+   Installation and setup guide
+   <!-- omit in toc -->
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/local-docker.html">
+     Install MLRun locally using Docker
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/kubernetes.html">
+     Install MLRun on Kubernetes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/aws-install.html">
+     Install MLRun on AWS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/remote.html">
+     Set up your client environment
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core components
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../projects/project.html">
+   Projects and automation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/create-project.html">
+     Create, save, and use projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/load-project.html">
+     Load and run projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/run-build-deploy.html">
+     Run, build, and deploy functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/build-run-workflows-pipelines.html">
+     Build and run workflows/pipelines
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/ci-integration.html">
+     CI/CD integration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../secrets.html">
+     Working with secrets
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="functions.html">
+   Serverless functions
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="functions-architecture.html">
+     Functions architecture
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../concepts/functions-overview.html">
+     Kinds of functions (runtimes)
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="dask-overview.html">
+       Dask distributed runtime
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="dask-mlrun.html">
+         Running Dask on the cluster with mlrun
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="dask-pipeline.html">
+         Pipelines using Dask, Kubeflow and MLRun
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="horovod.html">
+       MPIJob and Horovod runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="spark-operator.html">
+       Spark Operator runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/nuclio-real-time-functions.html">
+       Nuclio real-time functions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="create-and-use-functions.html">
+     Create and use functions
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Converting notebooks to function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="function-storage.html">
+     Attach storage to functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="images.html">
+     Images and their usage in MLRun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="image-build.html">
+     Build function image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/node-affinity.html">
+     Node affinity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="configuring-job-resources.html">
+     Managing job resources
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="load-from-hub.html">
+     Function Hub
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/data.html">
+   Data and artifacts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/datastore.html">
+     Data stores
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/data-items.html">
+     Data items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/artifacts.html">
+     Artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/models.html">
+     Model Artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../feature-store/feature-store.html">
+   Feature store
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-store-overview.html">
+     Feature store overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-sets.html">
+     Feature sets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/transformations.html">
+     Feature set transformations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-vectors.html">
+     Creating and using feature vectors
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../feature-store/end-to-end-demo/index.html">
+     Feature store end-to-end demo
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/01-ingest-datasources.html">
+       Part 1: Data Ingestion
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/02-create-training-model.html">
+       Part 2: Training
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/03-deploy-serving-model.html">
+       Part 3: Serving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/04-pipeline.html">
+       Part 4: Automated ML pipeline
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/runs-workflows.html">
+   Batch runs and workflows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/mlrun-execution-context.html">
+     MLRun execution context
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/decorators-and-auto-logging.html">
+     Decorators and auto-logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/submitting-tasks-jobs-to-functions.html">
+     Running a task (job)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/workflow-overview.html">
+     Running a multi-stage workflow
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/scheduled-jobs.html">
+     Scheduled jobs and workflows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../serving/serving-graph.html">
+   Real-time serving pipelines (graphs)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/getting-started.html">
+     Getting started
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/use-cases.html">
+     Use cases
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/realtime-pipelines.html">
+     Graph concepts and state machine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/model-serving-get-started.html">
+     Model serving graph
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/writing-custom-steps.html">
+     Writing custom steps
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/available-steps.html">
+     Built-in steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/demos.html">
+     Demos and tutorials
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/distributed-graph.html">
+       Distributed (multi-function) pipeline example
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/graph-example.html">
+       Advanced model serving graph - notebook example
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/graph-ha-cfg.html">
+     Serving graph high availability configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/pipelines-error-handling.html">
+     Error handling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/monitoring.html">
+   Model monitoring
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLOps tasks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data-prep/index.html">
+   Ingest and process data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingesting_data.html">
+     Using data sources and items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/logging_datasets.html">
+     Logging datasets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="spark-operator.html">
+     Spark Operator runtime
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingest-data-fs.html">
+     Ingest data using the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/using-spark-engine.html">
+     Ingest features with Spark
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../development/index.html">
+   Develop and train models
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../development/model-training-tracking.html">
+     Model training and tracking
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/create-a-basic-training-job.html">
+       Create a basic training job
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/working-with-data-and-model-artifacts.html">
+       Working with data and model artifacts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/auto-logging-mlops.html">
+       Automated experiment tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/built-in-training-function.html">
+       Using the built-in training function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../hyper-params.html">
+       Hyperparameter tuning optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/retrieve-offline-data.html">
+     Training with the feature store
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../deployment/index.html">
+   Deploy models and applications
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/serving-overview.html">
+     Real-time deployment
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/built-in-model-serving.html">
+       Using built-in model serving classes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/custom-model-serving-class.html">
+       Build your own model serving class
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/test-deploy-model-server.html">
+       Test and deploy a model server
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/model-api.html">
+       Model serving API
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/training-serving.html">
+     Serving with the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../deployment/batch_inference.html">
+     Batch inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/canary.html">
+     Canary and rolling upgrades
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../monitoring/index.html">
+   Monitor and alert
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/model-monitoring-deployment.html">
+     Model monitoring overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/initial-setup-configuration.html">
+     Enable model monitoring
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../genindex.html">
+   API index
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../api/index.html">
+   API by module
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+  <label for="toctree-checkbox-20">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/mlrun.frameworks/index.html">
+     mlrun.frameworks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.auto_mlrun.html">
+       AutoMLRun
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.tf_keras.html">
+       TensorFlow.Keras
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.pytorch.html">
+       PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.sklearn.html">
+       SciKit-Learn
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.xgboost.html">
+       XGBoost
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.lgbm.html">
+       LightGBM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.html">
+     mlrun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.artifacts.html">
+     mlrun.artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.config.html">
+     mlrun.config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.datastore.html">
+     mlrun.datastore
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.db.html">
+     mlrun.db
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.execution.html">
+     mlrun.execution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.feature_store.html">
+     mlrun.feature_store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.model.html">
+     mlrun.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.platforms.html">
+     mlrun.platforms
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.projects.html">
+     mlrun.projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.run.html">
+     mlrun.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.runtimes.html">
+     mlrun.runtimes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.serving.html">
+     mlrun.serving
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/storey.transformations.html">
+     storey.transformations - Graph transformations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli.html">
+   Command-Line Interface
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            By <a href="https://www.iguazio.com/">Iguazio</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/mlrun/mlrun"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/issues/new?title=Issue%20on%20page%20%2Fruntimes/mlrun_code_annotations.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/edit/development/docs/runtimes/mlrun_code_annotations.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/runtimes/mlrun_code_annotations.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#named-annotations">
+   Named annotations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multi-section-function">
+   Multi section function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#annotations-position-in-code-cell">
+   Annotation’s position in code cell
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#guidelines">
+   Guidelines
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Converting notebooks to function</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#named-annotations">
+   Named annotations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multi-section-function">
+   Multi section function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#annotations-position-in-code-cell">
+   Annotation’s position in code cell
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#guidelines">
+   Guidelines
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="converting-notebooks-to-function">
+<span id="mlrun-code-annotations"></span><h1>Converting notebooks to function<a class="headerlink" href="#converting-notebooks-to-function" title="Permalink to this headline">#</a></h1>
+<p>MLRun annotations are used to identify the code that needs to be converted into an MLRun function.
+They provide non-intrusive hints that indicate which parts of your notebook should be considered as the code of the function.</p>
+<p>Annotations start a code block using <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> and end a code block(s), with <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code>.
+Use the <code class="docutils literal notranslate"><span class="pre">#mlrun:</span> <span class="pre">ignore</span></code> to exclude items from the code qualified annotations.
+Make sure that the annotations include anything required for the function to run.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mlrun: start-code</span>
+
+<span class="k">def</span> <span class="nf">sub_handler</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;hello world&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">ignore</span></code> annotation enables you to exclude the cell from the function code.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mlrun: ignore</span>
+
+<span class="c1"># the handler in the code section below will not call this sub_handler</span>
+<span class="k">def</span> <span class="nf">sub_handler</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;I will be ignored!&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">sub_handler</span><span class="p">()</span>
+
+<span class="c1"># mlrun: end-code</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Convert the function with <code class="docutils literal notranslate"><span class="pre">mlrun.code_to_function</span></code> and run the handler. Notice the returned value under <code class="docutils literal notranslate"><span class="pre">results</span></code>.</p>
+<div class="admonition-note admonition">
+<p class="admonition-title">Note</p>
+<p>Make sure to save the notebook before running <code class="docutils literal notranslate"><span class="pre">mlrun.code_to_function</span></code> so that the lateset changes will be reflected in the function.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlrun</span> <span class="kn">import</span> <span class="n">code_to_function</span>
+
+<span class="n">some_function</span> <span class="o">=</span> <span class="n">code_to_function</span><span class="p">(</span><span class="s1">&#39;some-function-name&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;job&#39;</span><span class="p">,</span> <span class="n">code_output</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">some_function</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;some-function-name&#39;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s1">&#39;handler&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:42:44,930 [info] starting run some-function-name uid=742e7d6e930c48f3a2f1d6175e971455 DB=http://mlrun-api:8080
+</pre></div>
+</div>
+<div class="output text_html"><style>
+.dictlist {
+  background-color: #4EC64B;
+  text-align: center;
+  margin: 4px;
+  border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;}
+.artifact {
+  cursor: pointer;
+  background-color: #4EC64B;
+  text-align: left;
+  margin: 4px; border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;
+}
+div.block.hidden {
+  display: none;
+}
+.clickable {
+  cursor: pointer;
+}
+.ellipsis {
+  display: inline-block;
+  max-width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.master-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.master-tbl {
+  flex: 3
+}
+.master-wrapper > div {
+  margin: 4px;
+  padding: 10px;
+}
+iframe.fileview {
+  border: 0 none;
+  height: 100%;
+  width: 100%;
+  white-space: pre-wrap;
+}
+.pane-header-title {
+  width: 80%;
+  font-weight: 500;
+}
+.pane-header {
+  line-height: 1;
+  background-color: #4EC64B;
+  padding: 3px;
+}
+.pane-header .close {
+  font-size: 20px;
+  font-weight: 700;
+  float: right;
+  margin-top: -5px;
+}
+.master-wrapper .right-pane {
+  border: 1px inset silver;
+  width: 40%;
+  min-height: 300px;
+  flex: 3
+  min-width: 500px;
+}
+.master-wrapper * {
+  box-sizing: border-box;
+}
+</style><script>
+function copyToClipboard(fld) {
+    if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        var textarea = document.createElement('textarea');
+        textarea.textContent = fld.innerHTML;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+        } catch (ex) {
+
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+function expandPanel(el) {
+  const panelName = "#" + el.getAttribute('paneName');
+  console.log(el.title);
+
+  document.querySelector(panelName + "-title").innerHTML = el.title
+  iframe = document.querySelector(panelName + "-body");
+
+  const tblcss = `<style> body { font-family: Arial, Helvetica, sans-serif;}
+    #csv { margin-bottom: 15px; }
+    #csv table { border-collapse: collapse;}
+    #csv table td { padding: 4px 8px; border: 1px solid silver;} </style>`;
+
+  function csvToHtmlTable(str) {
+    return '<div id="csv"><table><tr><td>' +  str.replace(/[\n\r]+$/g, '').replace(/[\n\r]+/g, '</td></tr><tr><td>')
+      .replace(/,/g, '</td><td>') + '</td></tr></table></div>';
+  }
+
+  function reqListener () {
+    if (el.title.endsWith(".csv")) {
+      iframe.setAttribute("srcdoc", tblcss + csvToHtmlTable(this.responseText));
+    } else {
+      iframe.setAttribute("srcdoc", this.responseText);
+    }
+    console.log(this.responseText);
+  }
+
+  const oReq = new XMLHttpRequest();
+  oReq.addEventListener("load", reqListener);
+  oReq.open("GET", el.title);
+  oReq.send();
+
+
+  //iframe.src = el.title;
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (resultPane.classList.contains("hidden")) {
+    resultPane.classList.remove("hidden");
+  }
+}
+function closePanel(el) {
+  const panelName = "#" + el.getAttribute('paneName')
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (!resultPane.classList.contains("hidden")) {
+    resultPane.classList.add("hidden");
+  }
+}
+
+</script>
+<div class="master-wrapper">
+  <div class="block master-tbl"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>project</th>
+      <th>uid</th>
+      <th>iter</th>
+      <th>start</th>
+      <th>state</th>
+      <th>name</th>
+      <th>labels</th>
+      <th>inputs</th>
+      <th>parameters</th>
+      <th>results</th>
+      <th>artifacts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>default</td>
+      <td><div title="742e7d6e930c48f3a2f1d6175e971455"><a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/742e7d6e930c48f3a2f1d6175e971455/overview" target="_blank" >...5e971455</a></div></td>
+      <td>0</td>
+      <td>Nov 01 07:42:45</td>
+      <td>completed</td>
+      <td>some-function-name</td>
+      <td><div class="dictlist">v3io_user=admin</div><div class="dictlist">kind=</div><div class="dictlist">owner=admin</div><div class="dictlist">host=jupyter-8459699595-z544v</div></td>
+      <td></td>
+      <td></td>
+      <td><div class="dictlist">return=hello world</div></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+  <div id="result76c6d166-pane" class="right-pane block hidden">
+    <div class="pane-header">
+      <span id="result76c6d166-title" class="pane-header-title">Title</span>
+      <span onclick="closePanel(this)" paneName="result76c6d166" class="close clickable">&times;</span>
+    </div>
+    <iframe class="fileview" id="result76c6d166-body"></iframe>
+  </div>
+</div>
+</div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_html"><b> > to track results use the .show() or .logs() methods  or <a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/742e7d6e930c48f3a2f1d6175e971455/overview" target="_blank">click here</a> to open in UI</b></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:42:45,214 [info] run executed, status=completed
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;mlrun.model.RunObject at 0x7f3fc9ed81d0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>In this section</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="#named-annotations">Named annotations</a></p></li>
+<li><p><a class="reference external" href="#multi-section-function">Multi section function</a></p></li>
+<li><p><a class="reference external" href="#annotation's-position-in-code-cell">Annotation’s position in code cell</a></p></li>
+<li><p><a class="reference external" href="#guidelines">Guidelines</a></p></li>
+</ul>
+<section id="named-annotations">
+<h2>Named annotations<a class="headerlink" href="#named-annotations" title="Permalink to this headline">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code> annotations can be used to convert different code sections to different MLRun, functions in the same notebook.
+To do so add the name of the MLRun function to the end of the annotation as shown in the example below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mlrun: start-code my-function-name</span>
+
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;hello from my-function&quot;</span>
+
+<span class="c1"># mlrun: end-code my-function-name</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Convert the function and run the handler. Notice that the handler that is being used and that there is a change in the returned value under <code class="docutils literal notranslate"><span class="pre">results</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_function</span> <span class="o">=</span> <span class="n">code_to_function</span><span class="p">(</span><span class="s1">&#39;my-function-name&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;job&#39;</span><span class="p">)</span>
+<span class="n">my_function</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-function-name&#39;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s1">&#39;handler&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:42:53,892 [info] starting run my-function-name uid=e4bbc3cae21042439cc1c3cb9631751c DB=http://mlrun-api:8080
+</pre></div>
+</div>
+<div class="output text_html"><style>
+.dictlist {
+  background-color: #4EC64B;
+  text-align: center;
+  margin: 4px;
+  border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;}
+.artifact {
+  cursor: pointer;
+  background-color: #4EC64B;
+  text-align: left;
+  margin: 4px; border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;
+}
+div.block.hidden {
+  display: none;
+}
+.clickable {
+  cursor: pointer;
+}
+.ellipsis {
+  display: inline-block;
+  max-width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.master-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.master-tbl {
+  flex: 3
+}
+.master-wrapper > div {
+  margin: 4px;
+  padding: 10px;
+}
+iframe.fileview {
+  border: 0 none;
+  height: 100%;
+  width: 100%;
+  white-space: pre-wrap;
+}
+.pane-header-title {
+  width: 80%;
+  font-weight: 500;
+}
+.pane-header {
+  line-height: 1;
+  background-color: #4EC64B;
+  padding: 3px;
+}
+.pane-header .close {
+  font-size: 20px;
+  font-weight: 700;
+  float: right;
+  margin-top: -5px;
+}
+.master-wrapper .right-pane {
+  border: 1px inset silver;
+  width: 40%;
+  min-height: 300px;
+  flex: 3
+  min-width: 500px;
+}
+.master-wrapper * {
+  box-sizing: border-box;
+}
+</style><script>
+function copyToClipboard(fld) {
+    if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        var textarea = document.createElement('textarea');
+        textarea.textContent = fld.innerHTML;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+        } catch (ex) {
+
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+function expandPanel(el) {
+  const panelName = "#" + el.getAttribute('paneName');
+  console.log(el.title);
+
+  document.querySelector(panelName + "-title").innerHTML = el.title
+  iframe = document.querySelector(panelName + "-body");
+
+  const tblcss = `<style> body { font-family: Arial, Helvetica, sans-serif;}
+    #csv { margin-bottom: 15px; }
+    #csv table { border-collapse: collapse;}
+    #csv table td { padding: 4px 8px; border: 1px solid silver;} </style>`;
+
+  function csvToHtmlTable(str) {
+    return '<div id="csv"><table><tr><td>' +  str.replace(/[\n\r]+$/g, '').replace(/[\n\r]+/g, '</td></tr><tr><td>')
+      .replace(/,/g, '</td><td>') + '</td></tr></table></div>';
+  }
+
+  function reqListener () {
+    if (el.title.endsWith(".csv")) {
+      iframe.setAttribute("srcdoc", tblcss + csvToHtmlTable(this.responseText));
+    } else {
+      iframe.setAttribute("srcdoc", this.responseText);
+    }
+    console.log(this.responseText);
+  }
+
+  const oReq = new XMLHttpRequest();
+  oReq.addEventListener("load", reqListener);
+  oReq.open("GET", el.title);
+  oReq.send();
+
+
+  //iframe.src = el.title;
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (resultPane.classList.contains("hidden")) {
+    resultPane.classList.remove("hidden");
+  }
+}
+function closePanel(el) {
+  const panelName = "#" + el.getAttribute('paneName')
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (!resultPane.classList.contains("hidden")) {
+    resultPane.classList.add("hidden");
+  }
+}
+
+</script>
+<div class="master-wrapper">
+  <div class="block master-tbl"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>project</th>
+      <th>uid</th>
+      <th>iter</th>
+      <th>start</th>
+      <th>state</th>
+      <th>name</th>
+      <th>labels</th>
+      <th>inputs</th>
+      <th>parameters</th>
+      <th>results</th>
+      <th>artifacts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>default</td>
+      <td><div title="e4bbc3cae21042439cc1c3cb9631751c"><a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/e4bbc3cae21042439cc1c3cb9631751c/overview" target="_blank" >...9631751c</a></div></td>
+      <td>0</td>
+      <td>Nov 01 07:42:54</td>
+      <td>completed</td>
+      <td>my-function-name</td>
+      <td><div class="dictlist">v3io_user=admin</div><div class="dictlist">kind=</div><div class="dictlist">owner=admin</div><div class="dictlist">host=jupyter-8459699595-z544v</div></td>
+      <td></td>
+      <td></td>
+      <td><div class="dictlist">return=hello from my-function</div></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+  <div id="resultd56098b8-pane" class="right-pane block hidden">
+    <div class="pane-header">
+      <span id="resultd56098b8-title" class="pane-header-title">Title</span>
+      <span onclick="closePanel(this)" paneName="resultd56098b8" class="close clickable">&times;</span>
+    </div>
+    <iframe class="fileview" id="resultd56098b8-body"></iframe>
+  </div>
+</div>
+</div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_html"><b> > to track results use the .show() or .logs() methods  or <a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/e4bbc3cae21042439cc1c3cb9631751c/overview" target="_blank">click here</a> to open in UI</b></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:42:54,137 [info] run executed, status=completed
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;mlrun.model.RunObject at 0x7f3fc9ac71d0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-note admonition">
+<p class="admonition-title">Note</p>
+<p>Make sure to use the name given to the <code class="docutils literal notranslate"><span class="pre">code_to_function</span></code> parameter (<code class="docutils literal notranslate"><span class="pre">name='my-function-name'</span></code> in the example above) so that all relevant <code class="docutils literal notranslate"><span class="pre">start-code</span></code> and <code class="docutils literal notranslate"><span class="pre">end-code</span></code> annotations are included. If none of the annotations are marked with the function’s name, all annotations without any name are used.</p>
+</div>
+</section>
+<section id="multi-section-function">
+<h2>Multi section function<a class="headerlink" href="#multi-section-function" title="Permalink to this headline">#</a></h2>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code> annotations multiple times in a notebook since the whole notebook is scanned.
+The annotations can be named like the following example, and they can be nameless. If you choose nameless, remember all nameless annotations in the notebook are used.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mlrun: start-code multi-section-function-name</span>
+
+<span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;multi-section-function-name&quot;</span>
+
+<span class="c1"># mlrun: end-code multi-section-function-name</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Any code between those sections are not included:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;I will be ignored!&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mlrun: start-code multi-section-function-name</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;hello from </span><span class="si">{</span><span class="n">function_name</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mlrun: end-code multi-section-function-name</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_multi_section_function</span> <span class="o">=</span> <span class="n">code_to_function</span><span class="p">(</span><span class="s1">&#39;multi-section-function-name&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;job&#39;</span><span class="p">)</span>
+<span class="n">my_multi_section_function</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;multi-section-function-name&#39;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s1">&#39;handler&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:43:05,587 [info] starting run multi-section-function-name uid=9ac6a0e977a54980b657bae067c2242a DB=http://mlrun-api:8080
+</pre></div>
+</div>
+<div class="output text_html"><style>
+.dictlist {
+  background-color: #4EC64B;
+  text-align: center;
+  margin: 4px;
+  border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;}
+.artifact {
+  cursor: pointer;
+  background-color: #4EC64B;
+  text-align: left;
+  margin: 4px; border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;
+}
+div.block.hidden {
+  display: none;
+}
+.clickable {
+  cursor: pointer;
+}
+.ellipsis {
+  display: inline-block;
+  max-width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.master-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.master-tbl {
+  flex: 3
+}
+.master-wrapper > div {
+  margin: 4px;
+  padding: 10px;
+}
+iframe.fileview {
+  border: 0 none;
+  height: 100%;
+  width: 100%;
+  white-space: pre-wrap;
+}
+.pane-header-title {
+  width: 80%;
+  font-weight: 500;
+}
+.pane-header {
+  line-height: 1;
+  background-color: #4EC64B;
+  padding: 3px;
+}
+.pane-header .close {
+  font-size: 20px;
+  font-weight: 700;
+  float: right;
+  margin-top: -5px;
+}
+.master-wrapper .right-pane {
+  border: 1px inset silver;
+  width: 40%;
+  min-height: 300px;
+  flex: 3
+  min-width: 500px;
+}
+.master-wrapper * {
+  box-sizing: border-box;
+}
+</style><script>
+function copyToClipboard(fld) {
+    if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        var textarea = document.createElement('textarea');
+        textarea.textContent = fld.innerHTML;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+        } catch (ex) {
+
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+function expandPanel(el) {
+  const panelName = "#" + el.getAttribute('paneName');
+  console.log(el.title);
+
+  document.querySelector(panelName + "-title").innerHTML = el.title
+  iframe = document.querySelector(panelName + "-body");
+
+  const tblcss = `<style> body { font-family: Arial, Helvetica, sans-serif;}
+    #csv { margin-bottom: 15px; }
+    #csv table { border-collapse: collapse;}
+    #csv table td { padding: 4px 8px; border: 1px solid silver;} </style>`;
+
+  function csvToHtmlTable(str) {
+    return '<div id="csv"><table><tr><td>' +  str.replace(/[\n\r]+$/g, '').replace(/[\n\r]+/g, '</td></tr><tr><td>')
+      .replace(/,/g, '</td><td>') + '</td></tr></table></div>';
+  }
+
+  function reqListener () {
+    if (el.title.endsWith(".csv")) {
+      iframe.setAttribute("srcdoc", tblcss + csvToHtmlTable(this.responseText));
+    } else {
+      iframe.setAttribute("srcdoc", this.responseText);
+    }
+    console.log(this.responseText);
+  }
+
+  const oReq = new XMLHttpRequest();
+  oReq.addEventListener("load", reqListener);
+  oReq.open("GET", el.title);
+  oReq.send();
+
+
+  //iframe.src = el.title;
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (resultPane.classList.contains("hidden")) {
+    resultPane.classList.remove("hidden");
+  }
+}
+function closePanel(el) {
+  const panelName = "#" + el.getAttribute('paneName')
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (!resultPane.classList.contains("hidden")) {
+    resultPane.classList.add("hidden");
+  }
+}
+
+</script>
+<div class="master-wrapper">
+  <div class="block master-tbl"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>project</th>
+      <th>uid</th>
+      <th>iter</th>
+      <th>start</th>
+      <th>state</th>
+      <th>name</th>
+      <th>labels</th>
+      <th>inputs</th>
+      <th>parameters</th>
+      <th>results</th>
+      <th>artifacts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>default</td>
+      <td><div title="9ac6a0e977a54980b657bae067c2242a"><a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/9ac6a0e977a54980b657bae067c2242a/overview" target="_blank" >...67c2242a</a></div></td>
+      <td>0</td>
+      <td>Nov 01 07:43:05</td>
+      <td>completed</td>
+      <td>multi-section-function-name</td>
+      <td><div class="dictlist">v3io_user=admin</div><div class="dictlist">kind=</div><div class="dictlist">owner=admin</div><div class="dictlist">host=jupyter-8459699595-z544v</div></td>
+      <td></td>
+      <td></td>
+      <td><div class="dictlist">return=hello from multi-section-function-name</div></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+  <div id="result3f66c777-pane" class="right-pane block hidden">
+    <div class="pane-header">
+      <span id="result3f66c777-title" class="pane-header-title">Title</span>
+      <span onclick="closePanel(this)" paneName="result3f66c777" class="close clickable">&times;</span>
+    </div>
+    <iframe class="fileview" id="result3f66c777-body"></iframe>
+  </div>
+</div>
+</div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_html"><b> > to track results use the .show() or .logs() methods  or <a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/9ac6a0e977a54980b657bae067c2242a/overview" target="_blank">click here</a> to open in UI</b></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:43:05,834 [info] run executed, status=completed
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;mlrun.model.RunObject at 0x7f3fc9a24e10&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="annotations-position-in-code-cell">
+<h2>Annotation’s position in code cell<a class="headerlink" href="#annotations-position-in-code-cell" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code> annotations are relative to their positions inside the code block. Notice how the assignments to <code class="docutils literal notranslate"><span class="pre">function_name</span></code> below <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code> don’t override the assignment between the annotations in the function’s context.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mlrun: start-code part-cell-function</span>
+
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;hello from </span><span class="si">{</span><span class="n">function_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;part-cell-function&quot;</span>
+
+<span class="c1"># mlrun: end-code part-cell-function</span>
+
+<span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;I will be ignored&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_multi_section_function</span> <span class="o">=</span> <span class="n">code_to_function</span><span class="p">(</span><span class="s1">&#39;part-cell-function&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;job&#39;</span><span class="p">)</span>
+<span class="n">my_multi_section_function</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;part-cell-function&#39;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="s1">&#39;handler&#39;</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:43:14,347 [info] starting run part-cell-function uid=5426e665c7bc4ba492e0a704c5555fb6 DB=http://mlrun-api:8080
+</pre></div>
+</div>
+<div class="output text_html"><style>
+.dictlist {
+  background-color: #4EC64B;
+  text-align: center;
+  margin: 4px;
+  border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;}
+.artifact {
+  cursor: pointer;
+  background-color: #4EC64B;
+  text-align: left;
+  margin: 4px; border-radius: 3px; padding: 0px 3px 1px 3px; display: inline-block;
+}
+div.block.hidden {
+  display: none;
+}
+.clickable {
+  cursor: pointer;
+}
+.ellipsis {
+  display: inline-block;
+  max-width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.master-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.master-tbl {
+  flex: 3
+}
+.master-wrapper > div {
+  margin: 4px;
+  padding: 10px;
+}
+iframe.fileview {
+  border: 0 none;
+  height: 100%;
+  width: 100%;
+  white-space: pre-wrap;
+}
+.pane-header-title {
+  width: 80%;
+  font-weight: 500;
+}
+.pane-header {
+  line-height: 1;
+  background-color: #4EC64B;
+  padding: 3px;
+}
+.pane-header .close {
+  font-size: 20px;
+  font-weight: 700;
+  float: right;
+  margin-top: -5px;
+}
+.master-wrapper .right-pane {
+  border: 1px inset silver;
+  width: 40%;
+  min-height: 300px;
+  flex: 3
+  min-width: 500px;
+}
+.master-wrapper * {
+  box-sizing: border-box;
+}
+</style><script>
+function copyToClipboard(fld) {
+    if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        var textarea = document.createElement('textarea');
+        textarea.textContent = fld.innerHTML;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+        } catch (ex) {
+
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+function expandPanel(el) {
+  const panelName = "#" + el.getAttribute('paneName');
+  console.log(el.title);
+
+  document.querySelector(panelName + "-title").innerHTML = el.title
+  iframe = document.querySelector(panelName + "-body");
+
+  const tblcss = `<style> body { font-family: Arial, Helvetica, sans-serif;}
+    #csv { margin-bottom: 15px; }
+    #csv table { border-collapse: collapse;}
+    #csv table td { padding: 4px 8px; border: 1px solid silver;} </style>`;
+
+  function csvToHtmlTable(str) {
+    return '<div id="csv"><table><tr><td>' +  str.replace(/[\n\r]+$/g, '').replace(/[\n\r]+/g, '</td></tr><tr><td>')
+      .replace(/,/g, '</td><td>') + '</td></tr></table></div>';
+  }
+
+  function reqListener () {
+    if (el.title.endsWith(".csv")) {
+      iframe.setAttribute("srcdoc", tblcss + csvToHtmlTable(this.responseText));
+    } else {
+      iframe.setAttribute("srcdoc", this.responseText);
+    }
+    console.log(this.responseText);
+  }
+
+  const oReq = new XMLHttpRequest();
+  oReq.addEventListener("load", reqListener);
+  oReq.open("GET", el.title);
+  oReq.send();
+
+
+  //iframe.src = el.title;
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (resultPane.classList.contains("hidden")) {
+    resultPane.classList.remove("hidden");
+  }
+}
+function closePanel(el) {
+  const panelName = "#" + el.getAttribute('paneName')
+  const resultPane = document.querySelector(panelName + "-pane");
+  if (!resultPane.classList.contains("hidden")) {
+    resultPane.classList.add("hidden");
+  }
+}
+
+</script>
+<div class="master-wrapper">
+  <div class="block master-tbl"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>project</th>
+      <th>uid</th>
+      <th>iter</th>
+      <th>start</th>
+      <th>state</th>
+      <th>name</th>
+      <th>labels</th>
+      <th>inputs</th>
+      <th>parameters</th>
+      <th>results</th>
+      <th>artifacts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>default</td>
+      <td><div title="5426e665c7bc4ba492e0a704c5555fb6"><a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/5426e665c7bc4ba492e0a704c5555fb6/overview" target="_blank" >...c5555fb6</a></div></td>
+      <td>0</td>
+      <td>Nov 01 07:43:14</td>
+      <td>completed</td>
+      <td>part-cell-function</td>
+      <td><div class="dictlist">v3io_user=admin</div><div class="dictlist">kind=</div><div class="dictlist">owner=admin</div><div class="dictlist">host=jupyter-8459699595-z544v</div></td>
+      <td></td>
+      <td></td>
+      <td><div class="dictlist">return=hello from part-cell-function</div></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+  <div id="result494dc07b-pane" class="right-pane block hidden">
+    <div class="pane-header">
+      <span id="result494dc07b-title" class="pane-header-title">Title</span>
+      <span onclick="closePanel(this)" paneName="result494dc07b" class="close clickable">&times;</span>
+    </div>
+    <iframe class="fileview" id="result494dc07b-body"></iframe>
+  </div>
+</div>
+</div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_html"><b> > to track results use the .show() or .logs() methods  or <a href="https://dashboard.default-tenant.app.alonm32.iguazio-cd0.com/mlprojects/default/jobs/monitor/5426e665c7bc4ba492e0a704c5555fb6/overview" target="_blank">click here</a> to open in UI</b></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2021-11-01 07:43:14,628 [info] run executed, status=completed
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;mlrun.model.RunObject at 0x7f3fc9a2bf50&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="guidelines">
+<h2>Guidelines<a class="headerlink" href="#guidelines" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Make sure that every <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> has a corresponding <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code> before the next <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> in the notebook.</p></li>
+<li><p>Only one MLRun function can have a nameless annotation per notebook.</p></li>
+<li><p>Do not use multiple <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> nor multiple <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code> annotations in a single code cell. Only the first appearance of each is used.</p></li>
+<li><p>Using single annotations:</p>
+<ul>
+<li><p>Use a <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">start-code</span></code> alone, and all code blocks from the annotation to the end of the notebook are included.</p></li>
+<li><p>Use a <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">mlrun:</span> <span class="pre">end-code</span></code> alone, and all code blocks from the beginning of the notebook to the annotation are included.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="create-and-use-functions.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Create and use functions</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="function-storage.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Attach storage to functions</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Iguazio<br/>
+  
+      &copy; Copyright 2022, Iguazio.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+
+<div class="footer"><!-- This page uses <a href="https://analytics.google.com/">
+Google Analytics</a> to collect statistics. You can disable it by blocking
+the JavaScript coming from www.google-analytics.com. -->
+
+</div>
+
+  </body>
+</html>

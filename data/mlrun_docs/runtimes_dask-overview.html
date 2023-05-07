@@ -1,0 +1,1630 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Dask distributed runtime</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="/_/static/css/badge_only.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="/_/static/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="canonical" href="https://docs.mlrun.org/en/stable/runtimes/dask-overview.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Running Dask on the cluster with mlrun" href="dask-mlrun.html" />
+    <link rel="prev" title="Kinds of functions (runtimes)" href="../concepts/functions-overview.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MV26G85');</script>
+<!-- End Google Tag Manager -->
+
+
+  
+<!-- RTD Extra Head -->
+
+<link rel="stylesheet" href="/_/static/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2022-12-01T09:20:44Z", "builder": "sphinx", "canonical_url": null, "commit": "9933138d", "docroot": "/docs/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "runtimes/dask-overview", "programming_language": "py", "project": "mlrun", "proxied_api_host": "/_", "source_suffix": ".ipynb", "subprojects": {}, "theme": "sphinx_book_theme", "user_analytics_code": "UA-101852366-5", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="/_/static/javascript/readthedocs-analytics.js" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+</head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/MLRun_Character.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLRun basics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Using MLRun
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     MLRun architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mlops-dev-flow.html">
+   MLOps development workflow
+   <!-- omit in toc -->
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../tutorial/index.html">
+   Tutorials and Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/01-mlrun-basics.html">
+     Quick start tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/02-model-training.html">
+     Train, compare, and register models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/03-model-serving.html">
+     Serving pre-trained ML/DL models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/04-pipeline.html">
+     Projects and automated ML pipeline
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/05-model-monitoring.html">
+     Model monitoring and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/06-add-mlops-to-code.html">
+     Add MLOps to existing code
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/07-batch-infer.html">
+     Batch inference and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/basic-demo.html">
+     Feature store example (stocks)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference external" href="https://github.com/mlrun/demos">
+     MLRun demos repository
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../install.html">
+   Installation and setup guide
+   <!-- omit in toc -->
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/local-docker.html">
+     Install MLRun locally using Docker
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/kubernetes.html">
+     Install MLRun on Kubernetes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/aws-install.html">
+     Install MLRun on AWS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/remote.html">
+     Set up your client environment
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core components
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../projects/project.html">
+   Projects and automation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/create-project.html">
+     Create, save, and use projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/load-project.html">
+     Load and run projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/run-build-deploy.html">
+     Run, build, and deploy functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/build-run-workflows-pipelines.html">
+     Build and run workflows/pipelines
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/ci-integration.html">
+     CI/CD integration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../secrets.html">
+     Working with secrets
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="functions.html">
+   Serverless functions
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="functions-architecture.html">
+     Functions architecture
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../concepts/functions-overview.html">
+     Kinds of functions (runtimes)
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3 current active has-children">
+      <a class="current reference internal" href="#">
+       Dask distributed runtime
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="dask-mlrun.html">
+         Running Dask on the cluster with mlrun
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="dask-pipeline.html">
+         Pipelines using Dask, Kubeflow and MLRun
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="horovod.html">
+       MPIJob and Horovod runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="spark-operator.html">
+       Spark Operator runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/nuclio-real-time-functions.html">
+       Nuclio real-time functions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="create-and-use-functions.html">
+     Create and use functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mlrun_code_annotations.html">
+     Converting notebooks to function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="function-storage.html">
+     Attach storage to functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="images.html">
+     Images and their usage in MLRun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="image-build.html">
+     Build function image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/node-affinity.html">
+     Node affinity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="configuring-job-resources.html">
+     Managing job resources
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="load-from-hub.html">
+     Function Hub
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/data.html">
+   Data and artifacts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/datastore.html">
+     Data stores
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/data-items.html">
+     Data items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/artifacts.html">
+     Artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/models.html">
+     Model Artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../feature-store/feature-store.html">
+   Feature store
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-store-overview.html">
+     Feature store overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-sets.html">
+     Feature sets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/transformations.html">
+     Feature set transformations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-vectors.html">
+     Creating and using feature vectors
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../feature-store/end-to-end-demo/index.html">
+     Feature store end-to-end demo
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/01-ingest-datasources.html">
+       Part 1: Data Ingestion
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/02-create-training-model.html">
+       Part 2: Training
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/03-deploy-serving-model.html">
+       Part 3: Serving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/04-pipeline.html">
+       Part 4: Automated ML pipeline
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/runs-workflows.html">
+   Batch runs and workflows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/mlrun-execution-context.html">
+     MLRun execution context
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/decorators-and-auto-logging.html">
+     Decorators and auto-logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/submitting-tasks-jobs-to-functions.html">
+     Running a task (job)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/workflow-overview.html">
+     Running a multi-stage workflow
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/scheduled-jobs.html">
+     Scheduled jobs and workflows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../serving/serving-graph.html">
+   Real-time serving pipelines (graphs)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/getting-started.html">
+     Getting started
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/use-cases.html">
+     Use cases
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/realtime-pipelines.html">
+     Graph concepts and state machine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/model-serving-get-started.html">
+     Model serving graph
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/writing-custom-steps.html">
+     Writing custom steps
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/available-steps.html">
+     Built-in steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/demos.html">
+     Demos and tutorials
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/distributed-graph.html">
+       Distributed (multi-function) pipeline example
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/graph-example.html">
+       Advanced model serving graph - notebook example
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/graph-ha-cfg.html">
+     Serving graph high availability configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/pipelines-error-handling.html">
+     Error handling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/monitoring.html">
+   Model monitoring
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLOps tasks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data-prep/index.html">
+   Ingest and process data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingesting_data.html">
+     Using data sources and items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/logging_datasets.html">
+     Logging datasets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="spark-operator.html">
+     Spark Operator runtime
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingest-data-fs.html">
+     Ingest data using the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/using-spark-engine.html">
+     Ingest features with Spark
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../development/index.html">
+   Develop and train models
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../development/model-training-tracking.html">
+     Model training and tracking
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/create-a-basic-training-job.html">
+       Create a basic training job
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/working-with-data-and-model-artifacts.html">
+       Working with data and model artifacts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/auto-logging-mlops.html">
+       Automated experiment tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/built-in-training-function.html">
+       Using the built-in training function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../hyper-params.html">
+       Hyperparameter tuning optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/retrieve-offline-data.html">
+     Training with the feature store
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../deployment/index.html">
+   Deploy models and applications
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/serving-overview.html">
+     Real-time deployment
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/built-in-model-serving.html">
+       Using built-in model serving classes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/custom-model-serving-class.html">
+       Build your own model serving class
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/test-deploy-model-server.html">
+       Test and deploy a model server
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/model-api.html">
+       Model serving API
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/training-serving.html">
+     Serving with the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../deployment/batch_inference.html">
+     Batch inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/canary.html">
+     Canary and rolling upgrades
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../monitoring/index.html">
+   Monitor and alert
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/model-monitoring-deployment.html">
+     Model monitoring overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/initial-setup-configuration.html">
+     Enable model monitoring
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../genindex.html">
+   API index
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../api/index.html">
+   API by module
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+  <label for="toctree-checkbox-20">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/mlrun.frameworks/index.html">
+     mlrun.frameworks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.auto_mlrun.html">
+       AutoMLRun
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.tf_keras.html">
+       TensorFlow.Keras
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.pytorch.html">
+       PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.sklearn.html">
+       SciKit-Learn
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.xgboost.html">
+       XGBoost
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.lgbm.html">
+       LightGBM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.html">
+     mlrun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.artifacts.html">
+     mlrun.artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.config.html">
+     mlrun.config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.datastore.html">
+     mlrun.datastore
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.db.html">
+     mlrun.db
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.execution.html">
+     mlrun.execution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.feature_store.html">
+     mlrun.feature_store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.model.html">
+     mlrun.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.platforms.html">
+     mlrun.platforms
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.projects.html">
+     mlrun.projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.run.html">
+     mlrun.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.runtimes.html">
+     mlrun.runtimes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.serving.html">
+     mlrun.serving
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/storey.transformations.html">
+     storey.transformations - Graph transformations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli.html">
+   Command-Line Interface
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            By <a href="https://www.iguazio.com/">Iguazio</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/mlrun/mlrun"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/issues/new?title=Issue%20on%20page%20%2Fruntimes/dask-overview.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/edit/development/docs/runtimes/dask-overview.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/runtimes/dask-overview.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Dask overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dask-dataframe-mimics-pandas">
+   Dask DataFrame mimics Pandas
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dask-distributed-br">
+   Dask.distributed
+   <br/>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#motivation">
+     Motivation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#architecture">
+     Architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#x-faster-with-dask">
+   ~5X Faster with Dask
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#generate-random-text-files">
+     Generate random text files
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setfunction-for-benchmark">
+     Setfunction for benchmark
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sort-count-number-of-letters-with-python">
+     Sort &amp; count number of letters with Python
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sort-count-number-of-letters-with-dask">
+     Sort &amp; count number of letters with Dask
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#additional-topics">
+   Additional topics
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Dask distributed runtime</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Dask overview
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dask-dataframe-mimics-pandas">
+   Dask DataFrame mimics Pandas
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dask-distributed-br">
+   Dask.distributed
+   <br/>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#motivation">
+     Motivation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#architecture">
+     Architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#x-faster-with-dask">
+   ~5X Faster with Dask
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#generate-random-text-files">
+     Generate random text files
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setfunction-for-benchmark">
+     Setfunction for benchmark
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sort-count-number-of-letters-with-python">
+     Sort &amp; count number of letters with Python
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sort-count-number-of-letters-with-dask">
+     Sort &amp; count number of letters with Dask
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#additional-topics">
+   Additional topics
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="dask-distributed-runtime">
+<span id="dask-overview"></span><h1>Dask distributed runtime<a class="headerlink" href="#dask-distributed-runtime" title="Permalink to this headline">#</a></h1>
+<p><a class="reference internal" href="../_images/dask_horizontal.svg"><img alt="../_images/dask_horizontal.svg" src="../_images/dask_horizontal.svg" width="300" /></a> <br></p>
+<div class="admonition-quick-links admonition">
+<p class="admonition-title">Quick Links</p>
+<ul class="simple">
+<li><p><a class="reference external" href="./dask-mlrun.html">Running Dask Over MLRun</a></p></li>
+<li><p><a class="reference external" href="./dask-pipeline.html">Pipelines Using Dask, Kubeflow and MLRun</a></p></li>
+</ul>
+</div>
+<section id="id1">
+<h2>Dask overview<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>Source: <a class="reference external" href="https://docs.dask.org/en/latest/">Dask docs</a><br>
+Dask is a flexible library for parallel computing in Python.</p>
+<p>Dask is composed of two parts:</p>
+<ol class="arabic simple">
+<li><p><strong>Dynamic task scheduling</strong> optimized for computation. This is similar to Airflow, Luigi, Celery, or Make, but optimized for interactive computational workloads.</p></li>
+<li><p><strong>“Big Data” collections</strong> like parallel arrays, dataframes, and lists that extend common interfaces like NumPy, Pandas, or Python iterators to larger-than-memory or distributed environments. These parallel collections run on top of dynamic task schedulers.</p></li>
+</ol>
+<p><strong>Dask emphasizes the following virtues:</strong></p>
+<ul class="simple">
+<li><p><strong>Familiar</strong>: Provides parallelized NumPy array and Pandas DataFrame objects<br></p></li>
+<li><p><strong>Flexible</strong>: Provides a task scheduling interface for more custom workloads and integration with other projects.<br></p></li>
+<li><p><strong>Native</strong>: Enables distributed computing in pure Python with access to the PyData stack.<br></p></li>
+<li><p><strong>Fast</strong>: Operates with low overhead, low latency, and minimal serialization necessary for fast numerical algorithms<br></p></li>
+<li><p><strong>Scales up</strong>: Runs resiliently on clusters with 1000s of cores<br></p></li>
+<li><p><strong>Scales down</strong>: Trivial to set up and run on a laptop in a single process<br></p></li>
+<li><p><strong>Responsive</strong>: Designed with interactive computing in mind, it provides rapid feedback and diagnostics to aid humans<br>
+Dask collections and schedulers</p></li>
+</ul>
+<p><a class="reference internal" href="../_images/dask-overview.svg"><img alt="../_images/dask-overview.svg" src="../_images/dask-overview.svg" width="800" /></a><br></p>
+</section>
+<section id="dask-dataframe-mimics-pandas">
+<h2>Dask DataFrame mimics Pandas<a class="headerlink" href="#dask-dataframe-mimics-pandas" title="Permalink to this headline">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>                     <span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;2015-01-01.csv&#39;</span><span class="p">)</span>      <span class="n">df</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;2015-*-*.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>     <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+</pre></div>
+</div>
+<p>Dask Array mimics NumPy - documentation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>                       <span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">&#39;myfile.hdf5&#39;</span><span class="p">)</span>             <span class="n">f</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">&#39;myfile.hdf5&#39;</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;/small-data&#39;</span><span class="p">])</span>           <span class="n">x</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;/big-data&#39;</span><span class="p">],</span>
+                                                           <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>                       <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Dask Bag mimics iterators, Toolz, and PySpark - documentation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask.bag</span> <span class="k">as</span> <span class="nn">db</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;2015-*-*.json.gz&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">pluck</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">frequencies</span><span class="p">()</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">pair</span><span class="p">:</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Dask Delayed mimics for loops and wraps custom code - documentation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask</span> <span class="kn">import</span> <span class="n">delayed</span>
+<span class="n">L</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>                  <span class="c1"># Use for loops to build up computation</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">load</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span>          <span class="c1"># Delay execution of function</span>
+    <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delayed</span><span class="p">(</span><span class="n">process</span><span class="p">)(</span><span class="n">data</span><span class="p">))</span>  <span class="c1"># Build connections between variables</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">summarize</span><span class="p">)(</span><span class="n">L</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The concurrent.futures interface provides general submission of custom tasks: - documentation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s1">&#39;scheduler:port&#39;</span><span class="p">)</span>
+
+<span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+    <span class="n">future</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+    <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+
+<span class="n">summary</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">summarize</span><span class="p">,</span> <span class="n">futures</span><span class="p">)</span>
+<span class="n">summary</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="dask-distributed-br">
+<h2>Dask.distributed<br><a class="headerlink" href="#dask-distributed-br" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Dask.distributed</span></code> is a lightweight library for distributed computing in Python. It extends both the concurrent.futures and dask APIs to moderate sized clusters.<br></p>
+<p><a class="reference internal" href="../_images/dask_dist.png"><img alt="../_images/dask_dist.png" src="../_images/dask_dist.png" style="width: 800px;" /></a><br></p>
+<section id="motivation">
+<h3>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h3>
+<p>Distributed serves to complement the existing PyData analysis stack. In particular it meets the following needs:</p>
+<ul class="simple">
+<li><p><strong>Low latency</strong>: Each task suffers about 1ms of overhead. A small computation and network roundtrip can complete in less than 10ms.<br></p></li>
+<li><p><strong>Peer-to-peer data sharing</strong>: Workers communicate with each other to share data. This removes central bottlenecks for data transfer.<br></p></li>
+<li><p><strong>Complex Scheduling</strong>: Supports complex workflows (not just map/filter/reduce) which are necessary for sophisticated algorithms used in nd-arrays, machine learning, image processing, and statistics.<br></p></li>
+<li><p><strong>Pure Python</strong>: Built in Python using well-known technologies. This eases installation, improves efficiency (for Python users), and simplifies debugging.<br></p></li>
+<li><p><strong>Data Locality</strong>: Scheduling algorithms cleverly execute computations where data lives. This minimizes network traffic and improves efficiency.<br></p></li>
+<li><p><strong>Familiar APIs</strong>: Compatible with the concurrent.futures API in the Python standard library. Compatible with dask API for parallel algorithms<br></p></li>
+<li><p><strong>Easy Setup</strong>: As a Pure Python package distributed is pip installable and easy to set up on your own cluster.<br></p></li>
+</ul>
+</section>
+<section id="architecture">
+<h3>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Dask.distributed</span></code> is a centrally managed, distributed, dynamic task scheduler. The central <code class="docutils literal notranslate"><span class="pre">dask-scheduler</span></code> process coordinates the actions of several <code class="docutils literal notranslate"><span class="pre">dask-worker</span></code> processes spread across multiple machines and the concurrent requests of several clients.</p>
+<p>The scheduler is asynchronous and event driven, simultaneously responding to requests for computation from multiple clients and tracking the progress of multiple workers. The event-driven and asynchronous nature makes it flexible to concurrently handle a variety of workloads coming from multiple users at the same time while also handling a fluid worker population with failures and additions. Workers communicate amongst each other for bulk data transfer over TCP.</p>
+<p>Internally the scheduler tracks all work as a constantly changing directed acyclic graph of tasks. A task is a Python function operating on Python objects, which can be the results of other tasks. This graph of tasks grows as users submit more computations, fills out as workers complete tasks, and shrinks as users leave or become disinterested in previous results.</p>
+<p>Users interact by connecting a local Python session to the scheduler and submitting work, either by individual calls to the simple interface <code class="docutils literal notranslate"><span class="pre">client.submit(function,</span> <span class="pre">*args,</span> <span class="pre">**kwargs)</span></code> or by using the large data collections and parallel algorithms of the parent dask library. The collections in the dask library like <code class="docutils literal notranslate"><span class="pre">dask.array</span></code> and <code class="docutils literal notranslate"><span class="pre">dask.dataframe</span></code> provide easy access to sophisticated algorithms and familiar APIs like NumPy and Pandas, while the simple <code class="docutils literal notranslate"><span class="pre">client.submit</span></code> interface provides users with custom control when they want to break out of canned “big data” abstractions and submit fully custom workloads.</p>
+</section>
+</section>
+<section id="x-faster-with-dask">
+<h2>~5X Faster with Dask<a class="headerlink" href="#x-faster-with-dask" title="Permalink to this headline">#</a></h2>
+<p>Short example which demonstrates the power of Dask, in this notebook we will preform the following:</p>
+<ul class="simple">
+<li><p>Generate random text files</p></li>
+<li><p>Process the file by sorting and counting it’s content</p></li>
+<li><p>Compare run times</p></li>
+</ul>
+<section id="generate-random-text-files">
+<h3>Generate random text files<a class="headerlink" href="#generate-random-text-files" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span> 
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_big_random_letters</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    generate big random letters/alphabets to a file</span>
+<span class="sd">    :param filename: the filename</span>
+<span class="sd">    :param size: the size in bytes</span>
+<span class="sd">    :return: void</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)])</span> <span class="c1">#1</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PATH</span> <span class="o">=</span> <span class="s1">&#39;/User/howto/dask/random_files&#39;</span>
+<span class="n">SIZE</span> <span class="o">=</span> <span class="mi">10000000</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">generate_big_random_letters</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">PATH</span> <span class="o">+</span> <span class="s1">&#39;/file_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">,</span> 
+                                <span class="n">size</span> <span class="o">=</span> <span class="n">SIZE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="setfunction-for-benchmark">
+<h3>Setfunction for benchmark<a class="headerlink" href="#setfunction-for-benchmark" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">count_letters</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    count letters in text file</span>
+<span class="sd">    :param path:  path to file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># open file in read mode</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+    <span class="c1"># read the content of file</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="c1"># sort file</span>
+    <span class="n">sorted_file</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="c1"># count file</span>
+    <span class="n">number_of_characters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_file</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">number_of_characters</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">process_files</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    list file and count letters</span>
+<span class="sd">    :param path: path to folder with files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="n">count_letters</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+        <span class="n">num_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+    
+    <span class="n">l</span> <span class="o">=</span> <span class="n">num_list</span>    
+    <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;done!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sort-count-number-of-letters-with-python">
+<h3>Sort &amp; count number of letters with Python<a class="headerlink" href="#sort-count-number-of-letters-with-python" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">PATH</span> <span class="o">=</span> <span class="s1">&#39;/User/howto/dask/random_files/&#39;</span>
+<span class="n">process_files</span><span class="p">(</span><span class="n">PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>done!
+CPU times: user 2min 19s, sys: 9.31 s, total: 2min 29s
+Wall time: 2min 32s
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sort-count-number-of-letters-with-dask">
+<h3>Sort &amp; count number of letters with Dask<a class="headerlink" href="#sort-count-number-of-letters-with-dask" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the dask client address </span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># list all files in folder</span>
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">PATH</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">PATH</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># run the count_letter function on a list of files while using multiple workers</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">count_letters</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 13.2 ms, sys: 983 µs, total: 14.2 ms
+Wall time: 12.2 ms
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># gather results </span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.39 s, sys: 533 ms, total: 3.92 s
+Wall time: 40 s
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="additional-topics">
+<h2>Additional topics<a class="headerlink" href="#additional-topics" title="Permalink to this headline">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dask-mlrun.html">Running Dask on the cluster with mlrun</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dask-pipeline.html">Pipelines using Dask, Kubeflow and MLRun</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../concepts/functions-overview.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Kinds of functions (runtimes)</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="dask-mlrun.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Running Dask on the cluster with mlrun</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Iguazio<br/>
+  
+      &copy; Copyright 2022, Iguazio.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+
+<div class="footer"><!-- This page uses <a href="https://analytics.google.com/">
+Google Analytics</a> to collect statistics. You can disable it by blocking
+the JavaScript coming from www.google-analytics.com. -->
+
+</div>
+
+  </body>
+</html>

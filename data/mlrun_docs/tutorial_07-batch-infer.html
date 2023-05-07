@@ -1,0 +1,2027 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Batch inference and drift detection</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="/_/static/css/badge_only.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="/_/static/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="canonical" href="https://docs.mlrun.org/en/stable/tutorial/07-batch-infer.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Feature store example (stocks)" href="../feature-store/basic-demo.html" />
+    <link rel="prev" title="Add MLOps to existing code" href="06-add-mlops-to-code.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MV26G85');</script>
+<!-- End Google Tag Manager -->
+
+
+  
+<!-- RTD Extra Head -->
+
+<link rel="stylesheet" href="/_/static/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2022-12-01T09:21:32Z", "builder": "sphinx", "canonical_url": null, "commit": "9933138d", "docroot": "/docs/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "tutorial/07-batch-infer", "programming_language": "py", "project": "mlrun", "proxied_api_host": "/_", "source_suffix": ".ipynb", "subprojects": {}, "theme": "sphinx_book_theme", "user_analytics_code": "UA-101852366-5", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="/_/static/javascript/readthedocs-analytics.js" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+</head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/MLRun_Character.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLRun basics
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Using MLRun
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     MLRun architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mlops-dev-flow.html">
+   MLOps development workflow
+   <!-- omit in toc -->
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   Tutorials and Examples
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="01-mlrun-basics.html">
+     Quick start tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="02-model-training.html">
+     Train, compare, and register models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="03-model-serving.html">
+     Serving pre-trained ML/DL models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="04-pipeline.html">
+     Projects and automated ML pipeline
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="05-model-monitoring.html">
+     Model monitoring and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="06-add-mlops-to-code.html">
+     Add MLOps to existing code
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Batch inference and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/basic-demo.html">
+     Feature store example (stocks)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference external" href="https://github.com/mlrun/demos">
+     MLRun demos repository
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../install.html">
+   Installation and setup guide
+   <!-- omit in toc -->
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/local-docker.html">
+     Install MLRun locally using Docker
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/kubernetes.html">
+     Install MLRun on Kubernetes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/aws-install.html">
+     Install MLRun on AWS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/remote.html">
+     Set up your client environment
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core components
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../projects/project.html">
+   Projects and automation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/create-project.html">
+     Create, save, and use projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/load-project.html">
+     Load and run projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/run-build-deploy.html">
+     Run, build, and deploy functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/build-run-workflows-pipelines.html">
+     Build and run workflows/pipelines
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/ci-integration.html">
+     CI/CD integration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../secrets.html">
+     Working with secrets
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../runtimes/functions.html">
+   Serverless functions
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/functions-architecture.html">
+     Functions architecture
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../concepts/functions-overview.html">
+     Kinds of functions (runtimes)
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../runtimes/dask-overview.html">
+       Dask distributed runtime
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-mlrun.html">
+         Running Dask on the cluster with mlrun
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-pipeline.html">
+         Pipelines using Dask, Kubeflow and MLRun
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/horovod.html">
+       MPIJob and Horovod runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/spark-operator.html">
+       Spark Operator runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/nuclio-real-time-functions.html">
+       Nuclio real-time functions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/create-and-use-functions.html">
+     Create and use functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/mlrun_code_annotations.html">
+     Converting notebooks to function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/function-storage.html">
+     Attach storage to functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/images.html">
+     Images and their usage in MLRun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/image-build.html">
+     Build function image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/node-affinity.html">
+     Node affinity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/configuring-job-resources.html">
+     Managing job resources
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/load-from-hub.html">
+     Function Hub
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/data.html">
+   Data and artifacts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/datastore.html">
+     Data stores
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/data-items.html">
+     Data items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/artifacts.html">
+     Artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/models.html">
+     Model Artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../feature-store/feature-store.html">
+   Feature store
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-store-overview.html">
+     Feature store overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-sets.html">
+     Feature sets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/transformations.html">
+     Feature set transformations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-vectors.html">
+     Creating and using feature vectors
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../feature-store/end-to-end-demo/index.html">
+     Feature store end-to-end demo
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/01-ingest-datasources.html">
+       Part 1: Data Ingestion
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/02-create-training-model.html">
+       Part 2: Training
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/03-deploy-serving-model.html">
+       Part 3: Serving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/04-pipeline.html">
+       Part 4: Automated ML pipeline
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/runs-workflows.html">
+   Batch runs and workflows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/mlrun-execution-context.html">
+     MLRun execution context
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/decorators-and-auto-logging.html">
+     Decorators and auto-logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/submitting-tasks-jobs-to-functions.html">
+     Running a task (job)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/workflow-overview.html">
+     Running a multi-stage workflow
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/scheduled-jobs.html">
+     Scheduled jobs and workflows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../serving/serving-graph.html">
+   Real-time serving pipelines (graphs)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/getting-started.html">
+     Getting started
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/use-cases.html">
+     Use cases
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/realtime-pipelines.html">
+     Graph concepts and state machine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/model-serving-get-started.html">
+     Model serving graph
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/writing-custom-steps.html">
+     Writing custom steps
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/available-steps.html">
+     Built-in steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/demos.html">
+     Demos and tutorials
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/distributed-graph.html">
+       Distributed (multi-function) pipeline example
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/graph-example.html">
+       Advanced model serving graph - notebook example
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/graph-ha-cfg.html">
+     Serving graph high availability configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/pipelines-error-handling.html">
+     Error handling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/monitoring.html">
+   Model monitoring
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLOps tasks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data-prep/index.html">
+   Ingest and process data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingesting_data.html">
+     Using data sources and items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/logging_datasets.html">
+     Logging datasets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/spark-operator.html">
+     Spark Operator runtime
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingest-data-fs.html">
+     Ingest data using the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/using-spark-engine.html">
+     Ingest features with Spark
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../development/index.html">
+   Develop and train models
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../development/model-training-tracking.html">
+     Model training and tracking
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/create-a-basic-training-job.html">
+       Create a basic training job
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/working-with-data-and-model-artifacts.html">
+       Working with data and model artifacts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/auto-logging-mlops.html">
+       Automated experiment tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/built-in-training-function.html">
+       Using the built-in training function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../hyper-params.html">
+       Hyperparameter tuning optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/retrieve-offline-data.html">
+     Training with the feature store
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../deployment/index.html">
+   Deploy models and applications
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/serving-overview.html">
+     Real-time deployment
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/built-in-model-serving.html">
+       Using built-in model serving classes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/custom-model-serving-class.html">
+       Build your own model serving class
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/test-deploy-model-server.html">
+       Test and deploy a model server
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/model-api.html">
+       Model serving API
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/training-serving.html">
+     Serving with the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../deployment/batch_inference.html">
+     Batch inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/canary.html">
+     Canary and rolling upgrades
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../monitoring/index.html">
+   Monitor and alert
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/model-monitoring-deployment.html">
+     Model monitoring overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring/initial-setup-configuration.html">
+     Enable model monitoring
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../genindex.html">
+   API index
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../api/index.html">
+   API by module
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+  <label for="toctree-checkbox-20">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/mlrun.frameworks/index.html">
+     mlrun.frameworks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.auto_mlrun.html">
+       AutoMLRun
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.tf_keras.html">
+       TensorFlow.Keras
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.pytorch.html">
+       PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.sklearn.html">
+       SciKit-Learn
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.xgboost.html">
+       XGBoost
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.lgbm.html">
+       LightGBM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.html">
+     mlrun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.artifacts.html">
+     mlrun.artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.config.html">
+     mlrun.config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.datastore.html">
+     mlrun.datastore
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.db.html">
+     mlrun.db
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.execution.html">
+     mlrun.execution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.feature_store.html">
+     mlrun.feature_store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.model.html">
+     mlrun.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.platforms.html">
+     mlrun.platforms
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.projects.html">
+     mlrun.projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.run.html">
+     mlrun.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.runtimes.html">
+     mlrun.runtimes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.serving.html">
+     mlrun.serving
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/storey.transformations.html">
+     storey.transformations - Graph transformations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli.html">
+   Command-Line Interface
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            By <a href="https://www.iguazio.com/">Iguazio</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/mlrun/mlrun"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/issues/new?title=Issue%20on%20page%20%2Ftutorial/07-batch-infer.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/edit/development/docs/tutorial/07-batch-infer.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/tutorial/07-batch-infer.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mlrun-installation-and-configuration">
+   MLRun installation and Configuration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#set-up-a-project">
+   Set up a project
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#view-the-data">
+   View the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log-the-model-with-training-data">
+   Log the model with training data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#import-and-run-the-batch-inference-function">
+   Import and run the batch inference function
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#run-batch-inference">
+     Run batch inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#view-predictions-and-drift-status">
+   View predictions and drift status
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next steps
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Batch inference and drift detection</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mlrun-installation-and-configuration">
+   MLRun installation and Configuration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#set-up-a-project">
+   Set up a project
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#view-the-data">
+   View the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log-the-model-with-training-data">
+   Log the model with training data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#import-and-run-the-batch-inference-function">
+   Import and run the batch inference function
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#run-batch-inference">
+     Run batch inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#view-predictions-and-drift-status">
+   View predictions and drift status
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next steps
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="batch-inference-and-drift-detection">
+<h1>Batch inference and drift detection<a class="headerlink" href="#batch-inference-and-drift-detection" title="Permalink to this headline">#</a></h1>
+<p>This tutorial leverages a function from the <a class="reference external" href="https://www.mlrun.org/marketplace/">MLRun Function Hub</a> to perform <a class="reference external" href="https://www.mlrun.org/marketplace/functions/master/batch_inference/">batch inference</a> using a logged model and a new prediction dataset. The function also calculates data drift by comparing the new prediction dataset with the original training set.</p>
+<p>Make sure you have reviewed the basics in MLRun <a class="reference external" href="../01-mlrun-basics.html"><strong>Quick Start Tutorial</strong></a>.</p>
+<p>Tutorial steps:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#setup-project"><strong>Set up an MLRun project</strong></a></p></li>
+<li><p><a class="reference external" href="#view-data"><strong>View the data</strong></a></p></li>
+<li><p><a class="reference external" href="#log-model"><strong>Log a model with a given framework and training set</strong></a></p></li>
+<li><p><a class="reference external" href="#run"><strong>Import and run the batch inference function</strong></a></p></li>
+<li><p><a class="reference external" href="#view-results"><strong>View predictions and drift status</strong></a></p></li>
+</ul>
+<section id="mlrun-installation-and-configuration">
+<h2>MLRun installation and Configuration<a class="headerlink" href="#mlrun-installation-and-configuration" title="Permalink to this headline">#</a></h2>
+<p>Before running this notebook make sure <code class="docutils literal notranslate"><span class="pre">mlrun</span></code> is installed and that you have configured the access to the MLRun service.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install MLRun if not installed, run this only once (restart the notebook after the install !!!)</span>
+<span class="o">%</span><span class="k">pip</span> install mlrun
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="setup-project"></a></p>
+</section>
+<section id="set-up-a-project">
+<h2>Set up a project<a class="headerlink" href="#set-up-a-project" title="Permalink to this headline">#</a></h2>
+<p>First, import the dependencies and create an <a class="reference external" href="https://docs.mlrun.org/en/latest/projects/project.html">MLRun project</a>. The project contains all of your models, functions, datasets, etc:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlrun</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">get_or_create_project</span><span class="p">(</span><span class="s2">&quot;tutorial&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">user_project</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2022-09-20 19:15:36,113 [info] Created and saved project batch-predict: {&#39;from_template&#39;: None, &#39;overwrite&#39;: False, &#39;context&#39;: &#39;./&#39;, &#39;save&#39;: True}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-note admonition">
+<p class="admonition-title">Note</p>
+<p>This tutorial does not focus on training a model. Instead, it starts with a trained model and its corresponding training and prediction dataset.</p>
+</div>
+<p>You will use the following model files and datasets to perform the batch prediction. The model is a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">DecisionTreeClassifier</a> from sklearn and the datasets are in <code class="docutils literal notranslate"><span class="pre">parquet</span></code> format.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_path</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">get_sample_path</span><span class="p">(</span><span class="s1">&#39;models/batch-predict/model.pkl&#39;</span><span class="p">)</span>
+<span class="n">training_set_path</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">get_sample_path</span><span class="p">(</span><span class="s1">&#39;data/batch-predict/training_set.parquet&#39;</span><span class="p">)</span>
+<span class="n">prediction_set_path</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">get_sample_path</span><span class="p">(</span><span class="s1">&#39;data/batch-predict/prediction_set.parquet&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="view-data"></a></p>
+</section>
+<section id="view-the-data">
+<h2>View the data<a class="headerlink" href="#view-the-data" title="Permalink to this headline">#</a></h2>
+<p>The training data has 20 numerical features and a binary (0,1) label:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">training_set_path</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature_0</th>
+      <th>feature_1</th>
+      <th>feature_2</th>
+      <th>feature_3</th>
+      <th>feature_4</th>
+      <th>feature_5</th>
+      <th>feature_6</th>
+      <th>feature_7</th>
+      <th>feature_8</th>
+      <th>feature_9</th>
+      <th>...</th>
+      <th>feature_11</th>
+      <th>feature_12</th>
+      <th>feature_13</th>
+      <th>feature_14</th>
+      <th>feature_15</th>
+      <th>feature_16</th>
+      <th>feature_17</th>
+      <th>feature_18</th>
+      <th>feature_19</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.572754</td>
+      <td>0.171079</td>
+      <td>0.403080</td>
+      <td>0.955429</td>
+      <td>0.272039</td>
+      <td>0.360277</td>
+      <td>-0.995429</td>
+      <td>0.437239</td>
+      <td>0.991556</td>
+      <td>0.010004</td>
+      <td>...</td>
+      <td>0.112194</td>
+      <td>-0.319256</td>
+      <td>-0.392631</td>
+      <td>-0.290766</td>
+      <td>1.265054</td>
+      <td>1.037082</td>
+      <td>-1.200076</td>
+      <td>0.820992</td>
+      <td>0.834868</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.623733</td>
+      <td>-0.149823</td>
+      <td>-1.410537</td>
+      <td>-0.729388</td>
+      <td>-1.996337</td>
+      <td>-1.213348</td>
+      <td>1.461307</td>
+      <td>1.187854</td>
+      <td>-1.790926</td>
+      <td>-0.981600</td>
+      <td>...</td>
+      <td>0.428653</td>
+      <td>-0.503820</td>
+      <td>-0.798035</td>
+      <td>2.038105</td>
+      <td>-3.080463</td>
+      <td>0.408561</td>
+      <td>1.647116</td>
+      <td>-0.838553</td>
+      <td>0.680983</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.814168</td>
+      <td>-0.221412</td>
+      <td>0.020822</td>
+      <td>1.066718</td>
+      <td>-0.573164</td>
+      <td>0.067838</td>
+      <td>0.923045</td>
+      <td>0.338146</td>
+      <td>0.981413</td>
+      <td>1.481757</td>
+      <td>...</td>
+      <td>-1.052559</td>
+      <td>-0.241873</td>
+      <td>-1.232272</td>
+      <td>-0.010758</td>
+      <td>0.806800</td>
+      <td>0.661162</td>
+      <td>0.589018</td>
+      <td>0.522137</td>
+      <td>-0.924624</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.062279</td>
+      <td>-0.966309</td>
+      <td>0.341471</td>
+      <td>-0.737059</td>
+      <td>1.460671</td>
+      <td>0.367851</td>
+      <td>-0.435336</td>
+      <td>0.445308</td>
+      <td>-0.655663</td>
+      <td>-0.196220</td>
+      <td>...</td>
+      <td>0.641017</td>
+      <td>0.099059</td>
+      <td>1.902592</td>
+      <td>-1.024929</td>
+      <td>0.030703</td>
+      <td>-0.198751</td>
+      <td>-0.342009</td>
+      <td>-1.286865</td>
+      <td>-1.118373</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.195755</td>
+      <td>0.576332</td>
+      <td>-0.260496</td>
+      <td>0.841489</td>
+      <td>0.398269</td>
+      <td>-0.717972</td>
+      <td>0.810550</td>
+      <td>-1.058326</td>
+      <td>0.368610</td>
+      <td>0.606007</td>
+      <td>...</td>
+      <td>0.195267</td>
+      <td>0.876144</td>
+      <td>0.151615</td>
+      <td>0.094867</td>
+      <td>0.627353</td>
+      <td>-0.389023</td>
+      <td>0.662846</td>
+      <td>-0.857000</td>
+      <td>1.091218</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 21 columns</p>
+</div></div></div>
+</div>
+<p><strong>The prediciton data has 20 numerical features, but no label - this is what you will predict:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">prediction_set_path</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature_0</th>
+      <th>feature_1</th>
+      <th>feature_2</th>
+      <th>feature_3</th>
+      <th>feature_4</th>
+      <th>feature_5</th>
+      <th>feature_6</th>
+      <th>feature_7</th>
+      <th>feature_8</th>
+      <th>feature_9</th>
+      <th>feature_10</th>
+      <th>feature_11</th>
+      <th>feature_12</th>
+      <th>feature_13</th>
+      <th>feature_14</th>
+      <th>feature_15</th>
+      <th>feature_16</th>
+      <th>feature_17</th>
+      <th>feature_18</th>
+      <th>feature_19</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-2.059506</td>
+      <td>-1.314291</td>
+      <td>2.721516</td>
+      <td>-2.132869</td>
+      <td>-0.693963</td>
+      <td>0.376643</td>
+      <td>3.017790</td>
+      <td>3.876329</td>
+      <td>-1.294736</td>
+      <td>0.030773</td>
+      <td>0.401491</td>
+      <td>2.775699</td>
+      <td>2.361580</td>
+      <td>0.173441</td>
+      <td>0.879510</td>
+      <td>1.141007</td>
+      <td>4.608280</td>
+      <td>-0.518388</td>
+      <td>0.129690</td>
+      <td>2.794967</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-1.190382</td>
+      <td>0.891571</td>
+      <td>3.726070</td>
+      <td>0.673870</td>
+      <td>-0.252565</td>
+      <td>-0.729156</td>
+      <td>2.646563</td>
+      <td>4.782729</td>
+      <td>0.318952</td>
+      <td>-0.781567</td>
+      <td>1.473632</td>
+      <td>1.101721</td>
+      <td>3.723400</td>
+      <td>-0.466867</td>
+      <td>-0.056224</td>
+      <td>3.344701</td>
+      <td>0.194332</td>
+      <td>0.463992</td>
+      <td>0.292268</td>
+      <td>4.665876</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.996384</td>
+      <td>-0.099537</td>
+      <td>3.421476</td>
+      <td>0.162771</td>
+      <td>-1.143458</td>
+      <td>-1.026791</td>
+      <td>2.114702</td>
+      <td>2.517553</td>
+      <td>-0.154620</td>
+      <td>-0.465423</td>
+      <td>-1.723025</td>
+      <td>1.729386</td>
+      <td>2.820340</td>
+      <td>-1.041428</td>
+      <td>-0.331871</td>
+      <td>2.909172</td>
+      <td>2.138613</td>
+      <td>-0.046252</td>
+      <td>-0.732631</td>
+      <td>4.716266</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-0.289976</td>
+      <td>-1.680019</td>
+      <td>3.126478</td>
+      <td>-0.704451</td>
+      <td>-1.149112</td>
+      <td>1.174962</td>
+      <td>2.860341</td>
+      <td>3.753661</td>
+      <td>-0.326119</td>
+      <td>2.128411</td>
+      <td>-0.508000</td>
+      <td>2.328688</td>
+      <td>3.397321</td>
+      <td>-0.932060</td>
+      <td>-1.442370</td>
+      <td>2.058517</td>
+      <td>3.881936</td>
+      <td>2.090635</td>
+      <td>-0.045832</td>
+      <td>4.197315</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.294866</td>
+      <td>1.044919</td>
+      <td>2.924139</td>
+      <td>0.814049</td>
+      <td>-1.455054</td>
+      <td>-0.270432</td>
+      <td>3.380195</td>
+      <td>2.339669</td>
+      <td>1.029101</td>
+      <td>-1.171018</td>
+      <td>-1.459395</td>
+      <td>1.283565</td>
+      <td>0.677006</td>
+      <td>-2.147444</td>
+      <td>-0.494150</td>
+      <td>3.222041</td>
+      <td>6.219348</td>
+      <td>-1.914110</td>
+      <td>0.317786</td>
+      <td>4.143443</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><a id="log-model"></a></p>
+</section>
+<section id="log-the-model-with-training-data">
+<h2>Log the model with training data<a class="headerlink" href="#log-the-model-with-training-data" title="Permalink to this headline">#</a></h2>
+<p>Next, log the model using MLRun experiment tracking. This is usually done in a training pipeline, but you can also bring in your pre-trained models from other sources. See <a class="reference external" href="https://docs.mlrun.org/en/latest/training/working-with-data-and-model-artifacts.html">Working with data and model artifacts</a> and <a class="reference external" href="https://docs.mlrun.org/en/latest/concepts/auto-logging-mlops.html">Automated experiment tracking</a> for more information.</p>
+<p>In this example, you are logging a training set with the model for future comparison, however you can also directly pass in your training set to the batch prediction function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_artifact</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span>
+    <span class="n">model_file</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
+    <span class="n">framework</span><span class="o">=</span><span class="s2">&quot;sklearn&quot;</span><span class="p">,</span>
+    <span class="n">training_set</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">training_set_path</span><span class="p">),</span>
+    <span class="n">label_column</span><span class="o">=</span><span class="s2">&quot;label&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the model artifact unique URI</span>
+<span class="n">model_artifact</span><span class="o">.</span><span class="n">uri</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;store://models/batch-predict/model#0:latest&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="run"></a></p>
+</section>
+<section id="import-and-run-the-batch-inference-function">
+<h2>Import and run the batch inference function<a class="headerlink" href="#import-and-run-the-batch-inference-function" title="Permalink to this headline">#</a></h2>
+<p>Next, import the <a class="reference external" href="https://www.mlrun.org/marketplace/functions/master/batch_inference/">batch inference</a> function from the <a class="reference external" href="https://www.mlrun.org/marketplace/">MLRun Function Hub</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fn</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">import_function</span><span class="p">(</span><span class="s2">&quot;hub://batch_inference&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="run-batch-inference">
+<h3>Run batch inference<a class="headerlink" href="#run-batch-inference" title="Permalink to this headline">#</a></h3>
+<p>Finally, perform the batch prediction by passing in your model and datasets. See the corresponding <a class="reference external" href="https://github.com/mlrun/functions/blob/development/batch_inference/batch_inference.ipynb">batch inference example notebook</a> for an exhaustive list of other parameters that are supported:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">run_function</span><span class="p">(</span>
+    <span class="n">fn</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="n">prediction_set_path</span><span class="p">,</span>
+        <span class="c1"># If you do not log a dataset with your model, you can pass it in here:</span>
+<span class="c1">#       &quot;sample_set&quot; : training_set_path</span>
+    <span class="p">},</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model_artifact</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span>
+        <span class="s2">&quot;perform_drift_analysis&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="view-results"></a></p>
+</section>
+</section>
+<section id="view-predictions-and-drift-status">
+<h2>View predictions and drift status<a class="headerlink" href="#view-predictions-and-drift-status" title="Permalink to this headline">#</a></h2>
+<p>These are the batch predicictions on the prediction set from the model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run</span><span class="o">.</span><span class="n">artifact</span><span class="p">(</span><span class="s2">&quot;prediction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature_0</th>
+      <th>feature_1</th>
+      <th>feature_2</th>
+      <th>feature_3</th>
+      <th>feature_4</th>
+      <th>feature_5</th>
+      <th>feature_6</th>
+      <th>feature_7</th>
+      <th>feature_8</th>
+      <th>feature_9</th>
+      <th>...</th>
+      <th>feature_11</th>
+      <th>feature_12</th>
+      <th>feature_13</th>
+      <th>feature_14</th>
+      <th>feature_15</th>
+      <th>feature_16</th>
+      <th>feature_17</th>
+      <th>feature_18</th>
+      <th>feature_19</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-2.059506</td>
+      <td>-1.314291</td>
+      <td>2.721516</td>
+      <td>-2.132869</td>
+      <td>-0.693963</td>
+      <td>0.376643</td>
+      <td>3.017790</td>
+      <td>3.876329</td>
+      <td>-1.294736</td>
+      <td>0.030773</td>
+      <td>...</td>
+      <td>2.775699</td>
+      <td>2.361580</td>
+      <td>0.173441</td>
+      <td>0.879510</td>
+      <td>1.141007</td>
+      <td>4.608280</td>
+      <td>-0.518388</td>
+      <td>0.129690</td>
+      <td>2.794967</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-1.190382</td>
+      <td>0.891571</td>
+      <td>3.726070</td>
+      <td>0.673870</td>
+      <td>-0.252565</td>
+      <td>-0.729156</td>
+      <td>2.646563</td>
+      <td>4.782729</td>
+      <td>0.318952</td>
+      <td>-0.781567</td>
+      <td>...</td>
+      <td>1.101721</td>
+      <td>3.723400</td>
+      <td>-0.466867</td>
+      <td>-0.056224</td>
+      <td>3.344701</td>
+      <td>0.194332</td>
+      <td>0.463992</td>
+      <td>0.292268</td>
+      <td>4.665876</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.996384</td>
+      <td>-0.099537</td>
+      <td>3.421476</td>
+      <td>0.162771</td>
+      <td>-1.143458</td>
+      <td>-1.026791</td>
+      <td>2.114702</td>
+      <td>2.517553</td>
+      <td>-0.154620</td>
+      <td>-0.465423</td>
+      <td>...</td>
+      <td>1.729386</td>
+      <td>2.820340</td>
+      <td>-1.041428</td>
+      <td>-0.331871</td>
+      <td>2.909172</td>
+      <td>2.138613</td>
+      <td>-0.046252</td>
+      <td>-0.732631</td>
+      <td>4.716266</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-0.289976</td>
+      <td>-1.680019</td>
+      <td>3.126478</td>
+      <td>-0.704451</td>
+      <td>-1.149112</td>
+      <td>1.174962</td>
+      <td>2.860341</td>
+      <td>3.753661</td>
+      <td>-0.326119</td>
+      <td>2.128411</td>
+      <td>...</td>
+      <td>2.328688</td>
+      <td>3.397321</td>
+      <td>-0.932060</td>
+      <td>-1.442370</td>
+      <td>2.058517</td>
+      <td>3.881936</td>
+      <td>2.090635</td>
+      <td>-0.045832</td>
+      <td>4.197315</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.294866</td>
+      <td>1.044919</td>
+      <td>2.924139</td>
+      <td>0.814049</td>
+      <td>-1.455054</td>
+      <td>-0.270432</td>
+      <td>3.380195</td>
+      <td>2.339669</td>
+      <td>1.029101</td>
+      <td>-1.171018</td>
+      <td>...</td>
+      <td>1.283565</td>
+      <td>0.677006</td>
+      <td>-2.147444</td>
+      <td>-0.494150</td>
+      <td>3.222041</td>
+      <td>6.219348</td>
+      <td>-1.914110</td>
+      <td>0.317786</td>
+      <td>4.143443</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 21 columns</p>
+</div></div></div>
+</div>
+<p>There is also a drift table plot that compares the drift between the training data and prediction data per feature:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run</span><span class="o">.</span><span class="n">artifact</span><span class="p">(</span><span class="s2">&quot;drift_table_plot&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="drift_table_plot" src="../_images/drift_table_plot.png" /></p>
+<p>Finally, you also get a numerical drift metric and boolean flag denoting whether or not data drift is detected:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;drift_status&#39;: False, &#39;drift_metric&#39;: 0.29934242566253266}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data/concept drift per feature</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">artifact</span><span class="p">(</span><span class="s2">&quot;features_drift_results&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;feature_6&#39;: 0.7262042202197605,
+ &#39;feature_2&#39;: 0.7391279921664593,
+ &#39;feature_16&#39;: 0.7181622588902428,
+ &#39;feature_0&#39;: 0.028086840976606773,
+ &#39;feature_3&#39;: 0.043769819014849734,
+ &#39;feature_18&#39;: 0.04443732609382538,
+ &#39;feature_15&#39;: 0.6329075683793959,
+ &#39;feature_1&#39;: 0.04485072701663093,
+ &#39;feature_12&#39;: 0.7034787615778625,
+ &#39;feature_14&#39;: 0.046364723781764774,
+ &#39;feature_8&#39;: 0.039060131873550404,
+ &#39;feature_10&#39;: 0.042567035578799796,
+ &#39;feature_11&#39;: 0.7221431701127441,
+ &#39;feature_5&#39;: 0.05184219833790496,
+ &#39;feature_9&#39;: 0.04468363504674985,
+ &#39;feature_19&#39;: 0.7902698698155215,
+ &#39;feature_4&#39;: 0.042755641152500176,
+ &#39;feature_13&#39;: 0.04239724655474124,
+ &#39;feature_7&#39;: 0.7297906294873706,
+ &#39;feature_17&#39;: 0.03587785749574268,
+ &#39;label&#39;: 0.017413285340161608}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">#</a></h2>
+<p>In a production setting, you probably want to incorporate this as part of a larger pipeline or application.</p>
+<p>For example, if you use this function for the prediction capabilities, you can pass the <code class="docutils literal notranslate"><span class="pre">prediction</span></code> output as the input to another pipeline step, store it in an external location like S3, or send to an application or user.</p>
+<p>If you use this function for the drift detection capabilities, you can use the <code class="docutils literal notranslate"><span class="pre">drift_status</span></code> and <code class="docutils literal notranslate"><span class="pre">drift_metrics</span></code> outputs to automate further pipeline steps, send a notification, or kick off a re-training pipeline.</p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="06-add-mlops-to-code.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Add MLOps to existing code</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../feature-store/basic-demo.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Feature store example (stocks)</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Iguazio<br/>
+  
+      &copy; Copyright 2022, Iguazio.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+
+<div class="footer"><!-- This page uses <a href="https://analytics.google.com/">
+Google Analytics</a> to collect statistics. You can disable it by blocking
+the JavaScript coming from www.google-analytics.com. -->
+
+</div>
+
+  </body>
+</html>

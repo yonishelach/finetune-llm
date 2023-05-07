@@ -1,0 +1,1718 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Model monitoring overview</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="/_/static/css/badge_only.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="/_/static/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="canonical" href="https://docs.mlrun.org/en/stable/monitoring/model-monitoring-deployment.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Enable model monitoring" href="initial-setup-configuration.html" />
+    <link rel="prev" title="Monitor and alert" href="index.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MV26G85');</script>
+<!-- End Google Tag Manager -->
+
+
+  
+<!-- RTD Extra Head -->
+
+<link rel="stylesheet" href="/_/static/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2022-12-01T09:20:37Z", "builder": "sphinx", "canonical_url": null, "commit": "9933138d", "docroot": "/docs/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "monitoring/model-monitoring-deployment", "programming_language": "py", "project": "mlrun", "proxied_api_host": "/_", "source_suffix": ".ipynb", "subprojects": {}, "theme": "sphinx_book_theme", "user_analytics_code": "UA-101852366-5", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="/_/static/javascript/readthedocs-analytics.js" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+</head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/MLRun_Character.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLRun basics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../index.html">
+   Using MLRun
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     MLRun architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mlops-dev-flow.html">
+   MLOps development workflow
+   <!-- omit in toc -->
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../tutorial/index.html">
+   Tutorials and Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/01-mlrun-basics.html">
+     Quick start tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/02-model-training.html">
+     Train, compare, and register models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/03-model-serving.html">
+     Serving pre-trained ML/DL models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/04-pipeline.html">
+     Projects and automated ML pipeline
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/05-model-monitoring.html">
+     Model monitoring and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/06-add-mlops-to-code.html">
+     Add MLOps to existing code
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorial/07-batch-infer.html">
+     Batch inference and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/basic-demo.html">
+     Feature store example (stocks)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference external" href="https://github.com/mlrun/demos">
+     MLRun demos repository
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../install.html">
+   Installation and setup guide
+   <!-- omit in toc -->
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/local-docker.html">
+     Install MLRun locally using Docker
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/kubernetes.html">
+     Install MLRun on Kubernetes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/aws-install.html">
+     Install MLRun on AWS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../install/remote.html">
+     Set up your client environment
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core components
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../projects/project.html">
+   Projects and automation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/create-project.html">
+     Create, save, and use projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/load-project.html">
+     Load and run projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/run-build-deploy.html">
+     Run, build, and deploy functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/build-run-workflows-pipelines.html">
+     Build and run workflows/pipelines
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../projects/ci-integration.html">
+     CI/CD integration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../secrets.html">
+     Working with secrets
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../runtimes/functions.html">
+   Serverless functions
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/functions-architecture.html">
+     Functions architecture
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../concepts/functions-overview.html">
+     Kinds of functions (runtimes)
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../runtimes/dask-overview.html">
+       Dask distributed runtime
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-mlrun.html">
+         Running Dask on the cluster with mlrun
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../runtimes/dask-pipeline.html">
+         Pipelines using Dask, Kubeflow and MLRun
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/horovod.html">
+       MPIJob and Horovod runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../runtimes/spark-operator.html">
+       Spark Operator runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/nuclio-real-time-functions.html">
+       Nuclio real-time functions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/create-and-use-functions.html">
+     Create and use functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/mlrun_code_annotations.html">
+     Converting notebooks to function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/function-storage.html">
+     Attach storage to functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/images.html">
+     Images and their usage in MLRun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/image-build.html">
+     Build function image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/node-affinity.html">
+     Node affinity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/configuring-job-resources.html">
+     Managing job resources
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/load-from-hub.html">
+     Function Hub
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/data.html">
+   Data and artifacts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/datastore.html">
+     Data stores
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/data-items.html">
+     Data items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/artifacts.html">
+     Artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../store/models.html">
+     Model Artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../feature-store/feature-store.html">
+   Feature store
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-store-overview.html">
+     Feature store overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-sets.html">
+     Feature sets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/transformations.html">
+     Feature set transformations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/feature-vectors.html">
+     Creating and using feature vectors
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../feature-store/end-to-end-demo/index.html">
+     Feature store end-to-end demo
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/01-ingest-datasources.html">
+       Part 1: Data Ingestion
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/02-create-training-model.html">
+       Part 2: Training
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/03-deploy-serving-model.html">
+       Part 3: Serving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../feature-store/end-to-end-demo/04-pipeline.html">
+       Part 4: Automated ML pipeline
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/runs-workflows.html">
+   Batch runs and workflows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/mlrun-execution-context.html">
+     MLRun execution context
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/decorators-and-auto-logging.html">
+     Decorators and auto-logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/submitting-tasks-jobs-to-functions.html">
+     Running a task (job)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/workflow-overview.html">
+     Running a multi-stage workflow
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/scheduled-jobs.html">
+     Scheduled jobs and workflows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../serving/serving-graph.html">
+   Real-time serving pipelines (graphs)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/getting-started.html">
+     Getting started
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/use-cases.html">
+     Use cases
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/realtime-pipelines.html">
+     Graph concepts and state machine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/model-serving-get-started.html">
+     Model serving graph
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/writing-custom-steps.html">
+     Writing custom steps
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/available-steps.html">
+     Built-in steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/demos.html">
+     Demos and tutorials
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/distributed-graph.html">
+       Distributed (multi-function) pipeline example
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/graph-example.html">
+       Advanced model serving graph - notebook example
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/graph-ha-cfg.html">
+     Serving graph high availability configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/pipelines-error-handling.html">
+     Error handling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/monitoring.html">
+   Model monitoring
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLOps tasks
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data-prep/index.html">
+   Ingest and process data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingesting_data.html">
+     Using data sources and items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/logging_datasets.html">
+     Logging datasets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../runtimes/spark-operator.html">
+     Spark Operator runtime
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data-prep/ingest-data-fs.html">
+     Ingest data using the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/using-spark-engine.html">
+     Ingest features with Spark
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../development/index.html">
+   Develop and train models
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../development/model-training-tracking.html">
+     Model training and tracking
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/create-a-basic-training-job.html">
+       Create a basic training job
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/working-with-data-and-model-artifacts.html">
+       Working with data and model artifacts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../concepts/auto-logging-mlops.html">
+       Automated experiment tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../training/built-in-training-function.html">
+       Using the built-in training function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../hyper-params.html">
+       Hyperparameter tuning optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/retrieve-offline-data.html">
+     Training with the feature store
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../deployment/index.html">
+   Deploy models and applications
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../serving/serving-overview.html">
+     Real-time deployment
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/built-in-model-serving.html">
+       Using built-in model serving classes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/custom-model-serving-class.html">
+       Build your own model serving class
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/test-deploy-model-server.html">
+       Test and deploy a model server
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../serving/model-api.html">
+       Model serving API
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store/training-serving.html">
+     Serving with the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../deployment/batch_inference.html">
+     Batch inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../serving/canary.html">
+     Canary and rolling upgrades
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   Monitor and alert
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Model monitoring overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="initial-setup-configuration.html">
+     Enable model monitoring
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../genindex.html">
+   API index
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../api/index.html">
+   API by module
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+  <label for="toctree-checkbox-20">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../api/mlrun.frameworks/index.html">
+     mlrun.frameworks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.auto_mlrun.html">
+       AutoMLRun
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.tf_keras.html">
+       TensorFlow.Keras
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.pytorch.html">
+       PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.sklearn.html">
+       SciKit-Learn
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.xgboost.html">
+       XGBoost
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/mlrun.frameworks/mlrun.frameworks.lgbm.html">
+       LightGBM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.html">
+     mlrun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.artifacts.html">
+     mlrun.artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.config.html">
+     mlrun.config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.datastore.html">
+     mlrun.datastore
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.db.html">
+     mlrun.db
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.execution.html">
+     mlrun.execution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.feature_store.html">
+     mlrun.feature_store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.model.html">
+     mlrun.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.platforms.html">
+     mlrun.platforms
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.projects.html">
+     mlrun.projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.run.html">
+     mlrun.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.runtimes.html">
+     mlrun.runtimes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/mlrun.serving.html">
+     mlrun.serving
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/storey.transformations.html">
+     storey.transformations - Graph transformations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cli.html">
+   Command-Line Interface
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            By <a href="https://www.iguazio.com/">Iguazio</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/mlrun/mlrun"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/issues/new?title=Issue%20on%20page%20%2Fmonitoring/model-monitoring-deployment.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/edit/development/docs/monitoring/model-monitoring-deployment.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/monitoring/model-monitoring-deployment.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#architecture">
+   Architecture
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#drift-analysis">
+     Drift analysis
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#common-terminology">
+     Common terminology
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model-monitoring-using-the-iguazio-platform-interface">
+   Model monitoring using the Iguazio platform interface
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-summary-list">
+     Model endpoint summary list
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-overview">
+     Model endpoint overview
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-drift-analysis">
+     Model drift analysis
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-features-analysis">
+     Model features analysis
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model-monitoring-using-grafana-dashboards">
+   Model monitoring using Grafana dashboards
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoints-overview-dashboard">
+     Model endpoints overview dashboard
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#how-to-read-a-heat-map">
+       How to read a heat map
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-details-dashboard">
+     Model endpoint details dashboard
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#project-and-model-summary">
+       Project and model summary
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#analysis-panes">
+       Analysis panes
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#incoming-features-graph">
+       Incoming features graph
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-performance-dashboard">
+     Model endpoint performance dashboard
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#configuring-grafana-dashboards">
+     Configuring Grafana dashboards
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Model monitoring overview</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#architecture">
+   Architecture
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#drift-analysis">
+     Drift analysis
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#common-terminology">
+     Common terminology
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model-monitoring-using-the-iguazio-platform-interface">
+   Model monitoring using the Iguazio platform interface
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-summary-list">
+     Model endpoint summary list
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-overview">
+     Model endpoint overview
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-drift-analysis">
+     Model drift analysis
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-features-analysis">
+     Model features analysis
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model-monitoring-using-grafana-dashboards">
+   Model monitoring using Grafana dashboards
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoints-overview-dashboard">
+     Model endpoints overview dashboard
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#how-to-read-a-heat-map">
+       How to read a heat map
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-details-dashboard">
+     Model endpoint details dashboard
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#project-and-model-summary">
+       Project and model summary
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#analysis-panes">
+       Analysis panes
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#incoming-features-graph">
+       Incoming features graph
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-endpoint-performance-dashboard">
+     Model endpoint performance dashboard
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#configuring-grafana-dashboards">
+     Configuring Grafana dashboards
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="model-monitoring-overview">
+<span id="id1"></span><h1>Model monitoring overview<a class="headerlink" href="#model-monitoring-overview" title="Permalink to this headline">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is currently a beta feature.</p>
+</div>
+<p><strong>In this section</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="#architecture">Architecture</a></p></li>
+<li><p><a class="reference external" href="#model-monitoring-using-the-iguazio-platform-interface">Model monitoring using the Iguazio platform interface</a></p></li>
+<li><p><a class="reference external" href="#model-monitoring-using-grafana-dashboards">Model monitoring using Grafana dashboards</a></p></li>
+</ul>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">#</a></h2>
+<p>The model monitoring process flow starts with collecting operational data. The operational data are converted to vectors, which are posted to the Model Server.
+The model server is then wrapped around a machine learning model that uses a function to calculate predictions based on the available vectors.
+Next, the model server creates a log for the input and output of the vectors, and the entries are written to the production data stream (a <a class="reference external" href="https://nuclio.io/docs/latest/reference/triggers/v3iostream/">v3io stream</a>).
+While the model server is processing the vectors, a Nuclio operation monitors the log of the data stream and is triggered when a new log entry is detected.
+The Nuclio function examines the log entry, processes it into statistics which are then written to the statistics databases (parquet file, time series database and key value database).
+The parquet files are written as a feature set under the model monitoring project. The parquet files can be read either using <code class="docutils literal notranslate"><span class="pre">pandas.read_parquet</span></code> or <code class="docutils literal notranslate"><span class="pre">feature_set.get_offline_features</span></code>, like any other feature set.
+In parallel, a scheduled MLRun job runs reading the parquet files, performing drift analysis. The drift analysis data is stored so that the user can retrieve it in the Iguazio UI or in a Grafana dashboard.</p>
+<p><img alt="Architecture" src="../_images/model-monitoring-data-flow.svg" /></p>
+<section id="drift-analysis">
+<h3>Drift analysis<a class="headerlink" href="#drift-analysis" title="Permalink to this headline">#</a></h3>
+<p>The model monitoring feature provides drift analysis monitoring.
+Model drift in machine learning is a situation where the statistical properties of the target variable (what the model is trying to predict) change over time.
+In other words, the production data has changed significantly over the course of time and no longer matches the input data used to train the model.
+So, for this new data, accuracy of the model predictions is low. Drift analysis statistics are computed once an hour.
+For more information see <a href="https://www.iguazio.com/glossary/concept-drift/" target="_blank">Concept Drift</a>.</p>
+</section>
+<section id="common-terminology">
+<h3>Common terminology<a class="headerlink" href="#common-terminology" title="Permalink to this headline">#</a></h3>
+<p>The following terms are used in all the model monitoring pages:</p>
+<ul class="simple">
+<li><p><strong>Total Variation Distance</strong> (TVD) — The statistical difference between the actual predictions and the model’s trained predictions.</p></li>
+<li><p><strong>Hellinger Distance</strong> — A type of f-divergence that quantifies the similarity between the actual predictions, and the model’s trained predictions.</p></li>
+<li><p><strong>Kullback–Leibler Divergence</strong> (KLD) — The measure of how the probability distribution of actual predictions is different from the second model’s trained reference probability distribution.</p></li>
+<li><p><strong>Model Endpoint</strong> — A combination of a deployed Nuclio function and the models themselves. One function can run multiple endpoints; however, statistics are saved per endpoint.</p></li>
+</ul>
+</section>
+</section>
+<section id="model-monitoring-using-the-iguazio-platform-interface">
+<h2>Model monitoring using the Iguazio platform interface<a class="headerlink" href="#model-monitoring-using-the-iguazio-platform-interface" title="Permalink to this headline">#</a></h2>
+<p>Iguazio’s model monitoring data is available for viewing through the regular platform interface.
+The platform provides four information pages with model monitoring data.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#model-endpoint-summary-list">Model endpoint summary list</a></p></li>
+<li><p><a class="reference external" href="#model-endpoint-overview">Model endpoint overview</a></p></li>
+<li><p><a class="reference external" href="#model-drift-analysis">Model drift analysis</a></p></li>
+<li><p><a class="reference external" href="#model-features-analysis">Model features analysis</a></p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>Select a project from the project tiles screen.</p></li>
+<li><p>From the project dashboard, press the <strong>Models</strong> tile to view the models currently deployed .</p></li>
+<li><p>Press <strong>Model Endpoints</strong> from the menu to display a list of monitored endpoints.<br>
+If the Model Monitoring feature is not enabled, the endpoints list is empty.</p></li>
+</ol>
+<section id="model-endpoint-summary-list">
+<h3>Model endpoint summary list<a class="headerlink" href="#model-endpoint-summary-list" title="Permalink to this headline">#</a></h3>
+<p>The Model Endpoints summary list provides a quick view of the model monitoring data.</p>
+<p><img alt="Model Monitoring Summary List" src="../_images/model_endpoints_main.png" /></p>
+<p>The summary page contains the following fields:</p>
+<ul class="simple">
+<li><p><strong>Name</strong> — the name of the model endpoint</p></li>
+<li><p><strong>Version</strong> — user configured version taken from model deployment</p></li>
+<li><p><strong>Class</strong> — the implementation class that is used by the endpoint</p></li>
+<li><p><strong>Model</strong> — user defined name for the model</p></li>
+<li><p><strong>Labels</strong> — user configurable tags that are searchable</p></li>
+<li><p><strong>Uptime</strong> — first request for production data</p></li>
+<li><p>**Last Prediction **— most recent request for production data</p></li>
+<li><p>**Error Count **— includes prediction process errors such as operational issues (For example, a function in a failed state), as well as data processing errors
+(For example, invalid timestamps, request ids, type mismatches etc.)</p></li>
+<li><p><strong>Drift</strong> — indication of drift status (no drift (green), possible drift (yellow), drift detected (red))</p></li>
+<li><p><strong>Accuracy</strong> — a numeric value representing the accuracy of model predictions (N/A)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Model Accuracy is currently under development.</p>
+</div>
+</section>
+<section id="model-endpoint-overview">
+<h3>Model endpoint overview<a class="headerlink" href="#model-endpoint-overview" title="Permalink to this headline">#</a></h3>
+<p>The Model Endpoints overview pane displays general information about the selected model.</p>
+<p><img alt="Model Endpoints Overview" src="../_images/IG_model_endpoints_overview.png" /></p>
+<p>The Overview page contains the following fields:</p>
+<ul class="simple">
+<li><p><strong>UUID</strong> — the ID of the deployed model</p></li>
+<li><p><strong>Model Class</strong> — the implementation class that is used by the endpoint</p></li>
+<li><p><strong>Model Artifact</strong> — reference to the model’s file location</p></li>
+<li><p><strong>Function URI</strong> — the MLRun function to access the model</p></li>
+<li><p><strong>Last Prediction</strong> — most recent request for production data</p></li>
+<li><p><strong>Error Count</strong> — includes prediction process errors such as operational issues (For example, a function in a failed state), as well as data processing errors
+(For example, invalid timestamps, request ids, type mismatches etc.)</p></li>
+<li><p><strong>Accuracy</strong> — a numeric value representing the accuracy of model predictions (N/A)</p></li>
+<li><p><strong>Stream path</strong> — the input and output stream of the selected model</p></li>
+</ul>
+<p>Use the ellipsis to view the YAML resource file for details about the monitored resource.</p>
+</section>
+<section id="model-drift-analysis">
+<h3>Model drift analysis<a class="headerlink" href="#model-drift-analysis" title="Permalink to this headline">#</a></h3>
+<p>The Drift Analysis pane provides performance statistics for the currently selected model.</p>
+<p><img alt="Model Endpoints Drift Analysis" src="../_images/IG_model_endpoints_drift_analysis.png" /></p>
+<p>Each of the following fields has both sum and mean numbers displayed. For definitions of the terms see <a class="reference external" href="#common-terminology">Common Terminology</a>.</p>
+<ul class="simple">
+<li><p><strong>TVD</strong></p></li>
+<li><p><strong>Hellinger</strong></p></li>
+<li><p><strong>KLD</strong></p></li>
+</ul>
+<p>Use the ellipsis to view the YAML resource file for details about the monitored resource.</p>
+</section>
+<section id="model-features-analysis">
+<h3>Model features analysis<a class="headerlink" href="#model-features-analysis" title="Permalink to this headline">#</a></h3>
+<p>The Features Analysis pane provides details of the drift analysis in a table format with each feature in the selected model on its own line.</p>
+<p><img alt="Model Endpoints Features Analysis" src="../_images/IG_model_endpoints_features_analysis.png" /></p>
+<p>Each field has a pair of columns. The <strong>Expected</strong> column displays the results from the model training phase, and the <strong>Actual</strong> column
+displays the results from the live production data. The following fields are available:</p>
+<ul class="simple">
+<li><p><strong>Mean</strong></p></li>
+<li><p><strong>STD</strong> (Standard deviation)</p></li>
+<li><p><strong>Min</strong></p></li>
+<li><p><strong>Max</strong></p></li>
+<li><p><strong>TVD</strong></p></li>
+<li><p><strong>Hellinger</strong></p></li>
+<li><p><strong>KLD</strong></p></li>
+<li><p><strong>Histograms</strong>—the approximate representation of the distribution of the data. Hover over the bars in the graph for  the details.</p></li>
+</ul>
+<p>Use the ellipsis to view the YAML resource file for details about the monitored resource.</p>
+</section>
+</section>
+<section id="model-monitoring-using-grafana-dashboards">
+<h2>Model monitoring using Grafana dashboards<a class="headerlink" href="#model-monitoring-using-grafana-dashboards" title="Permalink to this headline">#</a></h2>
+<p>You can deploy a Grafana service in your Iguazio instance and use Grafana Dashboards to view model monitoring details.
+There are three dashboards available:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#model-endpoints-overview-dashboard">Overview Dashboard</a></p></li>
+<li><p><a class="reference external" href="#model-endpoint-details-dashboard">Details Dashboard</a></p></li>
+<li><p><a class="reference external" href="#model-endpoint-performance-dashboard">Performance Dashboard</a></p></li>
+</ul>
+<section id="model-endpoints-overview-dashboard">
+<h3>Model endpoints overview dashboard<a class="headerlink" href="#model-endpoints-overview-dashboard" title="Permalink to this headline">#</a></h3>
+<p>The Overview dashboard displays the model endpoint IDs of a specific project. Only deployed models with Model Monitoring enabled are displayed.
+Endpoint IDs are URIs used to provide access to performance data and drift detection statistics of a deployed model.</p>
+<p><img alt="overview" src="../_images/overview.png" /></p>
+<p>The Overview pane provides details about the performance of all the deployed and monitored models within a project. You can change projects by choosing a new project from the
+<strong>Project</strong> dropdown. The Overview dashboard displays the number of endpoints in the project, the average predictions per second (using a 5-minute rolling average),
+the average latency (using a 1-hour rolling average), and the total error count in the project.</p>
+<p>Additional details include:</p>
+<ul class="simple">
+<li><p><strong>Endpoint ID</strong> — the ID of the deployed model. Use this link to drill down to the model performance and details panes.</p></li>
+<li><p><strong>Function</strong> — the MLRun function to access the model</p></li>
+<li><p><strong>Model</strong> — user defined name for the model</p></li>
+<li><p><strong>Model Class</strong> — the implementation class that is used by the endpoint</p></li>
+<li><p><strong>First Request</strong> — first request for production data</p></li>
+<li><p><strong>Last Request</strong> — most recent request for production data</p></li>
+<li><p><strong>Error Count</strong> — includes prediction process errors such as operational issues (for example, a function in a failed state), as well as data processing errors
+(for example, invalid timestamps, request ids, type mismatches etc.)</p></li>
+<li><p><strong>Accuracy</strong> — a numeric value representing the accuracy of model predictions (N/A)</p></li>
+<li><p><strong>Drift Status</strong> — no drift (green), possible drift (yellow), drift detected (red)</p></li>
+</ul>
+<p>At the bottom of the dashboard are heat maps for the Predictions per second, Average Latency and Errors. The heat maps display data based on 15 minute intervals.
+See <a class="reference external" href="#how-to-read-a-heat-map">How to Read a Heat Map</a> for more details.</p>
+<p>Click an endpoint ID to drill down the performance details of that model.</p>
+<section id="how-to-read-a-heat-map">
+<h4>How to read a heat map<a class="headerlink" href="#how-to-read-a-heat-map" title="Permalink to this headline">#</a></h4>
+<p>Heat maps are used to analyze trends and to instantly transform and enhance data through visualizations. This helps to quickly identify areas of interest,
+and empower users to explore the data in order to pinpoint where there may be potential issues. A heat map uses a matrix layout with colour and shading to show the relationship between
+two categories of values (x and y axes), so the darker the cell, the higher the value. The values presented along each axis correspond to a cell which is color-coded to represent the relationship between
+the two categories. The Predictions per second heatmap shows the relationship between time, and the predictions per second, and the Average Latency per hour shows the relationship between
+time and the latency.</p>
+<p>To properly read the heap maps, follow the hierarchy of shades from the darkest (the highest values) to the lightest shades (the lowest values).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The exact quantitative values represented by the colors may be difficult to determine. Use the <a class="reference external" href="#model-endpoint-performance-dashboard">Performance Dashboard</a> to see detailed results.</p>
+</div>
+</section>
+</section>
+<section id="model-endpoint-details-dashboard">
+<h3>Model endpoint details dashboard<a class="headerlink" href="#model-endpoint-details-dashboard" title="Permalink to this headline">#</a></h3>
+<p>The model endpoint details dashboard displays the real time performance data of the selected model in detail.
+Model performance data provided is rich and is used to fine tune or diagnose potential performance issues that may affect business goals.
+The data in this dashboard changes based on the selection of the project and model.</p>
+<p>This dashboard has three panes:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="#project-and-model-summary">Project and model summary</a></p></li>
+<li><p><a class="reference external" href="#analysis-panes">Analysis panes</a></p>
+<ol class="arabic simple">
+<li><p>Overall drift analysis</p></li>
+<li><p>Features analysis</p></li>
+</ol>
+</li>
+<li><p><a class="reference external" href="#incoming-features-graph">Incoming features graph</a></p></li>
+</ol>
+<p><img alt="details" src="../_images/details.png" /></p>
+<section id="project-and-model-summary">
+<h4>Project and model summary<a class="headerlink" href="#project-and-model-summary" title="Permalink to this headline">#</a></h4>
+<p>Use the dropdown to change the project and model. The dashboard presents the following information about the project:</p>
+<ul class="simple">
+<li><p><strong>Endpoint ID</strong> — the ID of the deployed model</p></li>
+<li><p><strong>Model</strong> — user defined name for the model</p></li>
+<li><p><strong>Function URI</strong> — the MLRun function to access the model</p></li>
+<li><p><strong>Model Class</strong> — the implementation class that is used by the endpoint</p></li>
+<li><p><strong>Prediction/s</strong> — the average number of predictions per second over a rolling 5-minute period</p></li>
+<li><p><strong>Average Latency</strong> — the average latency over a rolling 1-hour period</p></li>
+<li><p><strong>First Request</strong> — first request for production data</p></li>
+<li><p><strong>Last Request</strong> — most recent request for production data</p></li>
+</ul>
+<p>Use the <a class="reference external" href="#model-endpoint-performance-dashboard">Performance</a> and <a class="reference external" href="#model-endpoints-overview-dashboard">Overview</a> buttons view those dashboards.</p>
+</section>
+<section id="analysis-panes">
+<h4>Analysis panes<a class="headerlink" href="#analysis-panes" title="Permalink to this headline">#</a></h4>
+<p>This pane has two sections: Overall Drift Analysis and Features Analysis.
+The Overall Drift Analysis pane provides performance statistics for the currently selected model.</p>
+<ul class="simple">
+<li><p><strong>TVD</strong> (sum and mean)</p></li>
+<li><p><strong>Hellinger</strong> (sum and mean)</p></li>
+<li><p><strong>KLD</strong> (sum and mean)</p></li>
+</ul>
+<p>The Features Analysis pane provides details of the drift analysis for each feature in the selected model.
+This pane includes five types of statistics:</p>
+<ul class="simple">
+<li><p><strong>Actual</strong> (min, mean and max) — results based on actual live data stream</p></li>
+<li><p><strong>Expected</strong> (min, mean and max) — results based on training data</p></li>
+<li><p><strong>TVD</strong></p></li>
+<li><p><strong>Hellinger</strong></p></li>
+<li><p><strong>KLD</strong></p></li>
+</ul>
+</section>
+<section id="incoming-features-graph">
+<h4>Incoming features graph<a class="headerlink" href="#incoming-features-graph" title="Permalink to this headline">#</a></h4>
+<p>This graph displays the performance of the features that are in the selected model based on sampled data points from actual feature production data.
+The graph displays the values of the features in the model over time.</p>
+</section>
+</section>
+<section id="model-endpoint-performance-dashboard">
+<h3>Model endpoint performance dashboard<a class="headerlink" href="#model-endpoint-performance-dashboard" title="Permalink to this headline">#</a></h3>
+<p>Model endpoint performance displays performance details in graphical format.</p>
+<p><img alt="performance" src="../_images/performance.png" /></p>
+<p>This dashboard has five graphs:</p>
+<ul class="simple">
+<li><p><strong>Drift Measures</strong> — the overall drift over time for each of the endpoints in the selected model</p></li>
+<li><p><strong>Average Latency</strong> — the average latency of the model in 5 minute intervals, for 5 minutes and 1 hour rolling windows</p></li>
+<li><p><strong>Predictions/s</strong>  — the model predictions per second displayed in 5 second intervals for 5 minutes (rolling)</p></li>
+<li><p><strong>Predictions Count</strong> — the number of predictions the model makes for 5 minutes and 1 hour rolling windows</p></li>
+</ul>
+</section>
+<section id="configuring-grafana-dashboards">
+<h3>Configuring Grafana dashboards<a class="headerlink" href="#configuring-grafana-dashboards" title="Permalink to this headline">#</a></h3>
+<p>Verify that you have a Grafana service running in your Iguazio MLOps Platform.
+If you do not have a Grafana service running,
+see <a href="https://www.iguazio.com/docs/latest-release/services/grafana-dashboards/" target="_blank">Adding Grafana Dashboards</a> to create and configure it. When you create the service: In the <strong>Custom Parameters</strong> tab, <strong>Platform data-access user</strong> parameter, select a user with access to the <code class="docutils literal notranslate"><span class="pre">/user/pipelines</span></code> directory.</p>
+<p><strong>For working with Iguazio 3.0.x:</strong></p>
+<ol class="arabic">
+<li><p>Make sure you have the <code class="docutils literal notranslate"><span class="pre">model-monitoring</span></code> as a Grafana data source configured in your Grafana service. If not,
+add it by:</p>
+<ol class="arabic">
+<li><p>Open your grafana service.</p></li>
+<li><p>Navigate to <strong>Configuration | Data Sources</strong>.</p></li>
+<li><p>Press <strong>Add data source</strong>.</p></li>
+<li><p>Select the <strong>SimpleJson</strong> datasource and configure the following parameters.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Name</span><span class="p">:</span> <span class="n">model</span><span class="o">-</span><span class="n">monitoring</span>
+<span class="n">URL</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mlrun</span><span class="o">-</span><span class="n">api</span><span class="p">:</span><span class="mi">8080</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">grafana</span><span class="o">-</span><span class="n">proxy</span><span class="o">/</span><span class="n">model</span><span class="o">-</span><span class="n">endpoints</span>
+<span class="n">Access</span><span class="p">:</span> <span class="n">Server</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+
+<span class="c1">## Add a custom header of:</span>
+<span class="n">X</span><span class="o">-</span><span class="n">V3io</span><span class="o">-</span><span class="n">Session</span><span class="o">-</span><span class="n">Key</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">YOUR</span> <span class="n">ACCESS</span> <span class="n">KEY</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Press <strong>Save &amp; Test</strong> for verification. You’ll receive a confirmation with either a success or a failure message.</p></li>
+</ol>
+</li>
+<li><p>Download the following monitoring dashboards:</p>
+<ul class="simple">
+<li><p><a class="reference download internal" download="" href="../_downloads/59d58c4024917adf6b33a3225bc2c8cb/model-monitoring-overview.json"><code class="xref download docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Monitoring</span> <span class="pre">-</span> <span class="pre">Overview</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/450569d7d28d3419b5a7da1063945c8f/model-monitoring-details.json"><code class="xref download docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Monitoring</span> <span class="pre">-</span> <span class="pre">Details</span></code></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/971acaa976ff5c3fbac05d26801ddb4d/model-monitoring-performance.json"><code class="xref download docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Monitoring</span> <span class="pre">-</span> <span class="pre">Performance</span></code></a></p></li>
+</ul>
+</li>
+<li><p>Import the downloaded dashboards to your Grafana service:</p>
+<ol class="arabic simple">
+<li><p>Navigate to your Grafana service in the Services list and press it.</p></li>
+<li><p>Press the dashboards icon in left menu.</p></li>
+<li><p>In the Dashboard Management screen, press <strong>IMPORT</strong>, and select one file to import. Repeat this step for each dashboard.</p></li>
+</ol>
+</li>
+</ol>
+<p><strong>For working with Iguazio 3.2.x and later:</strong>
+Add access keys to your model-monitoring data source:</p>
+<ol class="arabic simple">
+<li><p>Open your Grafana service.</p></li>
+<li><p>Navigate to <strong>Configuration | Data Sources</strong>.</p></li>
+<li><p>Press <strong>mlrun-model-monitoring</strong>.</p></li>
+<li><p>In Custom HTTP Headers, configure the cookie parameter. Set the value of <code class="docutils literal notranslate"><span class="pre">cookie</span></code> to:</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">session=j:{&quot;sid&quot;:</span> <span class="pre">&quot;&lt;YOUR</span> <span class="pre">ACCESS</span> <span class="pre">KEY&gt;&quot;}</span></code></p>
+<p>The overview, details, and performance dashboards are in <strong>Dashboards | Manage | private</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You need to train and deploy a model to see results in the dashboards.
+The dashboards immediately display data if you already have a model that is trained and running with production data.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Monitor and alert</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="initial-setup-configuration.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Enable model monitoring</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Iguazio<br/>
+  
+      &copy; Copyright 2022, Iguazio.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+
+<div class="footer"><!-- This page uses <a href="https://analytics.google.com/">
+Google Analytics</a> to collect statistics. You can disable it by blocking
+the JavaScript coming from www.google-analytics.com. -->
+
+</div>
+
+  </body>
+</html>

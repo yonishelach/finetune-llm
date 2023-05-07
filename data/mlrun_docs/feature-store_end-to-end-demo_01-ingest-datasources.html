@@ -1,0 +1,2398 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Part 1: Data Ingestion</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="/_/static/css/badge_only.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script async="async" src="/_/static/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="canonical" href="https://docs.mlrun.org/en/stable/feature-store/end-to-end-demo/01-ingest-datasources.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Part 2: Training" href="02-create-training-model.html" />
+    <link rel="prev" title="Feature store end-to-end demo" href="index.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MV26G85');</script>
+<!-- End Google Tag Manager -->
+
+
+  
+<!-- RTD Extra Head -->
+
+<link rel="stylesheet" href="/_/static/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": false, "api_host": "https://readthedocs.org", "build_date": "2022-12-01T09:20:21Z", "builder": "sphinx", "canonical_url": null, "commit": "9933138d", "docroot": "/docs/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "feature-store/end-to-end-demo/01-ingest-datasources", "programming_language": "py", "project": "mlrun", "proxied_api_host": "/_", "source_suffix": ".ipynb", "subprojects": {}, "theme": "sphinx_book_theme", "user_analytics_code": "UA-101852366-5", "version": "stable"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+<script type="text/javascript" src="/_/static/javascript/readthedocs-analytics.js" async="async"></script>
+
+<!-- end RTD <extrahead> -->
+</head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/MLRun_Character.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLRun basics
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../index.html">
+   Using MLRun
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../architecture.html">
+     MLRun architecture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../mlops-dev-flow.html">
+   MLOps development workflow
+   <!-- omit in toc -->
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorial/index.html">
+   Tutorials and Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorial/01-mlrun-basics.html">
+     Quick start tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorial/02-model-training.html">
+     Train, compare, and register models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorial/03-model-serving.html">
+     Serving pre-trained ML/DL models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorial/04-pipeline.html">
+     Projects and automated ML pipeline
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorial/05-model-monitoring.html">
+     Model monitoring and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorial/06-add-mlops-to-code.html">
+     Add MLOps to existing code
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorial/07-batch-infer.html">
+     Batch inference and drift detection
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../basic-demo.html">
+     Feature store example (stocks)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference external" href="https://github.com/mlrun/demos">
+     MLRun demos repository
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../install.html">
+   Installation and setup guide
+   <!-- omit in toc -->
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../install/local-docker.html">
+     Install MLRun locally using Docker
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../install/kubernetes.html">
+     Install MLRun on Kubernetes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../install/aws-install.html">
+     Install MLRun on AWS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../install/remote.html">
+     Set up your client environment
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core components
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../projects/project.html">
+   Projects and automation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../projects/create-project.html">
+     Create, save, and use projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../projects/load-project.html">
+     Load and run projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../projects/run-build-deploy.html">
+     Run, build, and deploy functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../projects/build-run-workflows-pipelines.html">
+     Build and run workflows/pipelines
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../projects/ci-integration.html">
+     CI/CD integration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../secrets.html">
+     Working with secrets
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../runtimes/functions.html">
+   Serverless functions
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/functions-architecture.html">
+     Functions architecture
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../concepts/functions-overview.html">
+     Kinds of functions (runtimes)
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="../../runtimes/dask-overview.html">
+       Dask distributed runtime
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../runtimes/dask-mlrun.html">
+         Running Dask on the cluster with mlrun
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../../runtimes/dask-pipeline.html">
+         Pipelines using Dask, Kubeflow and MLRun
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../runtimes/horovod.html">
+       MPIJob and Horovod runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../runtimes/spark-operator.html">
+       Spark Operator runtime
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../concepts/nuclio-real-time-functions.html">
+       Nuclio real-time functions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/create-and-use-functions.html">
+     Create and use functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/mlrun_code_annotations.html">
+     Converting notebooks to function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/function-storage.html">
+     Attach storage to functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/images.html">
+     Images and their usage in MLRun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/image-build.html">
+     Build function image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/node-affinity.html">
+     Node affinity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/configuring-job-resources.html">
+     Managing job resources
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/load-from-hub.html">
+     Function Hub
+     <!-- omit in toc -->
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../concepts/data.html">
+   Data and artifacts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../store/datastore.html">
+     Data stores
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../store/data-items.html">
+     Data items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../store/artifacts.html">
+     Artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../store/models.html">
+     Model Artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../feature-store.html">
+   Feature store
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-store-overview.html">
+     Feature store overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-sets.html">
+     Feature sets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../transformations.html">
+     Feature set transformations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../feature-vectors.html">
+     Creating and using feature vectors
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="index.html">
+     Feature store end-to-end demo
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Part 1: Data Ingestion
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="02-create-training-model.html">
+       Part 2: Training
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="03-deploy-serving-model.html">
+       Part 3: Serving
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="04-pipeline.html">
+       Part 4: Automated ML pipeline
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../concepts/runs-workflows.html">
+   Batch runs and workflows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/mlrun-execution-context.html">
+     MLRun execution context
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/decorators-and-auto-logging.html">
+     Decorators and auto-logging
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/submitting-tasks-jobs-to-functions.html">
+     Running a task (job)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/workflow-overview.html">
+     Running a multi-stage workflow
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/scheduled-jobs.html">
+     Scheduled jobs and workflows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../serving/serving-graph.html">
+   Real-time serving pipelines (graphs)
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/getting-started.html">
+     Getting started
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/use-cases.html">
+     Use cases
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/realtime-pipelines.html">
+     Graph concepts and state machine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/model-serving-get-started.html">
+     Model serving graph
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/writing-custom-steps.html">
+     Writing custom steps
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/available-steps.html">
+     Built-in steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../serving/demos.html">
+     Demos and tutorials
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../serving/distributed-graph.html">
+       Distributed (multi-function) pipeline example
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../serving/graph-example.html">
+       Advanced model serving graph - notebook example
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/graph-ha-cfg.html">
+     Serving graph high availability configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/pipelines-error-handling.html">
+     Error handling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../concepts/monitoring.html">
+   Model monitoring
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  MLOps tasks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../data-prep/index.html">
+   Ingest and process data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+  <label for="toctree-checkbox-14">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../data-prep/ingesting_data.html">
+     Using data sources and items
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../data-prep/logging_datasets.html">
+     Logging datasets
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../runtimes/spark-operator.html">
+     Spark Operator runtime
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../data-prep/ingest-data-fs.html">
+     Ingest data using the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../using-spark-engine.html">
+     Ingest features with Spark
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../development/index.html">
+   Develop and train models
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../development/model-training-tracking.html">
+     Model training and tracking
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+    <label for="toctree-checkbox-16">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../training/create-a-basic-training-job.html">
+       Create a basic training job
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../training/working-with-data-and-model-artifacts.html">
+       Working with data and model artifacts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../concepts/auto-logging-mlops.html">
+       Automated experiment tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../training/built-in-training-function.html">
+       Using the built-in training function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../hyper-params.html">
+       Hyperparameter tuning optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../retrieve-offline-data.html">
+     Training with the feature store
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../deployment/index.html">
+   Deploy models and applications
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../serving/serving-overview.html">
+     Real-time deployment
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../serving/built-in-model-serving.html">
+       Using built-in model serving classes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../serving/custom-model-serving-class.html">
+       Build your own model serving class
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../serving/test-deploy-model-server.html">
+       Test and deploy a model server
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../serving/model-api.html">
+       Model serving API
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../training-serving.html">
+     Serving with the feature store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../deployment/batch_inference.html">
+     Batch inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../serving/canary.html">
+     Canary and rolling upgrades
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../monitoring/index.html">
+   Monitor and alert
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../monitoring/model-monitoring-deployment.html">
+     Model monitoring overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../monitoring/initial-setup-configuration.html">
+     Enable model monitoring
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../genindex.html">
+   API index
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../api/index.html">
+   API by module
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+  <label for="toctree-checkbox-20">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../api/mlrun.frameworks/index.html">
+     mlrun.frameworks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+    <label for="toctree-checkbox-21">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/mlrun.frameworks/mlrun.frameworks.auto_mlrun.html">
+       AutoMLRun
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/mlrun.frameworks/mlrun.frameworks.tf_keras.html">
+       TensorFlow.Keras
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/mlrun.frameworks/mlrun.frameworks.pytorch.html">
+       PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/mlrun.frameworks/mlrun.frameworks.sklearn.html">
+       SciKit-Learn
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/mlrun.frameworks/mlrun.frameworks.xgboost.html">
+       XGBoost
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/mlrun.frameworks/mlrun.frameworks.lgbm.html">
+       LightGBM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.html">
+     mlrun
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.artifacts.html">
+     mlrun.artifacts
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.config.html">
+     mlrun.config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.datastore.html">
+     mlrun.datastore
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.db.html">
+     mlrun.db
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.execution.html">
+     mlrun.execution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.feature_store.html">
+     mlrun.feature_store
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.model.html">
+     mlrun.model
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.platforms.html">
+     mlrun.platforms
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.projects.html">
+     mlrun.projects
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.run.html">
+     mlrun.run
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.runtimes.html">
+     mlrun.runtimes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/mlrun.serving.html">
+     mlrun.serving
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/storey.transformations.html">
+     storey.transformations - Graph transformations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cli.html">
+   Command-Line Interface
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../glossary.html">
+   Glossary
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            By <a href="https://www.iguazio.com/">Iguazio</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/mlrun/mlrun"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/issues/new?title=Issue%20on%20page%20%2Ffeature-store/end-to-end-demo/01-ingest-datasources.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/mlrun/mlrun/edit/development/docs/feature-store/end-to-end-demo/01-ingest-datasources.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/feature-store/end-to-end-demo/01-ingest-datasources.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-1-fetch-process-and-ingest-the-datasets">
+   Step 1 - Fetch, process and ingest the datasets
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transactions">
+   1.1 - Transactions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Transactions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-create-a-feature-set-and-preprocessing-pipeline">
+     Transactions - create a feature set and preprocessing pipeline
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-ingestion">
+     Transactions - ingestion
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#user-events">
+   1.2 - User events
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-fetching">
+     User events - fetching
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-create-a-feature-set-and-preprocessing-pipeline">
+     User events - create a feature set and preprocessing pipeline
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-ingestion">
+     User events - ingestion
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-2-create-a-labels-dataset-for-model-training">
+   Step 2 - Create a labels dataset for model training
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#label-set-create-a-feature-set">
+     Label set - create a feature set
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#label-set-ingestion">
+     Label set - ingestion
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-3-deploy-a-real-time-pipeline">
+   Step 3 - Deploy a real-time pipeline
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   3.1 - Transactions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-deploy-the-feature-set-live-endpoint">
+     Transactions - deploy the feature set live endpoint
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-test-the-feature-set-http-endpoint">
+     Transactions - test the feature set HTTP endpoint
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   3.2 - User events
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-deploy-the-feature-set-live-endpoint">
+     User events - deploy the feature set live endpoint
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-test-the-feature-set-http-endpoint">
+     User events - test the feature set HTTP endpoint
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#done">
+   Done!
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Part 1: Data Ingestion</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-1-fetch-process-and-ingest-the-datasets">
+   Step 1 - Fetch, process and ingest the datasets
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transactions">
+   1.1 - Transactions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Transactions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-create-a-feature-set-and-preprocessing-pipeline">
+     Transactions - create a feature set and preprocessing pipeline
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-ingestion">
+     Transactions - ingestion
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#user-events">
+   1.2 - User events
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-fetching">
+     User events - fetching
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-create-a-feature-set-and-preprocessing-pipeline">
+     User events - create a feature set and preprocessing pipeline
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-ingestion">
+     User events - ingestion
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-2-create-a-labels-dataset-for-model-training">
+   Step 2 - Create a labels dataset for model training
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#label-set-create-a-feature-set">
+     Label set - create a feature set
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#label-set-ingestion">
+     Label set - ingestion
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-3-deploy-a-real-time-pipeline">
+   Step 3 - Deploy a real-time pipeline
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   3.1 - Transactions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-deploy-the-feature-set-live-endpoint">
+     Transactions - deploy the feature set live endpoint
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transactions-test-the-feature-set-http-endpoint">
+     Transactions - test the feature set HTTP endpoint
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   3.2 - User events
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-deploy-the-feature-set-live-endpoint">
+     User events - deploy the feature set live endpoint
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#user-events-test-the-feature-set-http-endpoint">
+     User events - test the feature set HTTP endpoint
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#done">
+   Done!
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="part-1-data-ingestion">
+<h1>Part 1: Data Ingestion<a class="headerlink" href="#part-1-data-ingestion" title="Permalink to this headline">#</a></h1>
+<p>This demo showcases financial fraud prevention. It uses the MLRun feature store to define complex features that help identify fraud.</p>
+<p>Fraud prevention is a special challenge since it requires processing raw transaction and events in real-time and being able to quickly respond and block transactions before they occur.</p>
+<p>To address this, you’ll create a development pipeline and a production pipeline. Both pipelines share the same feature engineering and model code, but serve data very differently. Furthermore, MLRun automates the data and model monitoring process, drift identification, and trigger retraining in a CI/CD pipeline. This process is described in the diagram below:</p>
+<p><img alt="Feature store demo diagram - fraud prevention" src="../../_images/feature_store_demo_diagram.png" /></p>
+<p>The raw data is described as follows:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>TRANSACTIONS</p></th>
+<th class="head"><p></p></th>
+<th class="head"><p>║</p></th>
+<th class="head"><p>USER EVENTS</p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>age</strong></p></td>
+<td><p>age group value 0-6. Some values are marked as U for unknown</p></td>
+<td><p>║</p></td>
+<td><p><strong>source</strong></p></td>
+<td><p>The party/entity related to the event</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>gender</strong></p></td>
+<td><p>A character to define the age</p></td>
+<td><p>║</p></td>
+<td><p><strong>event</strong></p></td>
+<td><p>event, such as login or password change</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>zipcodeOri</strong></p></td>
+<td><p>ZIP code of the person originating the transaction</p></td>
+<td><p>║</p></td>
+<td><p><strong>timestamp</strong></p></td>
+<td><p>The date and time of the event</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>zipMerchant</strong></p></td>
+<td><p>ZIP code of the merchant receiving the transaction</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>category</strong></p></td>
+<td><p>category of the transaction (e.g., transportation, food, etc.)</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>amount</strong></p></td>
+<td><p>the total amount of the transaction</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>fraud</strong></p></td>
+<td><p>whether the transaction is fraudulent</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>timestamp</strong></p></td>
+<td><p>the date and time in which the transaction took place</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>source</strong></p></td>
+<td><p>the ID of the party/entity performing the transaction</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>target</strong></p></td>
+<td><p>the ID of the party/entity receiving the transaction</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>device</strong></p></td>
+<td><p>the device ID used to perform the transaction</p></td>
+<td><p>║</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>This notebook introduces how to <strong>Ingest</strong> different data sources to the <strong>Feature Store</strong>.</p>
+<p>The following FeatureSets are created:</p>
+<ul class="simple">
+<li><p><strong>Transactions</strong>: Monetary transactions between a source and a target.</p></li>
+<li><p><strong>Events</strong>: Account events such as account login or a password change.</p></li>
+<li><p><strong>Label</strong>: Fraud label for the data.</p></li>
+</ul>
+<p>By the end of this tutorial you’ll know how to:</p>
+<ul class="simple">
+<li><p>Create an ingestion pipeline for each data source.</p></li>
+<li><p>Define preprocessing, aggregation, and validation of the pipeline.</p></li>
+<li><p>Run the pipeline locally within the notebook.</p></li>
+<li><p>Launch a real-time function to ingest live data.</p></li>
+<li><p>Schedule a cron to run the task when needed.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project_name</span> <span class="o">=</span> <span class="s1">&#39;fraud-demo&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mlrun</span>
+
+<span class="c1"># Initialize the MLRun project object</span>
+<span class="n">project</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">get_or_create_project</span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">user_project</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2022-03-16 05:45:07,703 [info] loaded project fraud-demo from MLRun DB
+</pre></div>
+</div>
+</div>
+</div>
+<section id="step-1-fetch-process-and-ingest-the-datasets">
+<h2>Step 1 - Fetch, process and ingest the datasets<a class="headerlink" href="#step-1-fetch-process-and-ingest-the-datasets" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="transactions">
+<h2>1.1 - Transactions<a class="headerlink" href="#transactions" title="Permalink to this headline">#</a></h2>
+<section id="id1">
+<h3>Transactions<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
+<div class="cell tag_hide-cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Helper functions to adjust the timestamps of our data</span>
+<span class="c1"># while keeping the order of the selected events and</span>
+<span class="c1"># the relative distance from one event to the other</span>
+
+<span class="k">def</span> <span class="nf">date_adjustment</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">data_max</span><span class="p">,</span> <span class="n">new_max</span><span class="p">,</span> <span class="n">old_data_period</span><span class="p">,</span> <span class="n">new_data_period</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Adjust a specific sample&#39;s date according to the original and new time periods</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sample_dates_scale</span> <span class="o">=</span> <span class="p">((</span><span class="n">data_max</span> <span class="o">-</span> <span class="n">sample</span><span class="p">)</span> <span class="o">/</span> <span class="n">old_data_period</span><span class="p">)</span>
+    <span class="n">sample_delta</span> <span class="o">=</span> <span class="n">new_data_period</span> <span class="o">*</span> <span class="n">sample_dates_scale</span>
+    <span class="n">new_sample_ts</span> <span class="o">=</span> <span class="n">new_max</span> <span class="o">-</span> <span class="n">sample_delta</span>
+    <span class="k">return</span> <span class="n">new_sample_ts</span>
+
+<span class="k">def</span> <span class="nf">adjust_data_timespan</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">timestamp_col</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="n">new_period</span><span class="o">=</span><span class="s1">&#39;2d&#39;</span><span class="p">,</span> <span class="n">new_max_date_str</span><span class="o">=</span><span class="s1">&#39;now&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Adjust the dataframe timestamps to the new time period</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Calculate old time period</span>
+    <span class="n">data_min</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">data_max</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">old_data_period</span> <span class="o">=</span> <span class="n">data_max</span><span class="o">-</span><span class="n">data_min</span>
+    
+    <span class="c1"># Set new time period</span>
+    <span class="n">new_time_period</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="n">new_period</span><span class="p">)</span>
+    <span class="n">new_max</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">new_max_date_str</span><span class="p">)</span>
+    <span class="n">new_min</span> <span class="o">=</span> <span class="n">new_max</span><span class="o">-</span><span class="n">new_time_period</span>
+    <span class="n">new_data_period</span> <span class="o">=</span> <span class="n">new_max</span><span class="o">-</span><span class="n">new_min</span>
+    
+    <span class="c1"># Apply the timestamp change</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">timestamp_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">timestamp_col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">date_adjustment</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">data_max</span><span class="p">,</span> <span class="n">new_max</span><span class="p">,</span> <span class="n">old_data_period</span><span class="p">,</span> <span class="n">new_data_period</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Fetch the transactions dataset from the server</span>
+<span class="n">transactions_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://s3.wasabisys.com/iguazio/data/fraud-demo-mlrun-fs-docs/data.csv&#39;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">],</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="c1"># Adjust the samples timestamp for the past 2 days</span>
+<span class="n">transactions_data</span> <span class="o">=</span> <span class="n">adjust_data_timespan</span><span class="p">(</span><span class="n">transactions_data</span><span class="p">,</span> <span class="n">new_period</span><span class="o">=</span><span class="s1">&#39;2d&#39;</span><span class="p">)</span>
+
+<span class="c1"># Preview</span>
+<span class="n">transactions_data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>step</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>zipcodeOri</th>
+      <th>zipMerchant</th>
+      <th>category</th>
+      <th>amount</th>
+      <th>fraud</th>
+      <th>timestamp</th>
+      <th>source</th>
+      <th>target</th>
+      <th>device</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>4</td>
+      <td>M</td>
+      <td>28007</td>
+      <td>28007</td>
+      <td>es_transportation</td>
+      <td>4.55</td>
+      <td>0</td>
+      <td>2022-03-15 16:13:54.851486383</td>
+      <td>C1093826151</td>
+      <td>M348934600</td>
+      <td>f802e61d76564b7a89a83adcdfa573da</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>2</td>
+      <td>M</td>
+      <td>28007</td>
+      <td>28007</td>
+      <td>es_transportation</td>
+      <td>39.68</td>
+      <td>0</td>
+      <td>2022-03-14 09:21:09.710448366</td>
+      <td>C352968107</td>
+      <td>M348934600</td>
+      <td>38ef7fc3eb7442c8ae64579a483f1d2b</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>4</td>
+      <td>F</td>
+      <td>28007</td>
+      <td>28007</td>
+      <td>es_transportation</td>
+      <td>26.89</td>
+      <td>0</td>
+      <td>2022-03-15 22:41:20.666966912</td>
+      <td>C2054744914</td>
+      <td>M1823072687</td>
+      <td>7a851d0758894078b5846851ae32d5e3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="transactions-create-a-feature-set-and-preprocessing-pipeline">
+<h3>Transactions - create a feature set and preprocessing pipeline<a class="headerlink" href="#transactions-create-a-feature-set-and-preprocessing-pipeline" title="Permalink to this headline">#</a></h3>
+<p>Create the feature set (data pipeline) definition for the <strong>credit transaction processing</strong> that describes the offline/online data transformations and aggregations.<br>
+The feature store automatically adds an offline <code class="docutils literal notranslate"><span class="pre">parquet</span></code> target and an online <code class="docutils literal notranslate"><span class="pre">NoSQL</span></code> target by using <code class="docutils literal notranslate"><span class="pre">set_targets()</span></code>.</p>
+<p>The data pipeline consists of:</p>
+<ul class="simple">
+<li><p><strong>Extracting</strong> the data components (hour, day of week)</p></li>
+<li><p><strong>Mapping</strong> the age values</p></li>
+<li><p><strong>One hot encoding</strong> for the transaction category and the gender</p></li>
+<li><p><strong>Aggregating</strong> the amount (avg, sum, count, max over 2/12/24 hour time windows)</p></li>
+<li><p><strong>Aggregating</strong> the transactions per category (over 14 days time windows)</p></li>
+<li><p><strong>Writing</strong> the results to <strong>offline</strong> (Parquet) and <strong>online</strong> (NoSQL) targets</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import MLRun&#39;s Feature Store</span>
+<span class="kn">import</span> <span class="nn">mlrun.feature_store</span> <span class="k">as</span> <span class="nn">fstore</span>
+<span class="kn">from</span> <span class="nn">mlrun.feature_store.steps</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span><span class="p">,</span> <span class="n">MapValues</span><span class="p">,</span> <span class="n">DateExtractor</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the transactions FeatureSet</span>
+<span class="n">transaction_set</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">FeatureSet</span><span class="p">(</span><span class="s2">&quot;transactions&quot;</span><span class="p">,</span> 
+                                 <span class="n">entities</span><span class="o">=</span><span class="p">[</span><span class="n">fstore</span><span class="o">.</span><span class="n">Entity</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">)],</span> 
+                                 <span class="n">timestamp_key</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> 
+                                 <span class="n">description</span><span class="o">=</span><span class="s2">&quot;transactions feature set&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define and add value mapping</span>
+<span class="n">main_categories</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;es_transportation&quot;</span><span class="p">,</span> <span class="s2">&quot;es_health&quot;</span><span class="p">,</span> <span class="s2">&quot;es_otherservices&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;es_food&quot;</span><span class="p">,</span> <span class="s2">&quot;es_hotelservices&quot;</span><span class="p">,</span> <span class="s2">&quot;es_barsandrestaurants&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;es_tech&quot;</span><span class="p">,</span> <span class="s2">&quot;es_sportsandtoys&quot;</span><span class="p">,</span> <span class="s2">&quot;es_wellnessandbeauty&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;es_hyper&quot;</span><span class="p">,</span> <span class="s2">&quot;es_fashion&quot;</span><span class="p">,</span> <span class="s2">&quot;es_home&quot;</span><span class="p">,</span> <span class="s2">&quot;es_contents&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;es_travel&quot;</span><span class="p">,</span> <span class="s2">&quot;es_leisure&quot;</span><span class="p">]</span>
+
+<span class="c1"># One Hot Encode the newly defined mappings</span>
+<span class="n">one_hot_encoder_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="n">main_categories</span><span class="p">,</span>
+                           <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">transactions_data</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">unique</span><span class="p">())}</span>
+
+<span class="c1"># Define the graph steps</span>
+<span class="n">transaction_set</span><span class="o">.</span><span class="n">graph</span>\
+    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DateExtractor</span><span class="p">(</span><span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hour&#39;</span><span class="p">,</span> <span class="s1">&#39;day_of_week&#39;</span><span class="p">],</span> <span class="n">timestamp_col</span> <span class="o">=</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">))</span>\
+    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">MapValues</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;U&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">}},</span> <span class="n">with_original_features</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>\
+    <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="n">one_hot_encoder_mapping</span><span class="p">))</span>
+
+
+<span class="c1"># Add aggregations for 2, 12, and 24 hour time windows</span>
+<span class="n">transaction_set</span><span class="o">.</span><span class="n">add_aggregation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;amount&#39;</span><span class="p">,</span>
+                                <span class="n">column</span><span class="o">=</span><span class="s1">&#39;amount&#39;</span><span class="p">,</span>
+                                <span class="n">operations</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">,</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">,</span><span class="s1">&#39;max&#39;</span><span class="p">],</span>
+                                <span class="n">windows</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;2h&#39;</span><span class="p">,</span> <span class="s1">&#39;12h&#39;</span><span class="p">,</span> <span class="s1">&#39;24h&#39;</span><span class="p">],</span>
+                                <span class="n">period</span><span class="o">=</span><span class="s1">&#39;1h&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Add the category aggregations over a 14 day window</span>
+<span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">main_categories</span><span class="p">:</span>
+    <span class="n">transaction_set</span><span class="o">.</span><span class="n">add_aggregation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">category</span><span class="p">,</span><span class="n">column</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;category_</span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                    <span class="n">operations</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">],</span> <span class="n">windows</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;14d&#39;</span><span class="p">],</span> <span class="n">period</span><span class="o">=</span><span class="s1">&#39;1d&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add default (offline-parquet &amp; online-nosql) targets</span>
+<span class="n">transaction_set</span><span class="o">.</span><span class="n">set_targets</span><span class="p">()</span>
+
+<span class="c1"># Plot the pipeline so we can see the different steps</span>
+<span class="n">transaction_set</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rankdir</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">,</span> <span class="n">with_targets</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/05f7d6198ca22a31d8767b4bd995c2cdd00cd7313fcb5967db952c9abd8c6cb5.svg" src="../../_images/05f7d6198ca22a31d8767b4bd995c2cdd00cd7313fcb5967db952c9abd8c6cb5.svg" /></div>
+</div>
+</section>
+<section id="transactions-ingestion">
+<h3>Transactions - ingestion<a class="headerlink" href="#transactions-ingestion" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ingest the transactions dataset through the defined pipeline</span>
+<span class="n">transactions_df</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="n">transaction_set</span><span class="p">,</span> <span class="n">transactions_data</span><span class="p">,</span> 
+                 <span class="n">infer_options</span><span class="o">=</span><span class="n">fstore</span><span class="o">.</span><span class="n">InferOptions</span><span class="o">.</span><span class="n">default</span><span class="p">())</span>
+
+<span class="n">transactions_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>persist count = 0
+persist count = 100
+persist count = 200
+persist count = 300
+persist count = 400
+persist count = 500
+persist count = 600
+persist count = 700
+persist count = 800
+persist count = 900
+persist count = 1000
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>amount_count_2h</th>
+      <th>amount_count_12h</th>
+      <th>amount_count_24h</th>
+      <th>amount_max_2h</th>
+      <th>amount_max_12h</th>
+      <th>amount_max_24h</th>
+      <th>amount_sum_2h</th>
+      <th>amount_sum_12h</th>
+      <th>amount_sum_24h</th>
+      <th>amount_avg_2h</th>
+      <th>...</th>
+      <th>category_es_contents</th>
+      <th>category_es_travel</th>
+      <th>category_es_leisure</th>
+      <th>amount</th>
+      <th>fraud</th>
+      <th>timestamp</th>
+      <th>target</th>
+      <th>device</th>
+      <th>timestamp_hour</th>
+      <th>timestamp_day_of_week</th>
+    </tr>
+    <tr>
+      <th>source</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C1093826151</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>4.55</td>
+      <td>4.55</td>
+      <td>4.55</td>
+      <td>4.55</td>
+      <td>4.55</td>
+      <td>4.55</td>
+      <td>4.55</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4.55</td>
+      <td>0</td>
+      <td>2022-03-15 16:13:54.851486383</td>
+      <td>M348934600</td>
+      <td>f802e61d76564b7a89a83adcdfa573da</td>
+      <td>16</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>C352968107</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>39.68</td>
+      <td>39.68</td>
+      <td>39.68</td>
+      <td>39.68</td>
+      <td>39.68</td>
+      <td>39.68</td>
+      <td>39.68</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>39.68</td>
+      <td>0</td>
+      <td>2022-03-14 09:21:09.710448366</td>
+      <td>M348934600</td>
+      <td>38ef7fc3eb7442c8ae64579a483f1d2b</td>
+      <td>9</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>C2054744914</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>26.89</td>
+      <td>26.89</td>
+      <td>26.89</td>
+      <td>26.89</td>
+      <td>26.89</td>
+      <td>26.89</td>
+      <td>26.89</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>26.89</td>
+      <td>0</td>
+      <td>2022-03-15 22:41:20.666966912</td>
+      <td>M1823072687</td>
+      <td>7a851d0758894078b5846851ae32d5e3</td>
+      <td>22</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 57 columns</p>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="user-events">
+<h2>1.2 - User events<a class="headerlink" href="#user-events" title="Permalink to this headline">#</a></h2>
+<section id="user-events-fetching">
+<h3>User events - fetching<a class="headerlink" href="#user-events-fetching" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch the user_events dataset from the server</span>
+<span class="n">user_events_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://s3.wasabisys.com/iguazio/data/fraud-demo-mlrun-fs-docs/events.csv&#39;</span><span class="p">,</span> 
+                               <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">quotechar</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">],</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="c1"># Adjust to the last 2 days to see the latest aggregations in our online feature vectors</span>
+<span class="n">user_events_data</span> <span class="o">=</span> <span class="n">adjust_data_timespan</span><span class="p">(</span><span class="n">user_events_data</span><span class="p">,</span> <span class="n">new_period</span><span class="o">=</span><span class="s1">&#39;2d&#39;</span><span class="p">)</span>
+
+<span class="c1"># Preview</span>
+<span class="n">user_events_data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>source</th>
+      <th>event</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>C1974668487</td>
+      <td>details_change</td>
+      <td>2022-03-15 15:03:17.518565985</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>C1973547259</td>
+      <td>login</td>
+      <td>2022-03-15 18:05:50.652706656</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>C515668508</td>
+      <td>login</td>
+      <td>2022-03-15 14:37:49.845093748</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="user-events-create-a-feature-set-and-preprocessing-pipeline">
+<h3>User events - create a feature set and preprocessing pipeline<a class="headerlink" href="#user-events-create-a-feature-set-and-preprocessing-pipeline" title="Permalink to this headline">#</a></h3>
+<p>Define the events feature set.
+This is a fairly straightforward pipeline in which you only “one hot encode” the event categories and save the data to the default targets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">user_events_set</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">FeatureSet</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span>
+                           <span class="n">entities</span><span class="o">=</span><span class="p">[</span><span class="n">fstore</span><span class="o">.</span><span class="n">Entity</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">)],</span>
+                           <span class="n">timestamp_key</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> 
+                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;user events feature set&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define and add value mapping</span>
+<span class="n">events_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;event&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">user_events_data</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">unique</span><span class="p">())}</span>
+
+<span class="c1"># One Hot Encode</span>
+<span class="n">user_events_set</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="n">events_mapping</span><span class="p">))</span>
+
+<span class="c1"># Add default (offline-parquet &amp; online-nosql) targets</span>
+<span class="n">user_events_set</span><span class="o">.</span><span class="n">set_targets</span><span class="p">()</span>
+
+<span class="c1"># Plot the pipeline so we can see the different steps</span>
+<span class="n">user_events_set</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rankdir</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">,</span> <span class="n">with_targets</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2547dacb3eef282f2b5481cb30e3e26c7b49b53be795a6eec40f091726f2cc31.svg" src="../../_images/2547dacb3eef282f2b5481cb30e3e26c7b49b53be795a6eec40f091726f2cc31.svg" /></div>
+</div>
+</section>
+<section id="user-events-ingestion">
+<h3>User events - ingestion<a class="headerlink" href="#user-events-ingestion" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ingestion of the newly created events feature set</span>
+<span class="n">events_df</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="n">user_events_set</span><span class="p">,</span> <span class="n">user_events_data</span><span class="p">)</span>
+<span class="n">events_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>persist count = 0
+persist count = 100
+persist count = 200
+persist count = 300
+persist count = 400
+persist count = 500
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>event_details_change</th>
+      <th>event_login</th>
+      <th>event_password_change</th>
+      <th>timestamp</th>
+    </tr>
+    <tr>
+      <th>source</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C1974668487</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2022-03-15 15:03:17.518565985</td>
+    </tr>
+    <tr>
+      <th>C1973547259</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2022-03-15 18:05:50.652706656</td>
+    </tr>
+    <tr>
+      <th>C515668508</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2022-03-15 14:37:49.845093748</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="step-2-create-a-labels-dataset-for-model-training">
+<h2>Step 2 - Create a labels dataset for model training<a class="headerlink" href="#step-2-create-a-labels-dataset-for-model-training" title="Permalink to this headline">#</a></h2>
+<section id="label-set-create-a-feature-set">
+<h3>Label set - create a feature set<a class="headerlink" href="#label-set-create-a-feature-set" title="Permalink to this headline">#</a></h3>
+<p>This feature set contains the label for the fraud demo, it is ingested directly to the default targets without any changes</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_labels</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;fraud&#39;</span><span class="p">,</span><span class="s1">&#39;source&#39;</span><span class="p">,</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;fraud&quot;</span><span class="p">:</span> <span class="s2">&quot;label&quot;</span><span class="p">})</span>
+    <span class="n">labels</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;datetime64[ms]&quot;</span><span class="p">)</span>
+    <span class="n">labels</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">labels</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">labels</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the &quot;labels&quot; feature set</span>
+<span class="n">labels_set</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">FeatureSet</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">,</span> 
+                           <span class="n">entities</span><span class="o">=</span><span class="p">[</span><span class="n">fstore</span><span class="o">.</span><span class="n">Entity</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">)],</span> 
+                           <span class="n">timestamp_key</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span>
+                           <span class="n">description</span><span class="o">=</span><span class="s2">&quot;training labels&quot;</span><span class="p">,</span>
+                           <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pandas&quot;</span><span class="p">)</span>
+
+<span class="n">labels_set</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;create_labels&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">create_labels</span><span class="p">)</span>
+
+<span class="c1"># specify only Parquet (offline) target since its not used for real-time</span>
+<span class="n">labels_set</span><span class="o">.</span><span class="n">set_targets</span><span class="p">([</span><span class="s1">&#39;parquet&#39;</span><span class="p">],</span> <span class="n">with_defaults</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">labels_set</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">with_targets</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/e33377db8925890de06070cdf43cd1caee738cc2ef22bc2799e307247a134987.svg" src="../../_images/e33377db8925890de06070cdf43cd1caee738cc2ef22bc2799e307247a134987.svg" /></div>
+</div>
+</section>
+<section id="label-set-ingestion">
+<h3>Label set - ingestion<a class="headerlink" href="#label-set-ingestion" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ingest the labels feature set</span>
+<span class="n">labels_df</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="n">labels_set</span><span class="p">,</span> <span class="n">transactions_data</span><span class="p">)</span>
+<span class="n">labels_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>label</th>
+      <th>timestamp</th>
+    </tr>
+    <tr>
+      <th>source</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C1093826151</th>
+      <td>0</td>
+      <td>2022-03-15 16:13:54.851</td>
+    </tr>
+    <tr>
+      <th>C352968107</th>
+      <td>0</td>
+      <td>2022-03-14 09:21:09.710</td>
+    </tr>
+    <tr>
+      <th>C2054744914</th>
+      <td>0</td>
+      <td>2022-03-15 22:41:20.666</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="step-3-deploy-a-real-time-pipeline">
+<h2>Step 3 - Deploy a real-time pipeline<a class="headerlink" href="#step-3-deploy-a-real-time-pipeline" title="Permalink to this headline">#</a></h2>
+<p>When dealing with real-time aggregation, it’s important to be able to update these aggregations in real-time.
+For this purpose, you’ll create live serving functions that update the online feature store of the <code class="docutils literal notranslate"><span class="pre">transactions</span></code> FeatureSet and <code class="docutils literal notranslate"><span class="pre">Events</span></code> FeatureSet.</p>
+<p>Using MLRun’s <code class="docutils literal notranslate"><span class="pre">serving</span></code> runtime, create a nuclio function loaded with the feature set’s computational graph definition
+and an <code class="docutils literal notranslate"><span class="pre">HttpSource</span></code> to define the HTTP trigger.</p>
+<p>Notice that the implementation below does not require any rewrite of the pipeline logic.</p>
+</section>
+<section id="id2">
+<h2>3.1 - Transactions<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<section id="transactions-deploy-the-feature-set-live-endpoint">
+<h3>Transactions - deploy the feature set live endpoint<a class="headerlink" href="#transactions-deploy-the-feature-set-live-endpoint" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create iguazio v3io stream and transactions push API endpoint</span>
+<span class="n">transaction_stream</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;v3io:///projects/</span><span class="si">{</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">/streams/transaction&#39;</span>
+<span class="n">transaction_pusher</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">get_stream_pusher</span><span class="p">(</span><span class="n">transaction_stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the source stream trigger (use v3io streams)</span>
+<span class="c1"># Define the `key` and `time` fields (extracted from the Json message).</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">StreamSource</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">transaction_stream</span> <span class="p">,</span> <span class="n">key_field</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">time_field</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">)</span>
+
+<span class="c1"># Deploy the transactions feature set&#39;s ingestion service over a real-time (Nuclio) serverless function</span>
+<span class="c1"># you can use the run_config parameter to pass function/service specific configuration</span>
+<span class="n">transaction_set_endpoint</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">deploy_ingestion_service</span><span class="p">(</span><span class="n">featureset</span><span class="o">=</span><span class="n">transaction_set</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2022-03-16 05:45:43,035 [info] Starting remote function deploy
+2022-03-16 05:45:43  (info) Deploying function
+2022-03-16 05:45:43  (info) Building
+2022-03-16 05:45:43  (info) Staging files and preparing base images
+2022-03-16 05:45:43  (warn) Python 3.6 runtime is deprecated and will soon not be supported. Please migrate your code and use Python 3.7 runtime (`python:3.7`) or higher
+2022-03-16 05:45:43  (info) Building processor image
+2022-03-16 05:47:03  (info) Build complete
+2022-03-16 05:47:08  (info) Function deploy complete
+&gt; 2022-03-16 05:47:08,835 [info] successfully deployed function: {&#39;internal_invocation_urls&#39;: [&#39;nuclio-fraud-demo-admin-transactions-ingest.default-tenant.svc.cluster.local:8080&#39;], &#39;external_invocation_urls&#39;: [&#39;fraud-demo-admin-transactions-ingest-fraud-demo-admin.default-tenant.app.xtvtjecfcssi.iguazio-cd1.com/&#39;]}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="transactions-test-the-feature-set-http-endpoint">
+<h3>Transactions - test the feature set HTTP endpoint<a class="headerlink" href="#transactions-test-the-feature-set-http-endpoint" title="Permalink to this headline">#</a></h3>
+<p>By defining the <code class="docutils literal notranslate"><span class="pre">transactions</span></code> feature set you can now use MLRun and Storey to deploy it as a live endpoint, ready to ingest new data!</p>
+<p>Using MLRun’s <code class="docutils literal notranslate"><span class="pre">serving</span></code> runtime, create a nuclio function loaded with the feature set’s computational graph definition and an <code class="docutils literal notranslate"><span class="pre">HttpSource</span></code> to define the HTTP trigger.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># Select a sample from the dataset and serialize it to JSON</span>
+<span class="n">transaction_sample</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">transactions_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">transaction_sample</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+<span class="n">transaction_sample</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;step&#39;: 0,
+ &#39;age&#39;: &#39;5&#39;,
+ &#39;gender&#39;: &#39;M&#39;,
+ &#39;zipcodeOri&#39;: 28007,
+ &#39;zipMerchant&#39;: 28007,
+ &#39;category&#39;: &#39;es_transportation&#39;,
+ &#39;amount&#39;: 2.19,
+ &#39;fraud&#39;: 0,
+ &#39;timestamp&#39;: &#39;2022-03-16 05:47:08.884971&#39;,
+ &#39;source&#39;: &#39;C546957379&#39;,
+ &#39;target&#39;: &#39;M348934600&#39;,
+ &#39;device&#39;: &#39;8ee3b24f2eb143759e938b6148da547c&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Post the sample to the ingestion endpoint</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">transaction_set_endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">transaction_sample</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;{&quot;id&quot;: &quot;c3f8a087-3932-45c0-8dcb-1fd8efabe681&quot;}&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id3">
+<h2>3.2 - User events<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
+<section id="user-events-deploy-the-feature-set-live-endpoint">
+<h3>User events - deploy the feature set live endpoint<a class="headerlink" href="#user-events-deploy-the-feature-set-live-endpoint" title="Permalink to this headline">#</a></h3>
+<p>Deploy the events feature set’s ingestion service using the feature set and all the previously defined resources.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create iguazio v3io stream and transactions push API endpoint</span>
+<span class="n">events_stream</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;v3io:///projects/</span><span class="si">{</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">/streams/events&#39;</span>
+<span class="n">events_pusher</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">get_stream_pusher</span><span class="p">(</span><span class="n">events_stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the source stream trigger (use v3io streams)</span>
+<span class="c1"># Define the `key` and `time` fields (extracted from the Json message).</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">mlrun</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">StreamSource</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">events_stream</span> <span class="p">,</span> <span class="n">key_field</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">time_field</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">)</span>
+
+<span class="c1"># Deploy the transactions feature set&#39;s ingestion service over a real-time (Nuclio) serverless function</span>
+<span class="c1"># you can use the run_config parameter to pass function/service specific configuration</span>
+<span class="n">events_set_endpoint</span> <span class="o">=</span> <span class="n">fstore</span><span class="o">.</span><span class="n">deploy_ingestion_service</span><span class="p">(</span><span class="n">featureset</span><span class="o">=</span><span class="n">user_events_set</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; 2022-03-16 05:47:09,035 [info] Starting remote function deploy
+2022-03-16 05:47:09  (info) Deploying function
+2022-03-16 05:47:09  (info) Building
+2022-03-16 05:47:09  (info) Staging files and preparing base images
+2022-03-16 05:47:09  (warn) Python 3.6 runtime is deprecated and will soon not be supported. Please migrate your code and use Python 3.7 runtime (`python:3.7`) or higher
+2022-03-16 05:47:09  (info) Building processor image
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="user-events-test-the-feature-set-http-endpoint">
+<h3>User events - test the feature set HTTP endpoint<a class="headerlink" href="#user-events-test-the-feature-set-http-endpoint" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select a sample from the events dataset and serialize it to JSON</span>
+<span class="n">user_events_sample</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">user_events_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">user_events_sample</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+<span class="n">user_events_sample</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Post the sample to the ingestion endpoint</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">events_set_endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">user_events_sample</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="done">
+<h2>Done!<a class="headerlink" href="#done" title="Permalink to this headline">#</a></h2>
+<p>You’ve completed Part 1 of the data-ingestion with the feature store.
+Proceed to <a class="reference external" href="02-create-training-model.html">Part 2</a> to learn how to train an ML model using the feature store data.</p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Feature store end-to-end demo</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="02-create-training-model.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Part 2: Training</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Iguazio<br/>
+  
+      &copy; Copyright 2022, Iguazio.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+
+<div class="footer"><!-- This page uses <a href="https://analytics.google.com/">
+Google Analytics</a> to collect statistics. You can disable it by blocking
+the JavaScript coming from www.google-analytics.com. -->
+
+</div>
+
+  </body>
+</html>
