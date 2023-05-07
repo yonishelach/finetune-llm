@@ -13,10 +13,11 @@ import zipfile
 def _ignore(filename, ignored_files) -> bool:
     return filename.stem in ignored_files
 
-
-def _parse_html_files(root, files_to_ignore: List[str] = []):
+    
+def _parse_html_files(root, files_to_ignore: List[str] = [], from_text: bool = True):
     # Iterating over all html files:
-    pathlist = Path(root).glob("**/*.html")
+    suffix = "txt" if from_text else "html"
+    pathlist = Path(root).glob(f"**/*.{suffix}")
     values = []
     ignored_files = []
     problematic_files = []
@@ -25,9 +26,13 @@ def _parse_html_files(root, files_to_ignore: List[str] = []):
         if _ignore(path, files_to_ignore):
             ignored_files.append(path)
             continue
-        soup = BeautifulSoup(open(path, "r").read(), features="html.parser")
-        txt = soup.get_text()
-        txt = txt.split("\n")
+        with open(path, "r") as f:
+            if from_text:
+                txt = f.readlines()
+            else:
+                soup = BeautifulSoup(f.read(), features="html.parser")
+                txt = soup.get_text()
+                txt = txt.split("\n")
         clean_content = [line.strip() for line in txt if line != "" if line.strip() != ""]
         start = -1
         end = 0
@@ -57,13 +62,13 @@ def _parse_html_files(root, files_to_ignore: List[str] = []):
     return values
 
 
-def _prepare_mlrun_documentation_dataset(dataset_path, docs_source, ignored_files):
+def _prepare_mlrun_documentation_dataset(dataset_path, docs_source, ignored_files, from_text):
     with tempfile.TemporaryDirectory() as temp_folder:
         path_to_zip_file = os.path.join(temp_folder, "docs.zip")
         docs_source.download(path_to_zip_file)
         with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
             zip_ref.extractall(temp_folder)
-        parsed_htmls = _parse_html_files(temp_folder, ignored_files)
+        parsed_htmls = _parse_html_files(temp_folder, ignored_files, from_text)
         with open(dataset_path, "w", encoding='utf8') as f:
             for item in parsed_htmls:
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
@@ -88,6 +93,7 @@ def prepare_dataset(
     drop_columns: Optional[List[str]] = None,
     rename_columns: Optional[Dict[str, str]] = None,
     ignored_files: Optional[List[str]] = None,
+    from_text: bool = False,
 ):
     """
     Loading the dataset and editing the columns and logs the datasets
@@ -99,7 +105,7 @@ def prepare_dataset(
     dataset_path = os.path.join(target_dir, "mlrun_docs.jsonl")
     os.makedirs(target_dir, exist_ok=True)
     if not os.path.exists(dataset_path):
-        _prepare_mlrun_documentation_dataset(dataset_path, docs_source, ignored_files)
+        _prepare_mlrun_documentation_dataset(dataset_path, docs_source, ignored_files, from_text)
     # Loading and editing dataset:
     dataset = load_dataset(target_dir)
     dataset = dataset["train"].train_test_split(test_size=0.2)

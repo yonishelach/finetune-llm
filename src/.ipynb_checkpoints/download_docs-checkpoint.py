@@ -5,7 +5,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import mlrun
-
+from pathlib import Path
 
 def get_all_links(base_url, parent_url):
     download_urls = []
@@ -20,16 +20,16 @@ def get_all_links(base_url, parent_url):
             if href.startswith("./"):
                 href = href[2:]
             if href.startswith("../"):  # in case the ref is to the parent path
-              link_to_parent = True
-              link = parent_url + href[3:]
+                link_to_parent = True
+                link = parent_url + href[3:]
             else:
                 link = base_url + href
             if link not in download_urls:
-                download_urls.append(link) # add the link to our array
+                download_urls.append(link)  # add the link to our array
     return download_urls, link_to_parent
 
 
-def download_link(url, target_dir, base_url):
+def download_link(url, target_dir, base_url, html_to_text):
     try:
         with urlopen(url) as connection:
             # read the contents of the url as bytes and return it
@@ -38,17 +38,20 @@ def download_link(url, target_dir, base_url):
         return
     filename = url[len(base_url):].replace("/", "_")
     path = os.path.join(target_dir, filename)
-    
-    # TBD - may want to convert html to text using bs4 here
-    
-    with open(path, 'wb') as file:
+    write = "wb"
+    if html_to_text:
+        write = "w"
+        path = Path(path).with_suffix(".txt")
+        data = BeautifulSoup(data, features="html.parser").get_text()
+
+    with open(path, write) as file:
         # write all provided data to the file
         file.write(data)
     return path
 
 
 @mlrun.handler(outputs=["docs_dir:directory"])
-def download_all_files(url, target_dir):
+def download_all_files(url, target_dir, html_to_text: bool = False):
     """download all files on the provided webpage to the provided path"""
     parent_url = url.rsplit("/", 2)[0] + "/"
     download_urls, link_to_parent = get_all_links(url, parent_url)
@@ -60,12 +63,12 @@ def download_all_files(url, target_dir):
     # create the pool of worker threads
     with ThreadPoolExecutor(max_workers=20) as exe:
         # dispatch all download tasks to worker threads
-        futures = [exe.submit(download_link, link, target_dir, root_url) for link in download_urls]
+        futures = [exe.submit(download_link, link, target_dir, root_url, html_to_text) for link in download_urls]
         # report results as they become available
         for future in as_completed(futures):
             # retrieve result
             path = future.result()
             if path:
-                print("wrote file:", path)
+                print("wrote file:", Path(path).name)
     return target_dir
     

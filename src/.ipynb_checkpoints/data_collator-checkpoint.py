@@ -1,6 +1,6 @@
 from transformers import DataCollatorForLanguageModeling
 from typing import List, Any, Dict, Union
-from data_prep_dolly import RESPONSE_KEY_NL
+from src.data_prep_dolly import RESPONSE_KEY_NL
 import numpy as np
 
 
