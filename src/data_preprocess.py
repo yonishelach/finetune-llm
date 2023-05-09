@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 from datasets import load_dataset
 import json
-
+import zipfile
+import tempfile
 import mlrun
 
 ARTICLE_TOKEN = "Article: "
@@ -53,18 +54,22 @@ def convert_textfile_to_data_with_prompts(txt_file):
     return data
 
 
-@mlrun.handler(inputs={"source_dir": "directory"}, outputs=["html-data:dataset"])
-def prepare_dataset(source_dir):
-    path_list = Path(source_dir).glob(f"./*.txt")
+@mlrun.handler(outputs=["html-data:dataset"])
+def prepare_dataset(source_dir: str):
+    with zipfile.ZipFile(source_dir, "r") as zip_file:
+        tmp_dir = tempfile.mkdtemp()
+        zip_file.extractall(tmp_dir)
+        
+    path_list = Path(tmp_dir).glob(f"./*.txt")
     data = []
     # Converting text files into data in our prompt format:
     for path in path_list:
         data.extend(convert_textfile_to_data_with_prompts(path))
-    data_dir = "html_data_dir"
+    data_dir = tempfile.mkdtemp()
     os.makedirs(data_dir, exist_ok=True)
     with open(data_dir + "/html_data.jsonl", "w", encoding="utf8") as f:
         for item in data:
             f.write(
                 json.dumps({"text": item.replace(" ", "")}, ensure_ascii=False) + "\n"
             )
-    return load_dataset(data_dir)["train"]
+    return load_dataset(data_dir)["train"].to_pandas()

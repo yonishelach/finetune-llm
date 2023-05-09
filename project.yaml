@@ -1,0 +1,42 @@
+kind: project
+metadata:
+  name: mlopspedia-admin
+  created: '2023-05-09T16:31:52.073000'
+spec:
+  functions:
+  - url: src/data_collection.py
+    name: data-collecting
+    kind: job
+  - url: src/data_preprocess.py
+    name: data-preparing
+    kind: job
+  - url: src/trainer.py
+    name: mpi-training
+    kind: mpijob
+    image: yonishelach/mlrun-hf-gpu
+  - url: src/trainer.py
+    name: training
+    kind: job
+  - url: src/serving.py
+    name: serving-gpt2
+    kind: serving
+  - url: src/serving.py
+    name: serving-mlopspedia
+    kind: serving
+  - url: src/testing.py
+    name: testing
+    kind: job
+    handler: model_server_tester
+  workflows:
+  - path: src/training_workflow.py
+    name: training_workflow
+  artifacts: []
+  conda: ''
+  source: git://github.com/yonishelach/learn-docs.git#main
+  origin_url: git://github.com/yonishelach/learn-docs.git#refs/heads/main
+  load_source_on_run: true
+  desired_state: online
+  owner: admin
+  default_image: yonishelach/mlrun-hf
+status:
+  state: online

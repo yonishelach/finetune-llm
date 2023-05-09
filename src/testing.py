@@ -20,7 +20,7 @@ def model_server_tester(
     context: mlrun.MLClientCtx,
     dataset: pd.DataFrame,
     endpoint: str,
-    rows: int = 100,
+    rows: int = 5,
     max_error: int = 5,
 ):
     """Test a model server

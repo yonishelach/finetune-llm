@@ -16,11 +16,15 @@ PROMPT_FORMAT = SUBJECT_MARK + "{}" + CONTENT_MARK
 
 
 def clean_preprocess(text: Union[str, bytes]) -> dict:
+    if isinstance(text, bytes):
+        text = text.decode("utf-8")
     return {"inputs": [str(text)]}
 
 
 def preprocess(text: Union[str, bytes]) -> dict:
     # Format the prompt as subject:
+    if isinstance(text, bytes):
+        text = text.decode("utf-8")
     return {"inputs": [PROMPT_FORMAT.format(str(text))]}
 
 

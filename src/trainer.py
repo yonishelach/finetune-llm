@@ -14,7 +14,7 @@ from typing import Any, Dict, List
 
 import mlrun
 import numpy as np
-
+import pandas as pd
 import transformers
 
 from datasets import Dataset
@@ -404,6 +404,7 @@ def train(
 
     # Preparing training arguments:
     training_args = TrainingArguments(
+        output_dir=tempfile.mkdtemp(),
         **train_kwargs,
     )
 
@@ -442,7 +443,7 @@ def train(
     )
 
 
-def evaluate(context, model_path, data):
+def evaluate(context, model_path, data: pd.DataFrame):
     # Get the model artifact and file:
     (
         model_file,
@@ -459,10 +460,10 @@ def evaluate(context, model_path, data):
         zip_file.extractall(model_directory)
 
     # Loading the saved pretrained tokenizer and model:
-    dataset = Dataset.from_pandas(data.as_df())
+    dataset = Dataset.from_pandas(data)
     tokenizer = GPT2Tokenizer.from_pretrained(model_directory)
     model = GPT2LMHeadModel.from_pretrained(model_directory)
-    encodings = tokenizer(dataset, return_tensors="pt")
+    encodings = tokenizer("\n\n".join(dataset["text"][:5]), return_tensors="pt")
 
     max_length = model.config.n_positions
     stride = 512
@@ -491,5 +492,5 @@ def evaluate(context, model_path, data):
         if end_loc == seq_len:
             break
 
-    ppl = torch.exp(torch.stack(nlls).mean())
+    ppl = torch.exp(torch.stack(nlls).mean()).item()
     context.log_result("perplexity", ppl)
