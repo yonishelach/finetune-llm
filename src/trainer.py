@@ -1,3 +1,4 @@
+import json
 import os
 import zipfile
 
@@ -39,6 +40,69 @@ from transformers import (
     GPT2LMHeadModel,
 )
 
+DEEPSPEED_CONFIG = {
+    "fp16": {
+        "enabled": "auto",
+        "loss_scale": 0,
+        "loss_scale_window": 1000,
+        "initial_scale_power": 16,
+        "hysteresis": 2,
+        "min_loss_scale": 1
+    },
+
+    "optimizer": {
+        "type": "AdamW",
+        "params": {
+            "lr": "auto",
+            "betas": "auto",
+            "eps": "auto",
+            "weight_decay": "auto"
+        }
+    },
+
+    "scheduler": {
+        "type": "WarmupLR",
+        "params": {
+            "warmup_min_lr": "auto",
+            "warmup_max_lr": "auto",
+            "warmup_num_steps": "auto"
+        }
+    },
+
+    "zero_optimization": {
+        "stage": 3,
+        "offload_optimizer": {
+            "device": "cpu",
+            "pin_memory": True
+        },
+        "offload_param": {
+            "device": "cpu",
+            "pin_memory": True
+        },
+        "overlap_comm": True,
+        "contiguous_gradients": True,
+        "sub_group_size": 1e9,
+        "reduce_bucket_size": "auto",
+        "stage3_prefetch_bucket_size": "auto",
+        "stage3_param_persistence_threshold": "auto",
+        "stage3_max_live_parameters": 1e9,
+        "stage3_max_reuse_distance": 1e9,
+        "stage3_gather_16bit_weights_on_model_save": True
+    },
+
+    "gradient_accumulation_steps": "auto",
+    "gradient_clipping": "auto",
+    "steps_per_print": 2000,
+    "train_batch_size": "auto",
+    "train_micro_batch_size_per_gpu": "auto",
+    "wall_clock_breakdown": False,
+    "comms_logger": {
+      "enabled": True,
+      "verbose": False,
+      "prof_all": True,
+      "debug": False
+    }
+}
 
 # ----------------------from MLRUN--------------------------------
 class HFTrainerMLRunInterface(MLRunInterface, ABC):
@@ -282,9 +346,14 @@ def train(
     model_class: str = None,
     tokenizer_class: str = None,
     model_name: str = "huggingface-model",
+    use_deepspeed: bool = True,
 ):
     torch.cuda.empty_cache()
-
+    deepspeed_config_json = None
+    if use_deepspeed:
+        deepspeed_config_json = os.path.join(tempfile.mkdtemp(), "ds_config.json")
+        with open(deepspeed_config_json, "w") as f:
+            json.dump(DEEPSPEED_CONFIG, f)
     # Creating tokenizer:
     if tokenizer_class:
         tokenizer_class = create_class(tokenizer_class)
@@ -315,6 +384,8 @@ def train(
     train_kwargs = _get_sub_dict_by_prefix(
         src=context.parameters, prefix_key=KWArgsPrefixes.TRAIN
     )
+    if use_deepspeed:
+        train_kwargs["deepspeed"] = deepspeed_config_json
     model_class_kwargs = _get_sub_dict_by_prefix(
         src=context.parameters, prefix_key=KWArgsPrefixes.MODEL_CLASS
     )

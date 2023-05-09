@@ -56,12 +56,22 @@ def create_and_set_project(
 
     # Set the functions:
     project.set_function(
-        "src/data_prep.py",
-        name="data-prep",
+        "src/data_collection.py",
+        name="data-collecting",
         kind="job",
     )
     project.set_function(
-        "src/training.py",
+        "src/data_preprocess.py",
+        name="data-preparing",
+        kind="job",
+    )
+    project.set_function(
+        "src/trainer.py",
+        name="mpi-training",
+        kind="mpijob",
+    )
+    project.set_function(
+        "src/trainer.py",
         name="training",
         kind="job",
     )
