@@ -1,0 +1,9 @@
+mlrun
+torch
+plotly
+gradio
+transformers[deepspeed]
+datasets
+accelerate
+evaluate
+mpi4py
