@@ -15,6 +15,10 @@ CONTENT_MARK = "\nContent: "
 PROMPT_FORMAT = SUBJECT_MARK + "{}" + CONTENT_MARK
 
 
+def clean_preprocess(text: Union[str, bytes]) -> dict:
+    return {"inputs": [str(text)]}
+
+
 def preprocess(text: Union[str, bytes]) -> dict:
     # Format the prompt as subject:
     return {"inputs": [PROMPT_FORMAT.format(str(text))]}
@@ -168,6 +172,10 @@ def postprocess(inputs: dict) -> dict:
     return {"inputs": [{"prediction": output, "prompt": inputs["outputs"]["prompt"]}]}
 
 
+def clean_postprocess(inputs: dict) -> dict:
+    return {"inputs": [inputs["outputs"]]}
+
+
 class ToxicityClassifierModelServer(V2ModelServer):
     def __init__(self, context, name: str, threshold: float = 0.7, **class_args):
         # Initialize the base server:
@@ -184,10 +192,10 @@ class ToxicityClassifierModelServer(V2ModelServer):
     def load(self):
         self.model = evaluate.load("toxicity", module_type="measurement")
 
-    def predict(self, request: Dict) -> str:
+    def predict(self, inputs: Dict) -> str:
         # Read the user's input and model output:
-        prediction = request["inputs"][0]["prediction"]
-        prompt = request["inputs"][0]["prompt"]
+        prediction = inputs["inputs"][0]["prediction"]
+        prompt = inputs["inputs"][0]["prompt"]
 
         # Infer through the evaluator model:
         result = self.model.compute(predictions=[prediction, prompt])["toxicity"]
