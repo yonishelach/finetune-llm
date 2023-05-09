@@ -18,10 +18,10 @@ def assert_build():
 
 
 def create_and_set_project(
-        git_source: str,
-        name: str = "llm-demo",
-        default_image: str = None,
-        user_project: bool = True,
+    git_source: str,
+    name: str = "llm-demo",
+    default_image: str = None,
+    user_project: bool = True,
 ):
     # Get / Create a project from the MLRun DB:
     project = mlrun.get_or_create_project(

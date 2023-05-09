@@ -31,7 +31,7 @@ def convert_textfile_to_data_with_prompts(txt_file):
             break
         if line.startswith(HEADER_TOKEN):
             subject_idx.append(i)
-    article_content = lines[start: end]
+    article_content = lines[start:end]
     subject_idx = [subject_i - start for subject_i in subject_idx]
     article_name = article_content[0].replace(ARTICLE_TOKEN, "")
     for i, subject in enumerate(subject_idx):
@@ -47,7 +47,7 @@ def convert_textfile_to_data_with_prompts(txt_file):
             DATA_FORMAT.format(
                 article_name,
                 subject_data,
-                "".join(article_content[content_limits[0]: content_limits[1]])
+                "".join(article_content[content_limits[0] : content_limits[1]]),
             )
         )
     return data
@@ -62,7 +62,9 @@ def prepare_dataset(source_dir):
         data.extend(convert_textfile_to_data_with_prompts(path))
     data_dir = "html_data_dir"
     os.makedirs(data_dir, exist_ok=True)
-    with open(data_dir + "/html_data.jsonl", "w", encoding='utf8') as f:
+    with open(data_dir + "/html_data.jsonl", "w", encoding="utf8") as f:
         for item in data:
-            f.write(json.dumps({"text": item.replace(" ", "")}, ensure_ascii=False) + "\n")
+            f.write(
+                json.dumps({"text": item.replace(" ", "")}, ensure_ascii=False) + "\n"
+            )
     return load_dataset(data_dir)["train"]

@@ -19,7 +19,9 @@ def mark_header_tags(soup):
     # Tagging headers in html to identify in text files:
     if nodes:
         content_type = type(nodes[0].contents[0])
-        nodes[0].string = content_type(ARTICLE_TOKEN + normalize(str(nodes[0].contents[0])))
+        nodes[0].string = content_type(
+            ARTICLE_TOKEN + normalize(str(nodes[0].contents[0]))
+        )
         for node in nodes[1:]:
             if node.string:
                 content_type = type(node.contents[0])
@@ -31,10 +33,7 @@ def mark_header_tags(soup):
 
 def get_html_as_string(url, mark_headers):
     # read html source:
-    req = Request(
-        url=url,
-        headers={'User-Agent': 'Mozilla/5.0'}
-    )
+    req = Request(url=url, headers={"User-Agent": "Mozilla/5.0"})
     web_html_content = urlopen(req).read().decode("utf-8")
     soup = BeautifulSoup(web_html_content, features="html.parser")
     if mark_headers:

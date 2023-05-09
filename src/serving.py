@@ -26,23 +26,23 @@ def preprocess(text: Union[str, bytes]) -> dict:
 
 class LLMModelServer(V2ModelServer):
     def __init__(
-            self,
-            context: mlrun.MLClientCtx = None,
-            name: str = None,
-            model_class: str = None,
-            tokenizer_class: str = None,
-            # Load from MLRun args:
-            model_path: str = None,
-            # Load from hub args:
-            model_name: str = None,
-            tokenizer_name: str = None,
-            # Deepspeed args:
-            use_deepspeed: bool = False,
-            n_gpus: int = 1,
-            is_fp16: bool = True,
-            # Inference args:
-            response_max_length: int = 200,
-            **class_args,
+        self,
+        context: mlrun.MLClientCtx = None,
+        name: str = None,
+        model_class: str = None,
+        tokenizer_class: str = None,
+        # Load from MLRun args:
+        model_path: str = None,
+        # Load from hub args:
+        model_name: str = None,
+        tokenizer_name: str = None,
+        # Deepspeed args:
+        use_deepspeed: bool = False,
+        n_gpus: int = 1,
+        is_fp16: bool = True,
+        # Inference args:
+        response_max_length: int = 200,
+        **class_args,
     ):
         # Initialize the base server:
         super(LLMModelServer, self).__init__(
@@ -146,7 +146,7 @@ class LLMModelServer(V2ModelServer):
             temperature=0.9,
             num_return_sequences=1,
             attention_mask=attention_mask,
-            pad_token_id=pad_token_id
+            pad_token_id=pad_token_id,
         )
 
         # Detokenize:
@@ -167,7 +167,7 @@ def postprocess(inputs: dict) -> dict:
     if content_index == -1:
         output = f"I'm not sure about it but I'll do my best: {prediction}"
     else:
-        output = prediction[content_index + len(CONTENT_MARK):]
+        output = prediction[content_index + len(CONTENT_MARK) :]
 
     return {"inputs": [{"prediction": output, "prompt": inputs["outputs"]["prompt"]}]}
 
