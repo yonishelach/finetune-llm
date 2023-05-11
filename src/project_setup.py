@@ -58,17 +58,21 @@ def create_and_set_project(
     # Set the project git source:
     project.set_source(git_source, pull_at_runtime=True)
 
-    # Set the functions:
+    # Set the data collection function:
     project.set_function(
         "src/data_collection.py",
         name="data-collecting",
         kind="job",
     )
+    
+    # Set the data preprocessing function:
     project.set_function(
         "src/data_preprocess.py",
         name="data-preparing",
         kind="job",
     )
+    
+    # Set the training function (gpu and without gpu for evaluation):
     train_function = project.set_function(
         "src/trainer.py",
         name="mpi-training",
@@ -88,18 +92,20 @@ def create_and_set_project(
         kind="job",
         
     )
-    # For the first notebook
-    serving_function = project.set_function(
+    
+    # Set the serving functions (different functions to not override deployments betwen notebooks)
+    project.set_function(
         "src/serving.py",
         name="serving-gpt2",
         kind="serving",
     )
-    # For the second notebook
-    serving_function = project.set_function(
+    project.set_function(
         "src/serving.py",
         name="serving-mlopspedia",
         kind="serving",
     )
+    
+    # Set the testing function:
     project.set_function(
         "src/testing.py",
         name="testing",
