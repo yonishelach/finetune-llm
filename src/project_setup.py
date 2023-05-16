@@ -98,11 +98,13 @@ def create_and_set_project(
         "src/serving.py",
         name="serving-gpt2",
         kind="serving",
+        image="yonishelach/mlrun-hf-gpu",
     )
     project.set_function(
         "src/serving.py",
         name="serving-mlopspedia",
         kind="serving",
+        image="yonishelach/mlrun-hf-gpu",
     )
     
     # Set the testing function:

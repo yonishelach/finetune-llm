@@ -135,6 +135,8 @@ class LLMModelServer(V2ModelServer):
 
         # Tokenize:
         input_ids = self.tokenizer.encode(prompt, return_tensors="pt")
+        if self.use_deepspeed:
+            input_ids = input_ids.cuda()
 
         # Create the attention mask and pad token id:
         attention_mask = torch.ones_like(input_ids)

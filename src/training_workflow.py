@@ -67,6 +67,8 @@ def kfpipeline(
 
     # Create serving graph:
     serving_function = project.get_function("serving-mlopspedia")
+    serving_function.with_limits(gpus=1)
+    serving_function.spec.readiness_timeout = 3000
 
     # Set the topology and get the graph object:
     graph = serving_function.set_topology("flow", engine="async")
