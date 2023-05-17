@@ -18,7 +18,8 @@ def convert_textfile_to_data_with_prompts(txt_file):
     # Read file:
     with open(txt_file, "r") as f:
         lines = f.readlines()
-
+    # removing empty lines:
+    lines = [line for line in lines if line.strip()]
     start = 0
     end = 0
     subject_idx = []
@@ -33,7 +34,9 @@ def convert_textfile_to_data_with_prompts(txt_file):
         if line.startswith(HEADER_TOKEN):
             subject_idx.append(i)
     article_content = lines[start:end]
-    subject_idx = [subject_i - start for subject_i in subject_idx]
+    # remove article author and date:
+    del article_content[1:3]
+    subject_idx = [subject_i - start - 2 for subject_i in subject_idx]
     article_name = article_content[0].replace(ARTICLE_TOKEN, "")
     for i, subject in enumerate(subject_idx):
         if subject + 1 in subject_idx:
