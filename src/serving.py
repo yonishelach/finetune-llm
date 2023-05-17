@@ -15,17 +15,13 @@ CONTENT_MARK = "\nContent: "
 PROMPT_FORMAT = SUBJECT_MARK + "{}" + CONTENT_MARK
 
 
-def clean_preprocess(text: Union[str, bytes]) -> dict:
-    if isinstance(text, bytes):
-        text = text.decode("utf-8")
-    return {"inputs": [str(text)]}
-
-
-def preprocess(text: Union[str, bytes]) -> dict:
+def preprocess(request: dict) -> dict:
+    text = request.pop("text")
     # Format the prompt as subject:
     if isinstance(text, bytes):
         text = text.decode("utf-8")
-    return {"inputs": [PROMPT_FORMAT.format(str(text))]}
+    request = {"inputs": [{"text": [PROMPT_FORMAT.format(str(text))], **request}]}
+    return request
 
 
 class LLMModelServer(V2ModelServer):
@@ -45,7 +41,6 @@ class LLMModelServer(V2ModelServer):
         n_gpus: int = 1,
         is_fp16: bool = True,
         # Inference args:
-        response_max_length: int = 200,
         **class_args,
     ):
         # Initialize the base server:
@@ -68,9 +63,6 @@ class LLMModelServer(V2ModelServer):
         self.use_deepspeed = use_deepspeed
         self.n_gpus = n_gpus
         self.is_fp16 = is_fp16
-
-        # Save inference parameters:
-        self.response_max_length = response_max_length
 
         # Prepare variables for future use:
         self.model = None
@@ -131,7 +123,8 @@ class LLMModelServer(V2ModelServer):
 
     def predict(self, request: Dict[str, Any]) -> dict:
         # Get the inputs:
-        prompt = request["inputs"][0]
+        kwargs = request["inputs"][0]
+        prompt = kwargs.pop("text")[0]
 
         # Tokenize:
         input_ids = self.tokenizer.encode(prompt, return_tensors="pt")
@@ -145,14 +138,11 @@ class LLMModelServer(V2ModelServer):
         # Infer through the model:
         output = self.model.generate(
             input_ids,
-            max_length=self.response_max_length,
-            do_sample=False,
-            top_k=50,
-            top_p=0.9,
-            temperature=0.9,
+            do_sample=True,
             num_return_sequences=1,
             attention_mask=attention_mask,
             pad_token_id=pad_token_id,
+            **kwargs
         )
 
         # Detokenize:
@@ -176,10 +166,6 @@ def postprocess(inputs: dict) -> dict:
         output = prediction[content_index + len(CONTENT_MARK) :]
 
     return {"inputs": [{"prediction": output, "prompt": inputs["outputs"]["prompt"]}]}
-
-
-def clean_postprocess(inputs: dict) -> dict:
-    return {"inputs": [inputs["outputs"]]}
 
 
 class ToxicityClassifierModelServer(V2ModelServer):

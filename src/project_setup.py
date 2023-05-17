@@ -86,6 +86,7 @@ def create_and_set_project(
         mem=memory_per_replica,
     )
     train_function.save()
+
     project.set_function(
         "src/trainer.py",
         name="training",
@@ -93,26 +94,11 @@ def create_and_set_project(
         
     )
     
-    # Set the serving functions (different functions to not override deployments betwen notebooks)
     project.set_function(
         "src/serving.py",
-        name="serving-gpt2",
+        name="serving",
         kind="serving",
         image="yonishelach/mlrun-hf-gpu",
-    )
-    project.set_function(
-        "src/serving.py",
-        name="serving-mlopspedia",
-        kind="serving",
-        image="yonishelach/mlrun-hf-gpu",
-    )
-    
-    # Set the testing function:
-    project.set_function(
-        "src/testing.py",
-        name="testing",
-        handler="model_server_tester",
-        kind="job",
     )
 
     # Set the training worflow:
