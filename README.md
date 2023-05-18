@@ -9,23 +9,18 @@ We will use:
 * [**DeepSpeed**](https://www.deepspeed.ai/) - as the distributed training framework.
 * and [**MLRun**](https://www.mlrun.org/) - as the orchastraitor to operationalize it, moving it from development to production.
 
+The demo contains a single [notebook](./tutorial.ipynb) that covers the two main stages in every MLOps project: 
+
+* **Training Pipeline Automation** - Demonstrating how to get an existing model (`GPT2-Medium`) from HuggingFace's Transformers package and operationalize it through all of its life cycle phases: data collection, data ppreparation, training and evaluation, as a fully automated pipeline.
+* **Application Serving Pipeline** - Showing how to productize the newly trained LLM as a serverless function.
+
+You can find all the python source code under [/src](./src)
+
+
 [<img src="./images/video-thumbnail.png" style="width: 700px"/>](https://www.nvidia.com/en-us/on-demand/session/gtcspring23-s51553/)
 
 Be sure to check out Yaron Haviv's video [Deploying Hugging Face Models to Production at Scale with GPUs](https://www.nvidia.com/en-us/on-demand/session/gtcspring23-s51553/)
 to get a walkthrough of a simillar demo.
-
-
-
-___
-<a id="notebooks"></a>
-## Notebooks 
-
-The demo contains two notebooks:
-
-* [**Application Serving Pipeline**](./01-llm-serving.ipynb) - Demonstrating how to get an existing model (`GPT2-Medium`) from HuggingFace's Transformers package and serve it as a serverless function using MLRun's `ModelServer`.
-* [**Pipeline Automation**](./02-llm-fine-tuning.ipynb) - Showing how to productize a HuggingFace model in all of its life cycle phases, from data collection to training and serving, as a fully automated pipeline.
-
-You can find all the python source code under [/src](./src)
 
 ___
 <a id="installation"></a>

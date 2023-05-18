@@ -1,5 +1,6 @@
 import os
 import zipfile
+import json
 from typing import Any, Dict, Union
 import numpy as np
 import transformers
@@ -16,11 +17,18 @@ PROMPT_FORMAT = SUBJECT_MARK + "{}" + CONTENT_MARK
 
 
 def preprocess(request: dict) -> dict:
-    text = request.pop("text")
+    # Read bytes:
+    if isinstance(request, bytes):
+        request = json.loads(request)
+
+    # Get the prompt:
+    prompt = request.pop("prompt")
+    
     # Format the prompt as subject:
-    if isinstance(text, bytes):
-        text = text.decode("utf-8")
-    request = {"inputs": [{"text": [PROMPT_FORMAT.format(str(text))], **request}]}
+    prompt = PROMPT_FORMAT.format(str(prompt))
+    
+    # Update the request and return:
+    request = {"inputs": [{"prompt": [prompt], **request}]}
     return request
 
 
@@ -124,7 +132,7 @@ class LLMModelServer(V2ModelServer):
     def predict(self, request: Dict[str, Any]) -> dict:
         # Get the inputs:
         kwargs = request["inputs"][0]
-        prompt = kwargs.pop("text")[0]
+        prompt = kwargs.pop("prompt")[0]
 
         # Tokenize:
         input_ids = self.tokenizer.encode(prompt, return_tensors="pt")
@@ -165,7 +173,7 @@ def postprocess(inputs: dict) -> dict:
     else:
         output = prediction[content_index + len(CONTENT_MARK) :]
 
-    return {"inputs": [{"prediction": output, "prompt": inputs["outputs"]["prompt"]}]}
+    return {"inputs": [{"prediction": output.strip(), "prompt": inputs["outputs"]["prompt"]}]}
 
 
 class ToxicityClassifierModelServer(V2ModelServer):
@@ -192,7 +200,7 @@ class ToxicityClassifierModelServer(V2ModelServer):
         # Infer through the evaluator model:
         result = self.model.compute(predictions=[prediction, prompt])["toxicity"]
         if any(np.array(result) > self.threshold):
-            return "MLRun does not allow toxicity!"
+            return "This bot do not respond to toxicity."
 
         return prediction
 

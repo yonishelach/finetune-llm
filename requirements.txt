@@ -2,8 +2,7 @@ mlrun
 torch
 plotly
 gradio
-transformers[deepspeed]
+transformers
 datasets
 accelerate
 evaluate
-mpi4py
